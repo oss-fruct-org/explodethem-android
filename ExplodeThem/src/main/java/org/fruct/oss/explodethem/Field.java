@@ -3,6 +3,7 @@ package org.fruct.oss.explodethem;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -42,6 +43,8 @@ public class Field {
 	private Random rand = new Random();
 
 	private List<Shell> shells = new ArrayList<Shell>();
+	private List<Shell> removedShells = new ArrayList<Shell>();
+	private List<Shell> addedShells = new ArrayList<Shell>();
 
 	public Field(int width, int height) {
 		this.width = width;
@@ -85,15 +88,34 @@ public class Field {
 		}
 	}
 
-	public boolean isActive() {
-		return !shells.isEmpty();
+	public boolean fire(int x, int y) {
+		Entity ent = field[x][y];
+		switch (ent) {
+		case LARGE_BOMB:
+			fire(ent, x, y);
+			break;
+
+		case MEDIUM_BOMB:
+			field[x][y] = Entity.LARGE_BOMB;
+			break;
+
+		case SMALL_BOMB:
+			field[x][y] = Entity.MEDIUM_BOMB;
+			break;
+
+		default:
+			return false;
+		}
+
+		return true;
 	}
 
-	public void fire(int x, int y) {
-		Entity ent = field[x][y];
-		if (ent != Entity.EMPTY) {
-			fire(ent, x, y);
-		}
+	public List<Shell> getShells() {
+		return shells;
+	}
+
+	public boolean isActive() {
+		return !shells.isEmpty();
 	}
 
 	public void fire(Entity ent, int x, int y) {
@@ -101,9 +123,37 @@ public class Field {
 			Shell shell = new Shell();
 			shell.x = x;
 			shell.y = y;
-			shell.dx = (i / 2) * 2 - 1;
-			shell.dy = (i % 2) * 2 - 1;
+
+			shell.dx = (i & 1) == 0 ? (i - 1) : 0;
+			shell.dy = (i & 1) != 0 ? (i - 2) : 0;
+
 			Log.d(TAG, "Shell created " + shell.dx + " " + shell.dy);
+
+			addedShells.add(shell);
 		}
+		field[x][y] = Entity.EMPTY;
+	}
+
+	public void step() {
+		for (Shell shell : shells) {
+			shell.x += shell.dx;
+			shell.y += shell.dy;
+
+			if (shell.x < 0 || shell.y < 0 || shell.x >= width || shell.y >= height) {
+				removedShells.add(shell);
+				continue;
+			}
+
+			if (fire(shell.x, shell.y)) {
+				removedShells.add(shell);
+			}
+		}
+	}
+
+	public void commit() {
+		shells.removeAll(removedShells);
+		shells.addAll(addedShells);
+		addedShells.clear();
+		removedShells.clear();
 	}
 }

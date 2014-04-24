@@ -42,6 +42,8 @@ public class ExplodeView extends SurfaceView implements SurfaceHolder.Callback {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+
+		thread.release();
 	}
 
 	@Override

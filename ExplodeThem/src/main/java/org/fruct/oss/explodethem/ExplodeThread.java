@@ -1,11 +1,17 @@
 package org.fruct.oss.explodethem;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.Log;
 import android.view.SurfaceHolder;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 
 public class ExplodeThread extends Thread {
 	private static final String TAG = "ExplodeThread";
@@ -16,6 +22,8 @@ public class ExplodeThread extends Thread {
 	public static int TILES_PADDING = 4;
 
 	public static final long TICK_MS = 32;
+	public static final long TICK_PER_STEP = 400 / TICK_MS;
+	public static final float RELATIVE_OFFSET = 1f / TICK_PER_STEP;
 
 	private final Context context;
 	private final SurfaceHolder holder;
@@ -26,6 +34,9 @@ public class ExplodeThread extends Thread {
 	// Timing variables
 	private long gameTime;
 	private long startTime;
+
+	private float stepRemaintTicks;
+	private float stepOffset;
 
 	private long ticksElapsed;
 	private long framesElapsed;
@@ -42,6 +53,10 @@ public class ExplodeThread extends Thread {
 	private float x, y;
 	private int touchX, touchY;
 	private Field field;
+
+	// Resources
+	private Bitmap backgroundOriginal;
+	private Bitmap backgroundScaled;
 
 	public ExplodeThread(Context context, SurfaceHolder holder) {
 		setName("ExplodeThread");
@@ -61,19 +76,51 @@ public class ExplodeThread extends Thread {
 		testPaint2.setTextSize(24);
 		testPaint.setAntiAlias(true);
 
-
 		testPaint3 = new Paint();
 		testPaint3.setColor(0xff1199fa);
 		testPaint3.setStyle(Paint.Style.FILL_AND_STROKE);
 		testPaint3.setTextSize(24);
 		testPaint.setAntiAlias(true);
 
-
 		eraserPaint = new Paint();
 		eraserPaint.setColor(0xff000000);
 		eraserPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
 		field = new Field(TILES_X, TILES_Y);
+
+		backgroundOriginal = createBitmapFromAsset("resources.jpg");
+	}
+
+	private Bitmap createBitmapFromAsset(String file) {
+		InputStream in = null;
+
+		try {
+			in = openAsset(file);
+			return BitmapFactory.decodeStream(in);
+		} finally {
+			if (in != null) {
+				try {
+					in.close();
+				} catch (IOException ignored) {
+				}
+			}
+		}
+	}
+
+	private InputStream openAsset(String file) {
+		try {
+			return context.getAssets().open("background.jpg");
+		} catch (IOException e) {
+			Log.e(TAG, "Can't open asset: " +  file);
+			return null;
+		}
+	}
+
+	public void release() {
+		if (backgroundScaled != null)
+			backgroundScaled.recycle();
+
+		backgroundOriginal.recycle();
 	}
 
 	@Override
@@ -131,8 +178,21 @@ public class ExplodeThread extends Thread {
 	private void updatePhysics() {
 		ticksElapsed++;
 
-		//x += 1;
-		//y += 1;
+		if (field.isActive()) {
+			if (stepRemaintTicks == 0) {
+				initializeStep();
+				field.step();
+				field.commit();
+			}
+
+			stepRemaintTicks--;
+			stepOffset += RELATIVE_OFFSET;
+		}
+	}
+
+	private void initializeStep() {
+		stepRemaintTicks = TICK_PER_STEP;
+		stepOffset = 0f;
 	}
 
 	private void draw(Canvas canvas) {
@@ -141,7 +201,8 @@ public class ExplodeThread extends Thread {
 		final float halfTileSize = dimensions.tileSize / 2;
 		final float tileSize = dimensions.tileSize;
 
-		canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), eraserPaint);
+		//canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), eraserPaint);
+		canvas.drawBitmap(backgroundScaled, 0, 0, null);
 
 		//canvas.drawText("TPS: " + ticksElapsed / ((gameTime - startTime) / 1000.), 10, 30, testPaint);
 		//canvas.drawText("FPS: " + framesElapsed / ((gameTime - startTime) / 1000.), 10, 50, testPaint);
@@ -167,7 +228,19 @@ public class ExplodeThread extends Thread {
 			}
 		}
 
-		canvas.drawRect(x, y, x + 5, y + 5, testPaint2);
+		List<Field.Shell> shells = field.getShells();
+		for (Field.Shell shell : shells) {
+			float xPos = dimensions.getOffset(shell.x)
+					+ shell.dx * stepOffset * (dimensions.tileSize + dimensions.tilePadding);
+			float yPos = dimensions.getOffset(shell.y)
+					+ shell.dy * stepOffset  * (dimensions.tileSize + dimensions.tilePadding)
+					+ dimensions.fieldStartY;
+
+			canvas.drawCircle(xPos + halfTileSize, yPos + halfTileSize,
+					4f, testPaint2);
+		}
+
+		//canvas.drawRect(x, y, x + 5, y + 5, testPaint3);
 	}
 
 	public void setRunning(boolean isRunning) {
@@ -192,6 +265,13 @@ public class ExplodeThread extends Thread {
 					- dimensions.tilePadding;
 
 			dimensions.fieldStartY = 60;
+
+			// Create new background
+			if (backgroundScaled != null) {
+				backgroundScaled.recycle();
+			}
+
+			backgroundScaled = Bitmap.createScaledBitmap(backgroundOriginal, width, height, true);
 		}
 	}
 
@@ -221,6 +301,11 @@ public class ExplodeThread extends Thread {
 
 				if (!field.isActive()) {
 					field.fire(touchX, touchY);
+					field.commit();
+
+					if (field.isActive()) {
+						initializeStep();
+					}
 				}
 			}
 		}
