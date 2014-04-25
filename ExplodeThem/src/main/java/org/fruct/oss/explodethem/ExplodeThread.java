@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
@@ -55,8 +57,12 @@ public class ExplodeThread extends Thread {
 	private Field field;
 
 	// Resources
-	private Bitmap backgroundOriginal;
-	private Bitmap backgroundScaled;
+	// Background
+	private BitmapHolder background;
+	private BitmapHolder largeBomb;
+	private BitmapHolder mediumBomb;
+	private BitmapHolder smallBomb;
+
 
 	public ExplodeThread(Context context, SurfaceHolder holder) {
 		setName("ExplodeThread");
@@ -88,7 +94,10 @@ public class ExplodeThread extends Thread {
 
 		field = new Field(TILES_X, TILES_Y);
 
-		backgroundOriginal = createBitmapFromAsset("resources.jpg");
+		background = new BitmapHolder("background.jpg");
+		largeBomb = new BitmapHolder("large-bomb.png");
+		mediumBomb = new BitmapHolder("medium-bomb.png");
+		smallBomb = new BitmapHolder("small-bomb.png");
 	}
 
 	private Bitmap createBitmapFromAsset(String file) {
@@ -109,7 +118,7 @@ public class ExplodeThread extends Thread {
 
 	private InputStream openAsset(String file) {
 		try {
-			return context.getAssets().open("background.jpg");
+			return context.getAssets().open(file);
 		} catch (IOException e) {
 			Log.e(TAG, "Can't open asset: " +  file);
 			return null;
@@ -117,10 +126,10 @@ public class ExplodeThread extends Thread {
 	}
 
 	public void release() {
-		if (backgroundScaled != null)
-			backgroundScaled.recycle();
-
-		backgroundOriginal.recycle();
+		background.recycle();
+		largeBomb.recycle();
+		mediumBomb.recycle();
+		smallBomb.recycle();
 	}
 
 	@Override
@@ -197,12 +206,11 @@ public class ExplodeThread extends Thread {
 
 	private void draw(Canvas canvas) {
 		assert dimensions != null;
-
 		final float halfTileSize = dimensions.tileSize / 2;
 		final float tileSize = dimensions.tileSize;
 
 		//canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), eraserPaint);
-		canvas.drawBitmap(backgroundScaled, 0, 0, null);
+		canvas.drawBitmap(background.getScaled(), 0, 0, null);
 
 		//canvas.drawText("TPS: " + ticksElapsed / ((gameTime - startTime) / 1000.), 10, 30, testPaint);
 		//canvas.drawText("FPS: " + framesElapsed / ((gameTime - startTime) / 1000.), 10, 50, testPaint);
@@ -220,13 +228,36 @@ public class ExplodeThread extends Thread {
 
 
 				Field.Entity ent = field.get(x, y);
-				if (ent != Field.Entity.EMPTY) {
+				Bitmap bitmapToDraw = null;
+				switch (ent) {
+				case LARGE_BOMB:
+					bitmapToDraw = largeBomb.getScaled();
+					break;
+				case MEDIUM_BOMB:
+					bitmapToDraw = mediumBomb.getScaled();
+					break;
+				case SMALL_BOMB:
+					bitmapToDraw = smallBomb.getScaled();
+					break;
+				}
+
+				if (bitmapToDraw != null) {
+					canvas.drawBitmap(bitmapToDraw,
+							xPos + halfTileSize - bitmapToDraw.getWidth() / 2,
+							yPos + halfTileSize - bitmapToDraw.getHeight() / 2,
+							null);
+				}
+
+				/*if (ent != Field.Entity.EMPTY) {
 					float size = halfTileSize * ent.getFactor();
 					canvas.drawCircle(xPos + halfTileSize, yPos + halfTileSize,
 							size, ent == Field.Entity.WATER_BOMB ? testPaint3 : testPaint2);
-				}
+				}*/
 			}
 		}
+
+		canvas.save();
+		canvas.clipRect(dimensions.fieldRect);
 
 		List<Field.Shell> shells = field.getShells();
 		for (Field.Shell shell : shells) {
@@ -239,6 +270,8 @@ public class ExplodeThread extends Thread {
 			canvas.drawCircle(xPos + halfTileSize, yPos + halfTileSize,
 					4f, testPaint2);
 		}
+
+		canvas.restore();
 
 		//canvas.drawRect(x, y, x + 5, y + 5, testPaint3);
 	}
@@ -265,13 +298,23 @@ public class ExplodeThread extends Thread {
 					- dimensions.tilePadding;
 
 			dimensions.fieldStartY = 60;
+			dimensions.fieldRect = new RectF(dimensions.tilePadding,
+					dimensions.tilePadding + dimensions.fieldStartY,
+					dimensions.tilePadding + dimensions.width,
+					dimensions.fieldStartY
+							+ (dimensions.tilePadding + dimensions.tileSize) * TILES_Y);
 
 			// Create new background
-			if (backgroundScaled != null) {
-				backgroundScaled.recycle();
-			}
+			background.scale(width, height);
 
-			backgroundScaled = Bitmap.createScaledBitmap(backgroundOriginal, width, height, true);
+			largeBomb.scale(dimensions.tileSize * Field.Entity.LARGE_BOMB.getFactor(),
+					dimensions.tileSize * Field.Entity.LARGE_BOMB.getFactor());
+
+			mediumBomb.scale(dimensions.tileSize * Field.Entity.MEDIUM_BOMB.getFactor(),
+					dimensions.tileSize * Field.Entity.MEDIUM_BOMB.getFactor());
+
+			smallBomb.scale(dimensions.tileSize * Field.Entity.SMALL_BOMB.getFactor(),
+					dimensions.tileSize * Field.Entity.SMALL_BOMB.getFactor());
 		}
 	}
 
@@ -311,17 +354,6 @@ public class ExplodeThread extends Thread {
 		}
 	}
 
-	private static class FloatPoint {
-		float x, y;
-		FloatPoint() {
-		}
-
-		FloatPoint(float x, float y) {
-			this.x = x;
-			this.y = y;
-		}
-	}
-
 	private class Dimensions {
 		float tileSize;
 		float tilePadding;
@@ -329,6 +361,8 @@ public class ExplodeThread extends Thread {
 		int height;
 
 		float fieldStartY;
+
+		private RectF fieldRect = new RectF();
 
 		float getOffset(int index) {
 			return tilePadding + index * (tileSize + tilePadding);
@@ -354,6 +388,41 @@ public class ExplodeThread extends Thread {
 		int getIndexY(float offset) {
 			int index = getIndex(offset);
 			return index < TILES_Y ? index : -1;
+		}
+	}
+
+	private class BitmapHolder {
+		private Bitmap original;
+		private Bitmap scaled;
+
+		BitmapHolder(String assetFile) {
+			original = createBitmapFromAsset(assetFile);
+		}
+
+		void recycle() {
+			original.recycle();
+			if (scaled != null) {
+				scaled.recycle();
+			}
+
+			original = null;
+			scaled = null;
+		}
+
+		void scale(float width, float height) {
+			if (scaled != null) {
+				scaled.recycle();
+			}
+
+			scaled = Bitmap.createScaledBitmap(original, (int) width, (int) height, true);
+		}
+
+		Bitmap getScaled() {
+			return scaled;
+		}
+
+		Bitmap getOriginal() {
+			return original;
 		}
 	}
 }
