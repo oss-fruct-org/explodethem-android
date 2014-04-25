@@ -3,13 +3,16 @@ package org.fruct.oss.explodethem;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 public class Field {
 	private static final String TAG = "Field";
+
+	// empty,small,medium,big,water
+	private static int[] FREQ_DIFF_1 = {2, 1, 2, 3, 1};
+	private static int[] FREQ_DIFF_2 = {1, 6, 3, 2, 1};
+	private static int[] FREQ_DIFF_3 = {1, 8, 2, 1, 2};
 
 	public class Explode {
 		public Entity from;
@@ -24,6 +27,8 @@ public class Field {
 
 		public int dx;
 		public int dy;
+
+		boolean isWater = false;
 	}
 
 	public enum Entity {
@@ -31,7 +36,7 @@ public class Field {
 		SMALL_BOMB(0.7f),
 		MEDIUM_BOMB(1f),
 		LARGE_BOMB(1.4f),
-		WATER_BOMB(0.9f);
+		WATER_BOMB(1.4f);
 
 		private final float factor;
 
@@ -56,7 +61,6 @@ public class Field {
 	private List<Shell> addedShells = new ArrayList<Shell>();
 	private List<Explode> explodes = new ArrayList<Explode>();
 
-
 	public Field(int width, int height) {
 		this.width = width;
 		this.height = height;
@@ -72,10 +76,21 @@ public class Field {
 	}
 
 	private void generateField() {
+		float[] freq = createFreqArray(FREQ_DIFF_1);
+
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
+				float v = rand.nextFloat();
+
+				int i;
+				for (i = 0; i < freq.length; i++) {
+					if (v < freq[i]) {
+						break;
+					}
+				}
+
 				Entity ent;
-				switch (rand.nextInt(5)) {
+				switch (i) {
 				case 0:
 					ent = Entity.EMPTY;
 					break;
@@ -88,46 +103,59 @@ public class Field {
 				case 3:
 					ent = Entity.LARGE_BOMB;
 					break;
-
 				case 4:
-					ent = Entity.EMPTY;
+					ent = Entity.WATER_BOMB;
 					break;
 				default:
-					throw new RuntimeException("Your Android corrupted");
+					throw new RuntimeException("Error");
 				}
 				field[x][y] = ent;
 			}
 		}
 	}
 
-	public boolean fire(int x, int y) {
+	public boolean fire(int x, int y, boolean isWater) {
 		Entity ent = field[x][y];
 		switch (ent) {
 		case LARGE_BOMB:
-			fire(ent, x, y);
+			if (isWater)
+				field[x][y] = Entity.MEDIUM_BOMB;
+			else
+				explode(ent, x, y);
 			break;
 
 		case MEDIUM_BOMB:
-			field[x][y] = Entity.LARGE_BOMB;
+			field[x][y] = isWater ? Entity.SMALL_BOMB : Entity.LARGE_BOMB;
 			break;
 
 		case SMALL_BOMB:
-			field[x][y] = Entity.MEDIUM_BOMB;
+			if (!isWater)
+				field[x][y] = Entity.MEDIUM_BOMB;
+			break;
+
+		case WATER_BOMB:
+			if (!isWater)
+				explode(ent, x, y);
 			break;
 
 		default:
 			return false;
 		}
 
-		Explode explode = new Explode();
-		explode.from = ent;
-		explode.to = field[x][y];
-		explode.x = x;
-		explode.y = y;
-		explodes.add(explode);
-		explodeField[x][y] = true;
-
+		if (ent != field[x][y]) {
+			Explode explode = new Explode();
+			explode.from = ent;
+			explode.to = field[x][y];
+			explode.x = x;
+			explode.y = y;
+			explodes.add(explode);
+			explodeField[x][y] = true;
+		}
 		return true;
+	}
+
+	public boolean fire(int x, int y) {
+		return fire(x, y, false);
 	}
 
 	public List<Shell> getShells() {
@@ -138,7 +166,7 @@ public class Field {
 		return !shells.isEmpty() || !explodes.isEmpty();
 	}
 
-	public void fire(Entity ent, int x, int y) {
+	public void explode(Entity ent, int x, int y) {
 		for (int i = 0; i < 4; i++) {
 			Shell shell = new Shell();
 			shell.x = x;
@@ -146,6 +174,9 @@ public class Field {
 
 			shell.dx = (i & 1) == 0 ? (i - 1) : 0;
 			shell.dy = (i & 1) != 0 ? (i - 2) : 0;
+
+			if (ent == Entity.WATER_BOMB)
+				shell.isWater = true;
 
 			Log.d(TAG, "Shell created " + shell.dx + " " + shell.dy);
 
@@ -167,7 +198,7 @@ public class Field {
 				continue;
 			}
 
-			if (fire(shell.x, shell.y)) {
+			if (fire(shell.x, shell.y, shell.isWater)) {
 				removedShells.add(shell);
 			}
 		}
@@ -186,5 +217,21 @@ public class Field {
 		shells.addAll(addedShells);
 		addedShells.clear();
 		removedShells.clear();
+	}
+
+	public static float[] createFreqArray(int[] ratio) {
+		int sum = 0;
+		for (int rat : ratio) {
+			sum += rat;
+		}
+
+		float[] ret = new float[ratio.length];
+		float acc = 0f;
+		for (int i = 0; i < ratio.length; i++) {
+			acc += ratio[i] / (float) sum;
+			ret[i] = acc;
+		}
+
+		return ret;
 	}
 }

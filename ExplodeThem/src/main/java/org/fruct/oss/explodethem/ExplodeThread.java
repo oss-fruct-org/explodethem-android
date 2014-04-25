@@ -45,10 +45,7 @@ public class ExplodeThread extends Thread {
 	private long framesElapsed;
 
 	// Paints
-	private final Paint testPaint;
-	private final Paint testPaint2;
-	private final Paint testPaint3;
-	private final Paint eraserPaint;
+	private final Paint tilePaint;
 
 	private Point point = new Point();
 	private Rect rect = new Rect();
@@ -66,19 +63,11 @@ public class ExplodeThread extends Thread {
 	private BitmapHolder largeBomb;
 	private BitmapHolder mediumBomb;
 	private BitmapHolder smallBomb;
+	private BitmapHolder waterBomb;
 
 	private BitmapHolder[] explosion;
 	private BitmapHolder fire;
-
-
-	// Rotate matrices;
-	private Matrix rotate0;
-	private Matrix rotate90;
-	private Matrix rotate180;
-	private Matrix rotate270;
-
-	private Matrix matrix = new Matrix();
-
+	private BitmapHolder water;
 
 	public ExplodeThread(Context context, SurfaceHolder holder) {
 		setName("ExplodeThread");
@@ -86,27 +75,10 @@ public class ExplodeThread extends Thread {
 		this.context = context;
 		this.holder = holder;
 
-		testPaint = new Paint();
-		testPaint.setColor(0xffff77ff);
-		testPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-		testPaint.setTextSize(24);
-		testPaint.setAntiAlias(true);
-
-		testPaint2 = new Paint();
-		testPaint2.setColor(0xffba4433);
-		testPaint2.setStyle(Paint.Style.FILL_AND_STROKE);
-		testPaint2.setTextSize(24);
-		testPaint.setAntiAlias(true);
-
-		testPaint3 = new Paint();
-		testPaint3.setColor(0xff1199fa);
-		testPaint3.setStyle(Paint.Style.FILL_AND_STROKE);
-		testPaint3.setTextSize(24);
-		testPaint.setAntiAlias(true);
-
-		eraserPaint = new Paint();
-		eraserPaint.setColor(0xff000000);
-		eraserPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+		tilePaint = new Paint();
+		tilePaint.setColor(0x84c5c0f3);
+		tilePaint.setStyle(Paint.Style.FILL_AND_STROKE);
+		tilePaint.setAntiAlias(true);
 
 		field = new Field(TILES_X, TILES_Y);
 
@@ -114,22 +86,16 @@ public class ExplodeThread extends Thread {
 		largeBomb = new BitmapHolder("large-bomb.png");
 		mediumBomb = new BitmapHolder("medium-bomb.png");
 		smallBomb = new BitmapHolder("small-bomb.png");
+		waterBomb = new BitmapHolder("water-bomb.png");
 
 		fire = new BitmapHolder("fire.png");
+		water = new BitmapHolder("drop.png");
 
 		explosion = new BitmapHolder[6];
 		for (int i = 0; i < explosion.length; i++) {
 			explosion[i] = new BitmapHolder("explosion-" + i + ".png");
 		}
 
-		// Matrices
-		rotate0 = new Matrix();
-		rotate90 = new Matrix();
-		rotate90.postRotate(90);
-		rotate180 = new Matrix();
-		rotate180.postRotate(180);
-		rotate270 = new Matrix();
-		rotate270.postRotate(270);
 	}
 
 	private Bitmap createBitmapFromAsset(String file) {
@@ -162,6 +128,9 @@ public class ExplodeThread extends Thread {
 		largeBomb.recycle();
 		mediumBomb.recycle();
 		smallBomb.recycle();
+		waterBomb.recycle();
+		water.recycle();
+		fire.recycle();
 
 		for (BitmapHolder bh : explosion) {
 			bh.recycle();
@@ -258,10 +227,14 @@ public class ExplodeThread extends Thread {
 				float xPos = dimensions.getOffset(x);
 				float yPos = dimensions.getOffset(y) + dimensions.fieldStartY;
 
+				canvas.drawRoundRect(new RectF(xPos, yPos, xPos + dimensions.tileSize, yPos + dimensions.tileSize),
+						Utils.getDP(context, 4), Utils.getDP(context, 4), tilePaint);
+
+				/*
 				canvas.drawRect(xPos, yPos,
 						xPos + dimensions.tileSize, yPos + dimensions.tileSize,
 						testPaint);
-
+*/
 
 				Field.Entity ent = field.get(x, y);
 				Bitmap bitmapToDraw = null;
@@ -274,6 +247,9 @@ public class ExplodeThread extends Thread {
 					break;
 				case SMALL_BOMB:
 					bitmapToDraw = smallBomb.getScaled();
+					break;
+				case WATER_BOMB:
+					bitmapToDraw = waterBomb.getScaled();
 					break;
 				}
 
@@ -297,6 +273,8 @@ public class ExplodeThread extends Thread {
 
 		List<Field.Shell> shells = field.getShells();
 		for (Field.Shell shell : shells) {
+			BitmapHolder shellBitmap = shell.isWater ? water : fire;
+
 			float xPos = dimensions.getOffset(shell.x)
 					+ shell.dx * stepOffset * (dimensions.tileSize + dimensions.tilePadding);
 			float yPos = dimensions.getOffset(shell.y)
@@ -304,8 +282,8 @@ public class ExplodeThread extends Thread {
 					+ dimensions.fieldStartY;
 
 			canvas.save();
-			final float halfBitmapWidth = fire.getOriginal().getWidth() / 2;
-			final float halfBitmapHeight = fire.getOriginal().getHeight() / 2;
+			final float halfBitmapWidth = shellBitmap.getOriginal().getWidth() / 2;
+			final float halfBitmapHeight = shellBitmap.getOriginal().getHeight() / 2;
 
 			canvas.translate(xPos + halfTileSize - halfBitmapWidth,
 					yPos + halfTileSize - halfBitmapHeight);
@@ -325,7 +303,7 @@ public class ExplodeThread extends Thread {
 				}
 			}
 
-			canvas.drawBitmap(fire.getOriginal(), 0, 0, null);
+			canvas.drawBitmap(shellBitmap.getOriginal(), 0, 0, null);
 			canvas.restore();
 		}
 
@@ -338,7 +316,9 @@ public class ExplodeThread extends Thread {
 
 	private void drawAnimated(Canvas canvas) {
 		for (Field.Explode explode : field.getExplodes()) {
-			if (explode.to == Field.Entity.LARGE_BOMB || explode.to == Field.Entity.MEDIUM_BOMB) {
+			if (explode.to == Field.Entity.LARGE_BOMB
+					|| explode.to == Field.Entity.MEDIUM_BOMB
+					|| explode.to == Field.Entity.SMALL_BOMB) {
 				drawInflate(canvas, explode);
 			} else if (explode.to == Field.Entity.EMPTY) {
 				drawExplosion(canvas, explode);
@@ -352,10 +332,12 @@ public class ExplodeThread extends Thread {
 		Field.Entity from = explode.from;
 		Field.Entity to = explode.to;
 		BitmapHolder fromHolder = null;
-		if (explode.from == Field.Entity.SMALL_BOMB && explode.to == Field.Entity.MEDIUM_BOMB) {
+		if (explode.to == Field.Entity.MEDIUM_BOMB) {
 			fromHolder = mediumBomb;
-		} else if (explode.from == Field.Entity.MEDIUM_BOMB && explode.to == Field.Entity.LARGE_BOMB) {
+		} else if (explode.to == Field.Entity.LARGE_BOMB) {
 			fromHolder = largeBomb;
+		} else if (explode.to == Field.Entity.SMALL_BOMB) {
+			fromHolder = smallBomb;
 		}
 
 		if (fromHolder != null) {
@@ -409,7 +391,11 @@ public class ExplodeThread extends Thread {
 			dimensions.tileSize = (width - dimensions.tilePadding) / TILES_X
 					- dimensions.tilePadding;
 
-			dimensions.fieldStartY = 0;
+			dimensions.fieldWidth = dimensions.tilePadding + (dimensions.tilePadding + dimensions.tileSize) * TILES_X;
+			dimensions.fieldHeight = dimensions.tilePadding + (dimensions.tilePadding + dimensions.tileSize) * TILES_Y;
+
+			dimensions.fieldStartY = height - dimensions.fieldHeight;
+
 			dimensions.fieldRect = new RectF(dimensions.tilePadding,
 					dimensions.tilePadding + dimensions.fieldStartY,
 					dimensions.tilePadding + dimensions.width,
@@ -427,6 +413,9 @@ public class ExplodeThread extends Thread {
 
 			smallBomb.scale(dimensions.tileSize * Field.Entity.SMALL_BOMB.getFactor(),
 					dimensions.tileSize * Field.Entity.SMALL_BOMB.getFactor());
+
+			waterBomb.scale(dimensions.tileSize * Field.Entity.WATER_BOMB.getFactor(),
+					dimensions.tileSize * Field.Entity.WATER_BOMB.getFactor());
 
 			for (BitmapHolder anExplosion : explosion) {
 				anExplosion.scale(dimensions.tileSize, dimensions.tileSize);
@@ -478,7 +467,10 @@ public class ExplodeThread extends Thread {
 
 		float fieldStartY;
 
-		private RectF fieldRect = new RectF();
+		float fieldWidth;
+		float fieldHeight;
+
+		RectF fieldRect = new RectF();
 
 		float getOffset(int index) {
 			return tilePadding + index * (tileSize + tilePadding);
