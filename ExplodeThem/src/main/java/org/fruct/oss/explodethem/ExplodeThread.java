@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -65,7 +66,18 @@ public class ExplodeThread extends Thread {
 	private BitmapHolder largeBomb;
 	private BitmapHolder mediumBomb;
 	private BitmapHolder smallBomb;
+
 	private BitmapHolder[] explosion;
+	private BitmapHolder fire;
+
+
+	// Rotate matrices;
+	private Matrix rotate0;
+	private Matrix rotate90;
+	private Matrix rotate180;
+	private Matrix rotate270;
+
+	private Matrix matrix = new Matrix();
 
 
 	public ExplodeThread(Context context, SurfaceHolder holder) {
@@ -103,10 +115,21 @@ public class ExplodeThread extends Thread {
 		mediumBomb = new BitmapHolder("medium-bomb.png");
 		smallBomb = new BitmapHolder("small-bomb.png");
 
+		fire = new BitmapHolder("fire.png");
+
 		explosion = new BitmapHolder[6];
 		for (int i = 0; i < explosion.length; i++) {
 			explosion[i] = new BitmapHolder("explosion-" + i + ".png");
 		}
+
+		// Matrices
+		rotate0 = new Matrix();
+		rotate90 = new Matrix();
+		rotate90.postRotate(90);
+		rotate180 = new Matrix();
+		rotate180.postRotate(180);
+		rotate270 = new Matrix();
+		rotate270.postRotate(270);
 	}
 
 	private Bitmap createBitmapFromAsset(String file) {
@@ -280,8 +303,30 @@ public class ExplodeThread extends Thread {
 					+ shell.dy * stepOffset  * (dimensions.tileSize + dimensions.tilePadding)
 					+ dimensions.fieldStartY;
 
-			canvas.drawCircle(xPos + halfTileSize, yPos + halfTileSize,
-					4f, testPaint2);
+			canvas.save();
+			final float halfBitmapWidth = fire.getOriginal().getWidth() / 2;
+			final float halfBitmapHeight = fire.getOriginal().getHeight() / 2;
+
+			canvas.translate(xPos + halfTileSize - halfBitmapWidth,
+					yPos + halfTileSize - halfBitmapHeight);
+
+
+			if (shell.dx == 0) {
+				if (shell.dy > 0) {
+					canvas.rotate(0, halfBitmapWidth, halfBitmapHeight);
+				} else {
+					canvas.rotate(180, halfBitmapWidth, halfBitmapHeight);
+				}
+			} else {
+				if (shell.dx > 0) {
+					canvas.rotate(270, halfBitmapWidth, halfBitmapHeight);
+				} else {
+					canvas.rotate(90, halfBitmapWidth, halfBitmapHeight);
+				}
+			}
+
+			canvas.drawBitmap(fire.getOriginal(), 0, 0, null);
+			canvas.restore();
 		}
 
 		canvas.restore();
@@ -364,7 +409,7 @@ public class ExplodeThread extends Thread {
 			dimensions.tileSize = (width - dimensions.tilePadding) / TILES_X
 					- dimensions.tilePadding;
 
-			dimensions.fieldStartY = 60;
+			dimensions.fieldStartY = 0;
 			dimensions.fieldRect = new RectF(dimensions.tilePadding,
 					dimensions.tilePadding + dimensions.fieldStartY,
 					dimensions.tilePadding + dimensions.width,

@@ -30,7 +30,7 @@ public class Field {
 		EMPTY(0),
 		SMALL_BOMB(0.7f),
 		MEDIUM_BOMB(1f),
-		LARGE_BOMB(1.2f),
+		LARGE_BOMB(1.4f),
 		WATER_BOMB(0.9f);
 
 		private final float factor;
