@@ -89,6 +89,7 @@ public class ExplodeThread extends Thread {
 		tilePaint.setAntiAlias(true);
 
 		field = new Field(TILES_X, TILES_Y);
+		Log.d(TAG, "Total bombs: " + field.getBombsRemain());
 
 		background = new BitmapHolder("background.jpg");
 		largeBomb = new BitmapHolder("large-bomb.png");
@@ -98,8 +99,6 @@ public class ExplodeThread extends Thread {
 
 		fire = new BitmapHolder("fire.png");
 		water = new BitmapHolder("drop.png");
-
-
 
 		textSize = Utils.getSP(context, 32);
 		textPaint = new Paint();
@@ -325,10 +324,9 @@ public class ExplodeThread extends Thread {
 		canvas.restore();
 
 		drawAnimated(canvas);
-		drawText(canvas, "Score: ", dimensions.scoreTextPoint, false);
+		drawText(canvas, "Score: " + field.getScore(), dimensions.scoreTextPoint, false);
 		drawText(canvas, "Level: ", dimensions.levelTextPoint, true);
 		drawText(canvas, "Shakes: ", dimensions.shakesTextPoint, true);
-
 	}
 
 	private void drawAnimated(Canvas canvas) {
@@ -442,7 +440,6 @@ public class ExplodeThread extends Thread {
 			for (BitmapHolder anExplosion : explosion) {
 				anExplosion.scale(dimensions.tileSize, dimensions.tileSize);
 			}
-
 
 			// Text bounds
 			Rect rect = new Rect();

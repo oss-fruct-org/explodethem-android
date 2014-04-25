@@ -53,6 +53,8 @@ public class Field {
 	private final int height;
 
 	private int bombsRemain;
+	private int score;
+
 	private Entity[][] field;
 	private boolean[][] explodeField;
 	private Random rand = new Random();
@@ -111,8 +113,9 @@ public class Field {
 				default:
 					throw new RuntimeException("Error");
 				}
-				if (ent != Entity.EMPTY)
+				if (ent != Entity.EMPTY) {
 					bombsRemain++;
+				}
 
 				field[x][y] = ent;
 			}
@@ -183,12 +186,11 @@ public class Field {
 			if (ent == Entity.WATER_BOMB)
 				shell.isWater = true;
 
-			Log.d(TAG, "Shell created " + shell.dx + " " + shell.dy);
-
 			addedShells.add(shell);
 		}
 		field[x][y] = Entity.EMPTY;
 		bombsRemain--;
+		score++;
 	}
 
 	public void step() {
@@ -243,5 +245,9 @@ public class Field {
 
 	public int getBombsRemain() {
 		return bombsRemain;
+	}
+
+	public int getScore() {
+		return score;
 	}
 }
