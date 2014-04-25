@@ -52,6 +52,7 @@ public class Field {
 	private final int width;
 	private final int height;
 
+	private int bombsRemain;
 	private Entity[][] field;
 	private boolean[][] explodeField;
 	private Random rand = new Random();
@@ -77,6 +78,7 @@ public class Field {
 
 	private void generateField() {
 		float[] freq = createFreqArray(FREQ_DIFF_1);
+		bombsRemain = 0;
 
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
@@ -109,6 +111,9 @@ public class Field {
 				default:
 					throw new RuntimeException("Error");
 				}
+				if (ent != Entity.EMPTY)
+					bombsRemain++;
+
 				field[x][y] = ent;
 			}
 		}
@@ -183,6 +188,7 @@ public class Field {
 			addedShells.add(shell);
 		}
 		field[x][y] = Entity.EMPTY;
+		bombsRemain--;
 	}
 
 	public void step() {
@@ -233,5 +239,9 @@ public class Field {
 		}
 
 		return ret;
+	}
+
+	public int getBombsRemain() {
+		return bombsRemain;
 	}
 }

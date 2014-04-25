@@ -4,11 +4,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
@@ -45,7 +45,15 @@ public class ExplodeThread extends Thread {
 	private long framesElapsed;
 
 	// Paints
+	private final float textSize;
 	private final Paint tilePaint;
+
+	private final Paint textPaint;
+	private final Paint textPaintOutline;
+
+	private final Paint textPaintRight;
+	private final Paint textPaintRightOutline;
+
 
 	private Point point = new Point();
 	private Rect rect = new Rect();
@@ -91,12 +99,32 @@ public class ExplodeThread extends Thread {
 		fire = new BitmapHolder("fire.png");
 		water = new BitmapHolder("drop.png");
 
+
+
+		textSize = Utils.getSP(context, 32);
+		textPaint = new Paint();
+		textPaint.setTypeface(Typeface.createFromAsset(context.getAssets(), "coolvetica.ttf"));
+		textPaint.setAntiAlias(true);
+		textPaint.setColor(0xfffafef1);
+		textPaint.setTextSize(textSize);
+
+		textPaintOutline = new Paint(textPaint);
+		textPaintOutline.setStyle(Paint.Style.STROKE);
+		textPaintOutline.setColor(0xff110011);
+		textPaintOutline.setStrokeWidth(2f);
+
+		textPaintRight = new Paint(textPaint);
+		textPaintRight.setTextAlign(Paint.Align.RIGHT);
+
+		textPaintRightOutline = new Paint(textPaintOutline);
+		textPaintRightOutline.setTextAlign(Paint.Align.RIGHT);
+
 		explosion = new BitmapHolder[6];
 		for (int i = 0; i < explosion.length; i++) {
 			explosion[i] = new BitmapHolder("explosion-" + i + ".png");
 		}
-
 	}
+
 
 	private Bitmap createBitmapFromAsset(String file) {
 		InputStream in = null;
@@ -214,7 +242,6 @@ public class ExplodeThread extends Thread {
 		final float halfTileSize = dimensions.tileSize / 2;
 		final float tileSize = dimensions.tileSize;
 
-		//canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), eraserPaint);
 		canvas.drawBitmap(background.getScaled(), 0, 0, null);
 
 		//canvas.drawText("TPS: " + ticksElapsed / ((gameTime - startTime) / 1000.), 10, 30, testPaint);
@@ -229,12 +256,6 @@ public class ExplodeThread extends Thread {
 
 				canvas.drawRoundRect(new RectF(xPos, yPos, xPos + dimensions.tileSize, yPos + dimensions.tileSize),
 						Utils.getDP(context, 4), Utils.getDP(context, 4), tilePaint);
-
-				/*
-				canvas.drawRect(xPos, yPos,
-						xPos + dimensions.tileSize, yPos + dimensions.tileSize,
-						testPaint);
-*/
 
 				Field.Entity ent = field.get(x, y);
 				Bitmap bitmapToDraw = null;
@@ -259,12 +280,6 @@ public class ExplodeThread extends Thread {
 							yPos + halfTileSize - bitmapToDraw.getHeight() / 2,
 							null);
 				}
-
-				/*if (ent != Field.Entity.EMPTY) {
-					float size = halfTileSize * ent.getFactor();
-					canvas.drawCircle(xPos + halfTileSize, yPos + halfTileSize,
-							size, ent == Field.Entity.WATER_BOMB ? testPaint3 : testPaint2);
-				}*/
 			}
 		}
 
@@ -310,8 +325,10 @@ public class ExplodeThread extends Thread {
 		canvas.restore();
 
 		drawAnimated(canvas);
+		drawText(canvas, "Score: ", dimensions.scoreTextPoint, false);
+		drawText(canvas, "Level: ", dimensions.levelTextPoint, true);
+		drawText(canvas, "Shakes: ", dimensions.shakesTextPoint, true);
 
-		//canvas.drawRect(x, y, x + 5, y + 5, testPaint3);
 	}
 
 	private void drawAnimated(Canvas canvas) {
@@ -370,6 +387,11 @@ public class ExplodeThread extends Thread {
 		canvas.drawBitmap(explosion[frame].getScaled(), xPos, yPos, null);
 	}
 
+	private void drawText(Canvas canvas, String str, Point p, boolean right) {
+		canvas.drawText(str, p.x, p.y, right ? textPaintRight : textPaint);
+		canvas.drawText(str, p.x, p.y, right ? textPaintRightOutline : textPaintOutline);
+	}
+
 	public void setRunning(boolean isRunning) {
 		synchronized (isRunningLock) {
 			this.isRunning = isRunning;
@@ -420,6 +442,15 @@ public class ExplodeThread extends Thread {
 			for (BitmapHolder anExplosion : explosion) {
 				anExplosion.scale(dimensions.tileSize, dimensions.tileSize);
 			}
+
+
+			// Text bounds
+			Rect rect = new Rect();
+			textPaint.getTextBounds("Score:", 0, "Score:".length(), rect);
+
+			dimensions.scoreTextPoint.set(0, rect.height());
+			dimensions.levelTextPoint.set(width, rect.height());
+			dimensions.shakesTextPoint.set(width, rect.height() * 2);
 		}
 	}
 
@@ -460,6 +491,10 @@ public class ExplodeThread extends Thread {
 	}
 
 	private class Dimensions {
+		Point scoreTextPoint = new Point();
+		Point levelTextPoint = new Point();
+		Point shakesTextPoint = new Point();
+
 		float tileSize;
 		float tilePadding;
 		int width;
