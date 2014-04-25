@@ -398,7 +398,7 @@ public class ExplodeThread extends Thread {
 
 			dimensions.fieldRect = new RectF(dimensions.tilePadding,
 					dimensions.tilePadding + dimensions.fieldStartY,
-					dimensions.tilePadding + dimensions.width,
+					dimensions.fieldWidth - dimensions.tilePadding,
 					dimensions.fieldStartY
 							+ (dimensions.tilePadding + dimensions.tileSize) * TILES_Y);
 
