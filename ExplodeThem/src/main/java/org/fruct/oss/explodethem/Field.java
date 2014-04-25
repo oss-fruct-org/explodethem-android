@@ -6,9 +6,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 public class Field {
 	private static final String TAG = "Field";
+
+	public class Explode {
+		public Entity from;
+		public Entity to;
+
+		int x, y;
+	}
 
 	public class Shell {
 		public int x;
@@ -40,17 +48,21 @@ public class Field {
 	private final int height;
 
 	private Entity[][] field;
+	private boolean[][] explodeField;
 	private Random rand = new Random();
 
 	private List<Shell> shells = new ArrayList<Shell>();
 	private List<Shell> removedShells = new ArrayList<Shell>();
 	private List<Shell> addedShells = new ArrayList<Shell>();
+	private List<Explode> explodes = new ArrayList<Explode>();
+
 
 	public Field(int width, int height) {
 		this.width = width;
 		this.height = height;
 
 		field = new Entity[width][height];
+		explodeField = new boolean[width][height];
 
 		generateField();
 	}
@@ -107,6 +119,14 @@ public class Field {
 			return false;
 		}
 
+		Explode explode = new Explode();
+		explode.from = ent;
+		explode.to = field[x][y];
+		explode.x = x;
+		explode.y = y;
+		explodes.add(explode);
+		explodeField[x][y] = true;
+
 		return true;
 	}
 
@@ -115,7 +135,7 @@ public class Field {
 	}
 
 	public boolean isActive() {
-		return !shells.isEmpty();
+		return !shells.isEmpty() || !explodes.isEmpty();
 	}
 
 	public void fire(Entity ent, int x, int y) {
@@ -135,6 +155,9 @@ public class Field {
 	}
 
 	public void step() {
+		explodes.clear();
+		explodeField = new boolean[width][height];
+
 		for (Shell shell : shells) {
 			shell.x += shell.dx;
 			shell.y += shell.dy;
@@ -148,6 +171,14 @@ public class Field {
 				removedShells.add(shell);
 			}
 		}
+	}
+
+	public List<Explode> getExplodes() {
+		return explodes;
+	}
+
+	public boolean isExplodedTile(int x, int y) {
+		return explodeField[x][y];
 	}
 
 	public void commit() {

@@ -50,6 +50,9 @@ public class ExplodeThread extends Thread {
 	private final Paint eraserPaint;
 
 	private Point point = new Point();
+	private Rect rect = new Rect();
+	private RectF rectF = new RectF();
+
 	private Dimensions dimensions;
 
 	private float x, y;
@@ -62,6 +65,7 @@ public class ExplodeThread extends Thread {
 	private BitmapHolder largeBomb;
 	private BitmapHolder mediumBomb;
 	private BitmapHolder smallBomb;
+	private BitmapHolder[] explosion;
 
 
 	public ExplodeThread(Context context, SurfaceHolder holder) {
@@ -98,6 +102,11 @@ public class ExplodeThread extends Thread {
 		largeBomb = new BitmapHolder("large-bomb.png");
 		mediumBomb = new BitmapHolder("medium-bomb.png");
 		smallBomb = new BitmapHolder("small-bomb.png");
+
+		explosion = new BitmapHolder[6];
+		for (int i = 0; i < explosion.length; i++) {
+			explosion[i] = new BitmapHolder("explosion-" + i + ".png");
+		}
 	}
 
 	private Bitmap createBitmapFromAsset(String file) {
@@ -130,6 +139,10 @@ public class ExplodeThread extends Thread {
 		largeBomb.recycle();
 		mediumBomb.recycle();
 		smallBomb.recycle();
+
+		for (BitmapHolder bh : explosion) {
+			bh.recycle();
+		}
 	}
 
 	@Override
@@ -241,7 +254,7 @@ public class ExplodeThread extends Thread {
 					break;
 				}
 
-				if (bitmapToDraw != null) {
+				if (!field.isExplodedTile(x, y) && bitmapToDraw != null) {
 					canvas.drawBitmap(bitmapToDraw,
 							xPos + halfTileSize - bitmapToDraw.getWidth() / 2,
 							yPos + halfTileSize - bitmapToDraw.getHeight() / 2,
@@ -273,7 +286,61 @@ public class ExplodeThread extends Thread {
 
 		canvas.restore();
 
+		drawAnimated(canvas);
+
 		//canvas.drawRect(x, y, x + 5, y + 5, testPaint3);
+	}
+
+	private void drawAnimated(Canvas canvas) {
+		for (Field.Explode explode : field.getExplodes()) {
+			if (explode.to == Field.Entity.LARGE_BOMB || explode.to == Field.Entity.MEDIUM_BOMB) {
+				drawInflate(canvas, explode);
+			} else if (explode.to == Field.Entity.EMPTY) {
+				drawExplosion(canvas, explode);
+			}
+		}
+	}
+
+	private void drawInflate(Canvas canvas, Field.Explode explode) {
+		final float halfTileSize = dimensions.tileSize / 2;
+
+		Field.Entity from = explode.from;
+		Field.Entity to = explode.to;
+		BitmapHolder fromHolder = null;
+		if (explode.from == Field.Entity.SMALL_BOMB && explode.to == Field.Entity.MEDIUM_BOMB) {
+			fromHolder = mediumBomb;
+		} else if (explode.from == Field.Entity.MEDIUM_BOMB && explode.to == Field.Entity.LARGE_BOMB) {
+			fromHolder = largeBomb;
+		}
+
+		if (fromHolder != null) {
+			float xPos = dimensions.getOffset(explode.x);
+			float yPos = dimensions.getOffset(explode.y) + dimensions.fieldStartY;
+			float newSizeFactor = from.getFactor()
+					+ (to.getFactor() - from.getFactor())
+					* stepOffset;
+
+			rect.set(0, 0, fromHolder.getOriginal().getWidth(), fromHolder.getOriginal().getHeight());
+			rectF.set(xPos + halfTileSize - halfTileSize * newSizeFactor,
+					yPos + halfTileSize - halfTileSize * newSizeFactor,
+					xPos + halfTileSize + halfTileSize * newSizeFactor,
+					yPos + halfTileSize + halfTileSize * newSizeFactor);
+
+			canvas.drawBitmap(fromHolder.getOriginal(), rect, rectF, null);
+		}
+	}
+
+	private void drawExplosion(Canvas canvas, Field.Explode explode) {
+		int frame = (int) (stepOffset * explosion.length);
+
+		if (frame == explosion.length) {
+			frame = explosion.length - 1;
+		}
+
+		float xPos = dimensions.getOffset(explode.x);
+		float yPos = dimensions.getOffset(explode.y) + dimensions.fieldStartY;
+
+		canvas.drawBitmap(explosion[frame].getScaled(), xPos, yPos, null);
 	}
 
 	public void setRunning(boolean isRunning) {
@@ -304,7 +371,7 @@ public class ExplodeThread extends Thread {
 					dimensions.fieldStartY
 							+ (dimensions.tilePadding + dimensions.tileSize) * TILES_Y);
 
-			// Create new background
+			// Scale bitmap holders
 			background.scale(width, height);
 
 			largeBomb.scale(dimensions.tileSize * Field.Entity.LARGE_BOMB.getFactor(),
@@ -315,6 +382,10 @@ public class ExplodeThread extends Thread {
 
 			smallBomb.scale(dimensions.tileSize * Field.Entity.SMALL_BOMB.getFactor(),
 					dimensions.tileSize * Field.Entity.SMALL_BOMB.getFactor());
+
+			for (BitmapHolder anExplosion : explosion) {
+				anExplosion.scale(dimensions.tileSize, dimensions.tileSize);
+			}
 		}
 	}
 
