@@ -46,8 +46,9 @@ public class Field {
 	private final int height;
 
 	private int bombsRemain;
-	private int score;
-	private int level;
+	private int score = 0;
+	private int level = 0;
+	private int sparks = 10;
 
 	private Entity[][] field;
 	private boolean[][] explodeField;
@@ -57,6 +58,7 @@ public class Field {
 	private List<Shell> removedShells = new ArrayList<Shell>();
 	private List<Shell> addedShells = new ArrayList<Shell>();
 	private List<Explode> explodes = new ArrayList<Explode>();
+	private int sparkChange = -1;
 
 	public Field(int width, int height) {
 		this.width = width;
@@ -64,6 +66,8 @@ public class Field {
 
 		field = new Entity[width][height];
 		explodeField = new boolean[width][height];
+
+
 
 		nextLevel();
 	}
@@ -128,7 +132,7 @@ public class Field {
 		}
 	}
 
-	public boolean fire(int x, int y, boolean isWater) {
+	private boolean fire(int x, int y, boolean isWater) {
 		Entity ent = field[x][y];
 		switch (ent) {
 		case LARGE_BOMB:
@@ -168,8 +172,16 @@ public class Field {
 		return true;
 	}
 
-	public boolean fire(int x, int y) {
-		return fire(x, y, false);
+	public void fire(int x, int y) {
+		if (sparks > 0) {
+			if (fire(x, y, false)) {
+				sparkChange = sparks;
+				if (rand.nextBoolean())
+					sparks++;
+				else
+					sparks--;
+			}
+		}
 	}
 
 	public List<Shell> getShells() {
@@ -201,6 +213,7 @@ public class Field {
 
 	public void step() {
 		explodes.clear();
+		sparkChange = -1;
 		explodeField = new boolean[width][height];
 
 		for (Shell shell : shells) {
@@ -282,5 +295,13 @@ public class Field {
 
 	public int getLevel() {
 		return level;
+	}
+
+	public int getSparks() {
+		return sparks;
+	}
+
+	public int getSparkChange() {
+		return sparkChange;
 	}
 }

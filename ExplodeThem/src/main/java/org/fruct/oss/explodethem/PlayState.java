@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
@@ -22,7 +23,7 @@ public class PlayState implements GameState {
 	public static int TILES_Y = 8;
 	public static int TILES_PADDING = 4;
 
-	public static final long TICK_PER_STEP = 150 / ExplodeThread.TICK_MS;
+	public static final long TICK_PER_STEP = 250 / ExplodeThread.TICK_MS;
 	public static final float RELATIVE_OFFSET = 1f / TICK_PER_STEP;
 
 	private final Context context;
@@ -31,10 +32,13 @@ public class PlayState implements GameState {
 
 	private float stepRemaintTicks;
 	private float stepOffset;
+	private int oldSparksValue;
 
 	// Paints
 	private final float textSize;
 	private final Paint tilePaint;
+
+	private final Paint sparksTextPaint;
 
 	private final Paint textPaint;
 	private final Paint textPaintOutline;
@@ -48,12 +52,9 @@ public class PlayState implements GameState {
 
 	private Dimensions dimensions;
 
-	private float x, y;
 	private int touchX, touchY;
 	private Field field;
 
-	// Resources
-	// Background
 	private BitmapHolder background;
 	private BitmapHolder largeBomb;
 	private BitmapHolder mediumBomb;
@@ -63,6 +64,7 @@ public class PlayState implements GameState {
 	private BitmapHolder[] explosion;
 	private BitmapHolder fire;
 	private BitmapHolder water;
+	private float tileRadius;
 
 
 	public PlayState(Context context, ExplodeThread explodeThread) {
@@ -86,7 +88,10 @@ public class PlayState implements GameState {
 		fire = new BitmapHolder(context, "fire.png");
 		water = new BitmapHolder(context, "drop.png");
 
+		tileRadius = Utils.getDP(context, 4);
 		textSize = Utils.getSP(context, 32);
+
+
 		textPaint = new Paint();
 		textPaint.setTypeface(Typeface.createFromAsset(context.getAssets(), "coolvetica.ttf"));
 		textPaint.setAntiAlias(true);
@@ -103,6 +108,10 @@ public class PlayState implements GameState {
 
 		textPaintRightOutline = new Paint(textPaintOutline);
 		textPaintRightOutline.setTextAlign(Paint.Align.RIGHT);
+
+		sparksTextPaint = new Paint(textPaint);
+		sparksTextPaint.setTextAlign(Paint.Align.CENTER);
+		sparksTextPaint.setColor(0xeeffffff);
 
 		explosion = new BitmapHolder[6];
 		for (int i = 0; i < explosion.length; i++) {
@@ -155,7 +164,7 @@ public class PlayState implements GameState {
 				float yPos = dimensions.getOffset(y) + dimensions.fieldStartY;
 
 				canvas.drawRoundRect(new RectF(xPos, yPos, xPos + dimensions.tileSize, yPos + dimensions.tileSize),
-						Utils.getDP(context, 4), Utils.getDP(context, 4), tilePaint);
+						tileRadius, tileRadius, tilePaint);
 
 				Field.Entity ent = field.get(x, y);
 				Bitmap bitmapToDraw = null;
@@ -228,6 +237,39 @@ public class PlayState implements GameState {
 		drawText(canvas, "Score: " + field.getScore(), dimensions.scoreTextPoint, false);
 		drawText(canvas, "Level: " + field.getLevel(), dimensions.levelTextPoint, true);
 		drawText(canvas, "Shakes: ", dimensions.shakesTextPoint, true);
+		drawSparks(canvas);
+	}
+
+	private void drawSparks(Canvas canvas) {
+		String text = "" + field.getSparks();
+		canvas.drawRoundRect(dimensions.sparksRect, tileRadius, tileRadius, tilePaint);
+
+		int oldSpark = field.getSparkChange();
+		if (oldSpark != -1) {
+			canvas.save();
+			canvas.clipRect(dimensions.sparksRect);
+			String text1;
+			String text2;
+			float posY1;
+			float posY2;
+			if (oldSpark > field.getSparks()) {
+				text1 = "" + oldSpark;
+				text2 = "" + field.getSparks();
+				posY1 = dimensions.sparksTextPoint.y - dimensions.sparksRect.height() * stepOffset;
+				posY2 = posY1 + dimensions.sparksRect.height();
+			} else {
+				text2 = "" + oldSpark;
+				text1 = "" + field.getSparks();
+				posY2 = dimensions.sparksTextPoint.y + dimensions.sparksRect.height() * stepOffset;
+				posY1 = posY2 - dimensions.sparksRect.height();
+			}
+
+			canvas.drawText(text1, dimensions.sparksRect.centerX(), posY1, sparksTextPaint);
+			canvas.drawText(text2, dimensions.sparksRect.centerX(), posY2, sparksTextPaint);
+			canvas.restore();
+		} else {
+			canvas.drawText(text, dimensions.sparksRect.centerX(), dimensions.sparksTextPoint.y, sparksTextPaint);
+		}
 	}
 
 	private void drawAnimated(Canvas canvas) {
@@ -341,6 +383,15 @@ public class PlayState implements GameState {
 		dimensions.levelTextPoint.set(width, rect.height());
 		dimensions.shakesTextPoint.set(width, rect.height() * 2);
 
+		PointF sparksSize = new PointF(Utils.getDP(context, 64), Utils.getDP(context, 32));
+		dimensions.sparksRect.set(width / 2 - sparksSize.x / 2,
+				dimensions.shakesTextPoint.y - sparksSize.y / 2,
+				width / 2 + sparksSize.x / 2,
+				dimensions.shakesTextPoint.y + sparksSize.y / 2);
+
+		textPaint.getTextBounds("99", 0, "99".length(), rect);
+		dimensions.sparksTextPoint.set(dimensions.sparksRect.centerX(),
+				dimensions.sparksRect.centerY() + rect.height() / 2);
 	}
 
 	public void testHit(float x, float y, Point outPoint) {
@@ -351,30 +402,29 @@ public class PlayState implements GameState {
 
 	@Override
 	public void touchDown(float x, float y) {
-			testHit(x, y, point);
-			this.x = x;
-			this.y = y;
+		testHit(x, y, point);
 
-			touchX = point.x;
-			touchY = point.y;
+		touchX = point.x;
+		touchY = point.y;
 	}
 
 	@Override
 	public void touchUp(float x, float y) {
-			testHit(x, y, point);
+		testHit(x, y, point);
 
-			if (touchX != -1 && touchY != -1 && touchY == point.y && touchX == point.x) {
-				Log.d(TAG, "Fire " + touchX + " " + touchY);
+		if (touchX != -1 && touchY != -1 && touchY == point.y && touchX == point.x) {
+			Log.d(TAG, "Fire " + touchX + " " + touchY);
 
-				if (!field.isActive()) {
-					field.fire(touchX, touchY);
-					field.commit();
+			if (!field.isActive()) {
+				oldSparksValue = field.getSparks();
+				field.fire(touchX, touchY);
+				field.commit();
 
-					if (field.isActive()) {
-						initializeStep();
-					}
+				if (field.isActive()) {
+					initializeStep();
 				}
 			}
+		}
 	}
 
 	@Override
@@ -404,6 +454,7 @@ public class PlayState implements GameState {
 		Point scoreTextPoint = new Point();
 		Point levelTextPoint = new Point();
 		Point shakesTextPoint = new Point();
+		PointF sparksTextPoint = new PointF();
 
 		float tileSize;
 		float tilePadding;
@@ -416,6 +467,7 @@ public class PlayState implements GameState {
 		float fieldHeight;
 
 		RectF fieldRect = new RectF();
+		RectF sparksRect = new RectF();
 
 		float getOffset(int index) {
 			return tilePadding + index * (tileSize + tilePadding);
