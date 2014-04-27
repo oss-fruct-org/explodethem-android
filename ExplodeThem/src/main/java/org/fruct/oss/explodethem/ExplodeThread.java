@@ -34,11 +34,22 @@ public class ExplodeThread extends Thread {
 	// Timing variables
 	private long gameTime;
 
+	private long startTime;
+	private long ticksElapsed;
+	private long framesElapsed;
+
+	private Paint testPaint;
+
 	public ExplodeThread(Context context, SurfaceHolder holder) {
 		setName("ExplodeThread");
 
 		this.context = context;
 		this.holder = holder;
+
+		testPaint = new Paint();
+		testPaint.setTextSize(Utils.getSP(context, 32));
+		testPaint.setColor(0xffffffff);
+		testPaint.setAntiAlias(true);
 
 		stateStack.add(new PlayState(context, this));
 	}
@@ -46,6 +57,8 @@ public class ExplodeThread extends Thread {
 	@Override
 	public void run() {
 		Canvas canvas = null;
+
+		startTime = gameTime = System.currentTimeMillis();
 
 		while (isRunning) {
 			try {
@@ -85,12 +98,17 @@ public class ExplodeThread extends Thread {
 				//Log.d(TAG, "Delta " + delta);
 				gameTime += TICK_MS;
 
+				//ticksElapsed++;
 				stateStack.get(stateStack.size() - 1).updatePhysics();
 			}
 
+			//framesElapsed++;
 			for (GameState state : stateStack) {
 				state.draw(canvas);
 			}
+
+			//canvas.drawText("TPS: " + ticksElapsed / ((gameTime - startTime) / 1000.), 10, 30, testPaint);
+			//canvas.drawText("FPS: " + framesElapsed / ((gameTime - startTime) / 1000.), 10, 50, testPaint);
 		}
 	}
 
