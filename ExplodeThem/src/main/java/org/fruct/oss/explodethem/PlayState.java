@@ -17,7 +17,7 @@ import static org.fruct.oss.explodethem.ExplodeThread.BitmapHolder;
 
 
 public class PlayState implements GameState {
-	private static final String TAG = "PlayStaet";
+	private static final String TAG = "PlayState";
 
 	public static int TILES_X = 6;
 	public static int TILES_Y = 8;
@@ -30,9 +30,8 @@ public class PlayState implements GameState {
 	private final ExplodeThread explodeThread;
 	private final NextLevelState nextLevelState;
 
-	private float stepRemaintTicks;
+	private float stepRemainTicks;
 	private float stepOffset;
-	private int oldSparksValue;
 
 	// Paints
 	private final float textSize;
@@ -76,7 +75,7 @@ public class PlayState implements GameState {
 		tilePaint.setStyle(Paint.Style.FILL_AND_STROKE);
 		tilePaint.setAntiAlias(true);
 
-		field = new Field(TILES_X, TILES_Y);
+		field = new Field(TILES_X, TILES_Y, 0);
 		Log.d(TAG, "Total bombs: " + field.getBombsRemain());
 
 		background = new BitmapHolder(context, "background.jpg");
@@ -124,13 +123,13 @@ public class PlayState implements GameState {
 	@Override
 	public void updatePhysics() {
 		if (field.isActive()) {
-			if (stepRemaintTicks == 0) {
+			if (stepRemainTicks == 0) {
 				initializeStep();
 				field.step();
 				field.commit();
 			}
 
-			stepRemaintTicks--;
+			stepRemainTicks--;
 			stepOffset += RELATIVE_OFFSET;
 		} else {
 			if (field.getBombsRemain() == 0) {
@@ -141,7 +140,7 @@ public class PlayState implements GameState {
 	}
 
 	private void initializeStep() {
-        stepRemaintTicks = TICK_PER_STEP;
+        stepRemainTicks = TICK_PER_STEP;
         stepOffset = 0f;
     }
 
@@ -416,7 +415,6 @@ public class PlayState implements GameState {
 			Log.d(TAG, "Fire " + touchX + " " + touchY);
 
 			if (!field.isActive()) {
-				oldSparksValue = field.getSparks();
 				field.fire(touchX, touchY);
 				field.commit();
 
@@ -447,7 +445,7 @@ public class PlayState implements GameState {
 	public void nextLevel() {
 		field.nextLevel();
 		stepOffset = 0;
-		stepRemaintTicks = 0;
+		stepRemainTicks = 0;
 	}
 
 	private class Dimensions {

@@ -6,6 +6,10 @@ import java.util.Random;
 
 public class Field {
 	private static final String TAG = "Field";
+	private static final int[] SCORE_SKILL = {7, 10, 13};
+	private static final int[] SPARK_COST = {4, 5, 6};
+
+	private final int skill;
 
 	public class Explode {
 		public Entity from;
@@ -50,6 +54,8 @@ public class Field {
 	private int level = 0;
 	private int sparks = 10;
 
+	private int explodedInLevel;
+
 	private Entity[][] field;
 	private boolean[][] explodeField;
 	private Random rand = new Random();
@@ -60,20 +66,20 @@ public class Field {
 	private List<Explode> explodes = new ArrayList<Explode>();
 	private int sparkChange = -1;
 
-	public Field(int width, int height) {
+	public Field(int width, int height, int skill) {
 		this.width = width;
 		this.height = height;
+		this.skill = skill;
 
 		field = new Entity[width][height];
 		explodeField = new boolean[width][height];
-
-
 
 		nextLevel();
 	}
 
 	public void nextLevel() {
 		level++;
+		explodedInLevel = 0;
 
 		field = new Entity[width][height];
 		explodeField = new boolean[width][height];
@@ -176,10 +182,7 @@ public class Field {
 		if (sparks > 0) {
 			if (fire(x, y, false)) {
 				sparkChange = sparks;
-				if (rand.nextBoolean())
-					sparks++;
-				else
-					sparks--;
+				sparks--;
 			}
 		}
 	}
@@ -206,9 +209,18 @@ public class Field {
 
 			addedShells.add(shell);
 		}
+
 		field[x][y] = Entity.EMPTY;
 		bombsRemain--;
-		score++;
+		score += SCORE_SKILL[skill];
+
+		if (explodedInLevel == SPARK_COST[skill]) {
+			explodedInLevel = 0;
+			sparkChange = sparks;
+			sparks++;
+		} else {
+			explodedInLevel++;
+		}
 	}
 
 	public void step() {
