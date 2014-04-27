@@ -1,7 +1,5 @@
 package org.fruct.oss.explodethem;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -49,6 +47,7 @@ public class Field {
 
 	private int bombsRemain;
 	private int score;
+	private int level;
 
 	private Entity[][] field;
 	private boolean[][] explodeField;
@@ -66,14 +65,19 @@ public class Field {
 		field = new Entity[width][height];
 		explodeField = new boolean[width][height];
 
-		reset(1);
+		nextLevel();
 	}
 
-	public void reset(int level) {
+	public void nextLevel() {
+		level++;
+
 		field = new Entity[width][height];
 		explodeField = new boolean[width][height];
+		explodes.clear();
+		shells.clear();
 
 		generateField(createRationArray(level));
+		//generateField(new int[] {20, 0, 0, 1, 0});
 	}
 
 	public Entity get(int x, int y) {
@@ -274,5 +278,9 @@ public class Field {
 
 	public int getScore() {
 		return score;
+	}
+
+	public int getLevel() {
+		return level;
 	}
 }

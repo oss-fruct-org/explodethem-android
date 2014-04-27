@@ -22,11 +22,12 @@ public class PlayState implements GameState {
 	public static int TILES_Y = 8;
 	public static int TILES_PADDING = 4;
 
-	public static final long TICK_PER_STEP = 400 / ExplodeThread.TICK_MS;
+	public static final long TICK_PER_STEP = 150 / ExplodeThread.TICK_MS;
 	public static final float RELATIVE_OFFSET = 1f / TICK_PER_STEP;
 
 	private final Context context;
 	private final ExplodeThread explodeThread;
+	private final NextLevelState nextLevelState;
 
 	private float stepRemaintTicks;
 	private float stepOffset;
@@ -107,6 +108,8 @@ public class PlayState implements GameState {
 		for (int i = 0; i < explosion.length; i++) {
 			explosion[i] = new BitmapHolder(context, "explosion-" + i + ".png");
 		}
+
+		nextLevelState = new NextLevelState(context, explodeThread, this);
 	}
 
 	@Override
@@ -120,6 +123,11 @@ public class PlayState implements GameState {
 
 			stepRemaintTicks--;
 			stepOffset += RELATIVE_OFFSET;
+		} else {
+			if (field.getBombsRemain() == 0) {
+				Log.d(TAG, "Win");
+				explodeThread.pushState(nextLevelState);
+			}
 		}
 	}
 
@@ -218,7 +226,7 @@ public class PlayState implements GameState {
 
 		drawAnimated(canvas);
 		drawText(canvas, "Score: " + field.getScore(), dimensions.scoreTextPoint, false);
-		drawText(canvas, "Level: ", dimensions.levelTextPoint, true);
+		drawText(canvas, "Level: " + field.getLevel(), dimensions.levelTextPoint, true);
 		drawText(canvas, "Shakes: ", dimensions.shakesTextPoint, true);
 	}
 
@@ -382,6 +390,14 @@ public class PlayState implements GameState {
 		for (BitmapHolder bh : explosion) {
 			bh.recycle();
 		}
+
+		nextLevelState.destroy();
+	}
+
+	public void nextLevel() {
+		field.nextLevel();
+		stepOffset = 0;
+		stepRemaintTicks = 0;
 	}
 
 	private class Dimensions {

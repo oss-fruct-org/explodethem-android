@@ -39,6 +39,8 @@ public class ExplodeThread extends Thread {
 	private long framesElapsed;
 
 	private Paint testPaint;
+	private int width;
+	private int height;
 
 	public ExplodeThread(Context context, SurfaceHolder holder) {
 		setName("ExplodeThread");
@@ -50,15 +52,18 @@ public class ExplodeThread extends Thread {
 		testPaint.setTextSize(Utils.getSP(context, 32));
 		testPaint.setColor(0xffffffff);
 		testPaint.setAntiAlias(true);
-
-		stateStack.add(new PlayState(context, this));
 	}
 
 	@Override
 	public void run() {
 		Canvas canvas = null;
 
-		startTime = gameTime = System.currentTimeMillis();
+		PlayState playState = new PlayState(context, this);
+		stateStack.add(playState);
+		playState.setSize(width, height);
+
+		startTime = System.currentTimeMillis();
+		gameTime = System.currentTimeMillis();
 
 		while (isRunning) {
 			try {
@@ -124,6 +129,9 @@ public class ExplodeThread extends Thread {
 
 	public void setSurfaceSize(int width, int height) {
 		synchronized (holder) {
+			this.width = width;
+			this.height = height;
+
 			for (GameState state : stateStack) {
 				state.setSize(width, height);
 			}
@@ -139,12 +147,13 @@ public class ExplodeThread extends Thread {
 	public void touchUp(float x, float y) {
 		synchronized (holder) {
 			stateStack.get(stateStack.size() - 1).touchUp(x, y);
-
 		}
 	}
 
 	public void pushState(GameState gameState) {
 		synchronized (holder) {
+			gameState.setSize(width, height);
+
 			stateStack.add(gameState);
 		}
 	}
@@ -157,9 +166,7 @@ public class ExplodeThread extends Thread {
 
 	public void release() {
 		synchronized (holder) {
-			for (GameState state : stateStack) {
-				state.destroy();
-			}
+			stateStack.get(0).destroy();
 
 			stateStack.clear();
 		}
