@@ -66,10 +66,10 @@ public class Field {
 		field = new Entity[width][height];
 		explodeField = new boolean[width][height];
 
-		reset(10);
+		reset(1);
 	}
 
-	private void reset(int level) {
+	public void reset(int level) {
 		field = new Entity[width][height];
 		explodeField = new boolean[width][height];
 
