@@ -9,11 +9,6 @@ import java.util.Random;
 public class Field {
 	private static final String TAG = "Field";
 
-	// empty,small,medium,big,water
-	private static int[] FREQ_DIFF_1 = {2, 1, 2, 3, 1};
-	private static int[] FREQ_DIFF_2 = {1, 6, 3, 2, 1};
-	private static int[] FREQ_DIFF_3 = {1, 8, 2, 1, 2};
-
 	public class Explode {
 		public Entity from;
 		public Entity to;
@@ -71,15 +66,22 @@ public class Field {
 		field = new Entity[width][height];
 		explodeField = new boolean[width][height];
 
-		generateField();
+		reset(10);
+	}
+
+	private void reset(int level) {
+		field = new Entity[width][height];
+		explodeField = new boolean[width][height];
+
+		generateField(createRationArray(level));
 	}
 
 	public Entity get(int x, int y) {
 		return field[x][y];
 	}
 
-	private void generateField() {
-		float[] freq = createFreqArray(FREQ_DIFF_1);
+	private void generateField(int[] ratios){
+		float[] freq = createFreqArray(ratios);
 		bombsRemain = 0;
 
 		for (int x = 0; x < width; x++) {
@@ -227,7 +229,7 @@ public class Field {
 		removedShells.clear();
 	}
 
-	public static float[] createFreqArray(int[] ratio) {
+	private static float[] createFreqArray(int[] ratio) {
 		int sum = 0;
 		for (int rat : ratio) {
 			sum += rat;
@@ -241,6 +243,29 @@ public class Field {
 		}
 
 		return ret;
+	}
+
+	private int[] createRationArray(int level) {
+		int empty, small, medium, large, water;
+		water = 2;
+		empty = level < 14 ? 7 + level : 20;
+		medium = level < 14 ? 18 - level : 3;
+		if(level < 2)
+			large = 6;
+		else if(level < 4)
+			large = 5;
+		else if(level < 6)
+			large = 4;
+		else if(level < 8)
+			large = 3;
+		else if(level < 10)
+			large = 2;
+		else
+			large = 1;
+
+		small = width * height - empty - large - medium - water;
+
+		return new int[] {empty, small, medium, large, water};
 	}
 
 	public int getBombsRemain() {

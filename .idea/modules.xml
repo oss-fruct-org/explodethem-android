@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/ExplodeThem.iml" filepath="$PROJECT_DIR$/ExplodeThem.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ExplodeThem/ExplodeThem-ExplodeThem.iml" filepath="$PROJECT_DIR$/ExplodeThem/ExplodeThem-ExplodeThem.iml" />
       <module fileurl="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/ExplodeThem-ExplodeThem.iml" filepath="$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/ExplodeThem-ExplodeThem.iml" />
     </modules>
   </component>
