@@ -13,6 +13,9 @@ public class ExplodeView extends SurfaceView implements SurfaceHolder.Callback {
 	private static final String TAG = "ExplodeView";
 	private ExplodeThread thread;
 
+	private String newHighscoreName;
+	private int newHighscore;
+
 	public ExplodeView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
@@ -29,6 +32,14 @@ public class ExplodeView extends SurfaceView implements SurfaceHolder.Callback {
 
 		thread = new ExplodeThread(getContext(), surfaceHolder);
 		thread.setRunning(true);
+
+		thread.startNewGame();
+
+		if (newHighscoreName != null) {
+			thread.showHighscore(newHighscoreName, newHighscore);
+			newHighscoreName = null;
+		}
+
 		thread.start();
 	}
 
@@ -72,5 +83,15 @@ public class ExplodeView extends SurfaceView implements SurfaceHolder.Callback {
 
 	public ExplodeThread getThread() {
 		return thread;
+	}
+
+	public void updateHighscore(String name, int score) {
+		newHighscore = score;
+		newHighscoreName = name;
+
+		if (thread != null) {
+			thread.showHighscore(newHighscoreName, newHighscore);
+			newHighscoreName = null;
+		}
 	}
 }

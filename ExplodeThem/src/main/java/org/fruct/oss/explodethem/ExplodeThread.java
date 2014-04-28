@@ -9,12 +9,14 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ExplodeThread extends Thread {
@@ -29,6 +31,7 @@ public class ExplodeThread extends Thread {
 	private boolean isRunning = false;
 	private final Object isRunningLock = new Object();
 
+	private HashMap<String, GameState> states = new HashMap<String, GameState>();
 	private ArrayList<GameState> stateStack = new ArrayList<GameState>();
 
 	// Timing variables
@@ -43,6 +46,7 @@ public class ExplodeThread extends Thread {
 	private int height;
 	private boolean isPaused = false;
 
+
 	public ExplodeThread(Context context, SurfaceHolder holder) {
 		setName("ExplodeThread");
 
@@ -53,15 +57,22 @@ public class ExplodeThread extends Thread {
 		testPaint.setTextSize(Utils.getSP(context, 32));
 		testPaint.setColor(0xffffffff);
 		testPaint.setAntiAlias(true);
+
+		PlayState playState = new PlayState(context, this);
+		states.put("play", playState);
+		states.put("menu", new MenuState(context, this, playState));
+		states.put("highscore", new HighscoreState(context, this));
+		states.put("nextlevel", new NextLevelState(context, this, playState));
+		states.put("gameover", new GameOverState(context, this));
+	}
+
+	public void startNewGame() {
+		pushState("play");
 	}
 
 	@Override
 	public void run() {
 		Canvas canvas = null;
-
-		PlayState playState = new PlayState(context, this);
-		stateStack.add(playState);
-		playState.setSize(width, height);
 
 		startTime = System.currentTimeMillis();
 		gameTime = System.currentTimeMillis();
@@ -84,7 +95,7 @@ public class ExplodeThread extends Thread {
 	}
 
 	private void update(Canvas canvas) {
-		if (isPaused) {
+		if (isPaused || stateStack.isEmpty()) {
 			return;
 		}
 
@@ -103,6 +114,10 @@ public class ExplodeThread extends Thread {
 		}
 
 		synchronized (holder) {
+			if (isPaused || stateStack.isEmpty()) {
+				return;
+			}
+
 			long delta = currentTime - gameTime;
 			if (delta > 0) {
 				//Log.d(TAG, "Delta " + delta);
@@ -137,7 +152,7 @@ public class ExplodeThread extends Thread {
 			this.width = width;
 			this.height = height;
 
-			for (GameState state : stateStack) {
+			for (GameState state : states.values()) {
 				state.setSize(width, height);
 			}
 		}
@@ -155,23 +170,37 @@ public class ExplodeThread extends Thread {
 		}
 	}
 
-	public void pushState(GameState gameState) {
+	public void pushState(String stateId) {
 		synchronized (holder) {
-			gameState.setSize(width, height);
-
-			stateStack.add(gameState);
+			GameState state = states.get(stateId);
+			if (state != null) {
+				state.prepare(null);
+				stateStack.add(state);
+			}
+		}
+	}
+	public void pushState(String stateId, Bundle args) {
+		synchronized (holder) {
+			GameState state = states.get(stateId);
+			if (state != null) {
+				state.prepare(args);
+				stateStack.add(state);
+			}
 		}
 	}
 
-	public GameState popState() {
+	public boolean popState() {
 		synchronized (holder) {
-			return stateStack.remove(stateStack.size() - 1);
+			stateStack.remove(stateStack.size() - 1);
+			return !stateStack.isEmpty();
 		}
 	}
 
 	public void release() {
 		synchronized (holder) {
-			stateStack.get(0).destroy();
+			for (GameState state : states.values()) {
+				state.destroy();
+			}
 
 			stateStack.clear();
 		}
@@ -189,6 +218,12 @@ public class ExplodeThread extends Thread {
 			Log.d(TAG, "unpause");
 			isPaused = false;
 			gameTime = System.currentTimeMillis();
+		}
+	}
+
+	public void showHighscore(String newHighscoreName, int newHighscore) {
+		synchronized (holder) {
+			pushState("highscore");
 		}
 	}
 

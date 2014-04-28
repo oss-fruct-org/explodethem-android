@@ -7,6 +7,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.os.Bundle;
 
 import static org.fruct.oss.explodethem.ExplodeThread.BitmapHolder;
 
@@ -16,6 +17,7 @@ public class NextLevelState implements GameState{
 	private final PlayState playState;
 
 	private static final long TICKS_FADE = 800 / ExplodeThread.TICK_MS;
+	private long ticksRemainFadeIn = TICKS_FADE;
 
 	private final Paint backgroundPaint;
 	private final Paint facePaint;
@@ -24,7 +26,6 @@ public class NextLevelState implements GameState{
 	private final Paint textPaintOutline;
 	private final Rect textBounds = new Rect();
 
-	private long ticksRemainFadeIn = TICKS_FADE;
 	private int width;
 	private int height;
 
@@ -64,6 +65,11 @@ public class NextLevelState implements GameState{
 		textPaint.setTextAlign(Paint.Align.CENTER);
 
 		textPaint.getTextBounds("Next", 0, 4, textBounds);
+	}
+
+	@Override
+	public void prepare(Bundle args) {
+
 	}
 
 	@Override

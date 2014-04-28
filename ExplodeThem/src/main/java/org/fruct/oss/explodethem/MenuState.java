@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.os.Bundle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,6 @@ public class MenuState implements GameState {
 
 	private float textSize;
 	private float buttonRadius;
-	private RectF buttonRect = new RectF();
 	private Rect textRect = new Rect();
 
 	private List<MenuItem> menuItems = new ArrayList<MenuItem>();
@@ -67,15 +67,6 @@ public class MenuState implements GameState {
 		textPaint.setTextAlign(Paint.Align.CENTER);
 
 		backgroundPaint = new Paint();
-
-		MenuItem newGameMenu;
-		menuItems.add(newGameMenu = new MenuItem("New game", "new-game"));
-		menuItems.add(new MenuItem("Highscore", "highscore"));
-
-		newGameMenu.subMenu = new ArrayList<MenuItem>();
-		newGameMenu.subMenu.add(new MenuItem("Easy", "new-game-easy"));
-		newGameMenu.subMenu.add(new MenuItem("Medium", "new-game-medium"));
-		newGameMenu.subMenu.add(new MenuItem("Hard", "new-game-hard"));
 	}
 
 	private void updateMenuLayout() {
@@ -90,6 +81,20 @@ public class MenuState implements GameState {
 
 			yPos += buttonHeight + buttonPadding;
 		}
+	}
+
+	@Override
+	public void prepare(Bundle args) {
+		menuItems.clear();
+		MenuItem newGameMenu;
+		menuItems.add(newGameMenu = new MenuItem("New game", "new-game"));
+		menuItems.add(new MenuItem("Highscore", "highscore"));
+
+		newGameMenu.subMenu = new ArrayList<MenuItem>();
+		newGameMenu.subMenu.add(new MenuItem("Easy", "new-game-easy"));
+		newGameMenu.subMenu.add(new MenuItem("Medium", "new-game-medium"));
+		newGameMenu.subMenu.add(new MenuItem("Hard", "new-game-hard"));
+		updateMenuLayout();
 	}
 
 	@Override

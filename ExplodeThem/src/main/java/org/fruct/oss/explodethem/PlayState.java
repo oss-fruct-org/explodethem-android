@@ -11,6 +11,7 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.util.Log;
 
 import java.util.List;
@@ -30,9 +31,6 @@ public class PlayState implements GameState {
 
 	private final Context context;
 	private final ExplodeThread explodeThread;
-
-	private final NextLevelState nextLevelState;
-	private final MenuState menuState;
 
 	private float stepRemainTicks;
 	private float stepOffset;
@@ -93,7 +91,6 @@ public class PlayState implements GameState {
 		tileRadius = Utils.getDP(context, 4);
 		textSize = Utils.getSP(context, 32);
 
-
 		textPaint = new Paint();
 		textPaint.setTypeface(Typeface.createFromAsset(context.getAssets(), "coolvetica.ttf"));
 		textPaint.setAntiAlias(true);
@@ -119,9 +116,6 @@ public class PlayState implements GameState {
 		for (int i = 0; i < explosion.length; i++) {
 			explosion[i] = new BitmapHolder(context, "explosion-" + i + ".png");
 		}
-
-		nextLevelState = new NextLevelState(context, explodeThread, this);
-		menuState = new MenuState(context, explodeThread, this);
 	}
 
 	public void newGame(int skill) {
@@ -131,14 +125,15 @@ public class PlayState implements GameState {
 	}
 
 	@Override
-	public void updatePhysics() {
-		if (!menuShown) {
-			menuShown = true;
-			explodeThread.pushState(menuState);
-			return;
-		}
+	public void prepare(Bundle args) {
 
+	}
+
+	@Override
+	public void updatePhysics() {
 		if (field == null) {
+			menuShown = true;
+			explodeThread.pushState("menu");
 			return;
 		}
 
@@ -154,7 +149,7 @@ public class PlayState implements GameState {
 		} else {
 			if (field.getBombsRemain() == 0) {
 				Log.d(TAG, "Win");
-				explodeThread.pushState(nextLevelState);
+				explodeThread.pushState("nextlevel");
 			}
 
 			if (field.getSparks() == 0) {
@@ -164,14 +159,9 @@ public class PlayState implements GameState {
 				final int score = field.getScore();
 				field = null;
 
-				mainActivity.runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						Intent intent = new Intent(context, GameOverActivity.class);
-						intent.putExtra(GameOverActivity.ARG_SCORE, score);
-						mainActivity.startActivityForResult(intent, 0);
-					}
-				});
+				Bundle args = new Bundle();
+				args.putInt("score", score);
+				explodeThread.pushState("gameover", args);
 			}
 		}
 	}
@@ -485,9 +475,6 @@ public class PlayState implements GameState {
 		for (BitmapHolder bh : explosion) {
 			bh.recycle();
 		}
-
-		nextLevelState.destroy();
-		menuState.destroy();
 	}
 
 	public void nextLevel() {
