@@ -7,8 +7,8 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/ExplodeThem" />
+            <option value="$USER_HOME$/AndroidStudioProjects/ExplodeThem" />
+            <option value="$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem" />
           </set>
         </option>
       </GradleProjectSettings>
