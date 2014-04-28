@@ -39,6 +39,7 @@ public class GameOverState implements GameState {
 	private float buttonTextPosY;
 
 	private boolean isButtonHover = false;
+	private boolean isHighscore = false;
 
 	public GameOverState(Context context, ExplodeThread explodeThread) {
 		this.context = context;
@@ -76,12 +77,13 @@ public class GameOverState implements GameState {
 		buttonPaintHightlight.setColor(0x99c5a0f3);
 
 		icon = new ExplodeThread.BitmapHolder(context, "gameover-bomb.png");
-	}
 
+	}
 
 	@Override
 	public void prepare(Bundle args) {
 		score = args.getInt("score");
+		isHighscore = HighscoreState.isHighscore(context, score);
 	}
 
 	@Override
@@ -104,7 +106,11 @@ public class GameOverState implements GameState {
 
 			canvas.drawText("Game Over", width / 2, titleTextPosY, titleTextPaint);
 			canvas.drawText("Your score: " + score, width / 2, titleTextPosY + textOffsetY, textPaint);
-			canvas.drawText("Your name: ", width / 2, titleTextPosY + textOffsetY * 2, textPaint);
+
+			if (isHighscore) {
+				canvas.drawText("Your name: ", width / 2, titleTextPosY + textOffsetY * 2, textPaint);
+			}
+
 			canvas.drawRoundRect(buttonRect, buttonRadius, buttonRadius,
 					isButtonHover ? buttonPaintHightlight : buttonPaint);
 			canvas.drawText("OK", width / 2, buttonTextPosY, buttonTextPaint);
@@ -147,7 +153,8 @@ public class GameOverState implements GameState {
 	public void touchUp(float x, float y) {
 		if (isButtonHover) {
 			isButtonHover = false;
-			// TODO:
+
+			explodeThread.popState();
 		}
 	}
 
