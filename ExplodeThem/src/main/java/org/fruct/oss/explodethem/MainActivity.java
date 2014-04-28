@@ -1,6 +1,7 @@
 package org.fruct.oss.explodethem;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -8,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 public class MainActivity extends Activity {
+	private static final String TAG = "MainActivity";
 	private ExplodeView explodeView;
 
 	@Override
@@ -16,5 +18,30 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
 		explodeView = (ExplodeView) findViewById(R.id.explode_view);
+	}
+
+	@Override
+	protected void onPause() {
+		if (explodeView.getThread() != null) {
+			explodeView.getThread().pause();
+		}
+		super.onPause();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		if (explodeView.getThread() != null) {
+			explodeView.getThread().unpause();
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == RESULT_OK && requestCode == 0) {
+			String name = data.getStringExtra(GameOverActivity.EXTRA_NAME);
+			Log.d(TAG, "onActivityResult " + name);
+		}
 	}
 }

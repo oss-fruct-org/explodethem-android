@@ -1,6 +1,8 @@
 package org.fruct.oss.explodethem;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -153,6 +155,23 @@ public class PlayState implements GameState {
 			if (field.getBombsRemain() == 0) {
 				Log.d(TAG, "Win");
 				explodeThread.pushState(nextLevelState);
+			}
+
+			if (field.getSparks() == 0) {
+				Log.d(TAG, "Game over");
+				final Activity mainActivity = (Activity) context;
+
+				final int score = field.getScore();
+				field = null;
+
+				mainActivity.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Intent intent = new Intent(context, GameOverActivity.class);
+						intent.putExtra(GameOverActivity.ARG_SCORE, score);
+						mainActivity.startActivityForResult(intent, 0);
+					}
+				});
 			}
 		}
 	}

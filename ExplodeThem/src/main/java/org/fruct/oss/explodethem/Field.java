@@ -52,7 +52,7 @@ public class Field {
 	private int bombsRemain;
 	private int score = 0;
 	private int level = 0;
-	private int sparks = 10;
+	private int sparks = 2;
 
 	private int explodedInLevel;
 

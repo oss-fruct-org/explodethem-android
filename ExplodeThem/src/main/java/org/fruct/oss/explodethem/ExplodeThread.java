@@ -41,6 +41,7 @@ public class ExplodeThread extends Thread {
 	private Paint testPaint;
 	private int width;
 	private int height;
+	private boolean isPaused = false;
 
 	public ExplodeThread(Context context, SurfaceHolder holder) {
 		setName("ExplodeThread");
@@ -83,6 +84,10 @@ public class ExplodeThread extends Thread {
 	}
 
 	private void update(Canvas canvas) {
+		if (isPaused) {
+			return;
+		}
+
 		long nextTime = gameTime + TICK_MS;
 		long currentTime = System.currentTimeMillis();
 
@@ -169,6 +174,21 @@ public class ExplodeThread extends Thread {
 			stateStack.get(0).destroy();
 
 			stateStack.clear();
+		}
+	}
+
+	public void pause() {
+		synchronized (holder) {
+			Log.d(TAG, "pause");
+			isPaused = true;
+		}
+	}
+
+	public void unpause() {
+		synchronized (holder) {
+			Log.d(TAG, "unpause");
+			isPaused = false;
+			gameTime = System.currentTimeMillis();
 		}
 	}
 

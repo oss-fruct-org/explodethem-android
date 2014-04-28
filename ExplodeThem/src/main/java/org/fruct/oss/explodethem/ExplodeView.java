@@ -1,5 +1,6 @@
 package org.fruct.oss.explodethem;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -10,7 +11,7 @@ import android.view.SurfaceView;
 
 public class ExplodeView extends SurfaceView implements SurfaceHolder.Callback {
 	private static final String TAG = "ExplodeView";
-	private final ExplodeThread thread;
+	private ExplodeThread thread;
 
 	public ExplodeView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -19,8 +20,6 @@ public class ExplodeView extends SurfaceView implements SurfaceHolder.Callback {
 		assert holder != null;
 		holder.addCallback(this);
 
-		thread = new ExplodeThread(getContext(), holder);
-
 		setFocusable(true);
 	}
 
@@ -28,6 +27,7 @@ public class ExplodeView extends SurfaceView implements SurfaceHolder.Callback {
 	public void surfaceCreated(SurfaceHolder surfaceHolder) {
 		Log.d(TAG, "surfaceCreated");
 
+		thread = new ExplodeThread(getContext(), surfaceHolder);
 		thread.setRunning(true);
 		thread.start();
 	}
@@ -54,6 +54,7 @@ public class ExplodeView extends SurfaceView implements SurfaceHolder.Callback {
 
 		Log.d(TAG, "Releasing thread");
 		thread.release();
+		thread = null;
 	}
 
 	@Override
@@ -67,5 +68,9 @@ public class ExplodeView extends SurfaceView implements SurfaceHolder.Callback {
 		}
 
 		return true;
+	}
+
+	public ExplodeThread getThread() {
+		return thread;
 	}
 }

@@ -3,5 +3,7 @@
 
     <string name="app_name">ExplodeThem</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_game_over">Game Over</string>
+    <string name="action_settings">Settings</string>
 
 </resources>
