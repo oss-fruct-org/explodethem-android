@@ -17,6 +17,9 @@ public class GameOverState implements GameState {
 	private final Paint backgroundPaint;
 	private final Paint titleTextPaint;
 	private final Paint buttonPaint;
+	private final Paint buttonTextPaint;
+	private final Paint buttonPaintHightlight;
+
 	private final float buttonRadius;
 
 	private int width;
@@ -31,7 +34,11 @@ public class GameOverState implements GameState {
 	private long ticksRemainFadeIn = TICKS_FADE;
 
 	private int score = -1;
+
 	private RectF buttonRect;
+	private float buttonTextPosY;
+
+	private boolean isButtonHover = false;
 
 	public GameOverState(Context context, ExplodeThread explodeThread) {
 		this.context = context;
@@ -57,6 +64,16 @@ public class GameOverState implements GameState {
 		buttonPaint.setColor(0x84c5c0f3);
 		buttonPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 		buttonPaint.setAntiAlias(true);
+
+		buttonTextPaint = new Paint();
+		buttonTextPaint.setTypeface(Typeface.createFromAsset(context.getAssets(), "coolvetica.ttf"));
+		buttonTextPaint.setAntiAlias(true);
+		buttonTextPaint.setColor(0xfffafef1);
+		buttonTextPaint.setTextSize(Utils.getSP(context, 24));
+		buttonTextPaint.setTextAlign(Paint.Align.CENTER);
+
+		buttonPaintHightlight = new Paint(buttonPaint);
+		buttonPaintHightlight.setColor(0x99c5a0f3);
 
 		icon = new ExplodeThread.BitmapHolder(context, "gameover-bomb.png");
 	}
@@ -88,7 +105,9 @@ public class GameOverState implements GameState {
 			canvas.drawText("Game Over", width / 2, titleTextPosY, titleTextPaint);
 			canvas.drawText("Your score: " + score, width / 2, titleTextPosY + textOffsetY, textPaint);
 			canvas.drawText("Your name: ", width / 2, titleTextPosY + textOffsetY * 2, textPaint);
-			canvas.drawRoundRect(buttonRect, buttonRadius, buttonRadius, buttonPaint);
+			canvas.drawRoundRect(buttonRect, buttonRadius, buttonRadius,
+					isButtonHover ? buttonPaintHightlight : buttonPaint);
+			canvas.drawText("OK", width / 2, buttonTextPosY, buttonTextPaint);
 		}
 	}
 
@@ -112,16 +131,24 @@ public class GameOverState implements GameState {
 		float buttonWidth = width / 2;
 		buttonRect = new RectF(width / 2 - buttonWidth / 2, textOffsetY * 3 + titleTextPosY,
 				width / 2 + buttonWidth / 2, textOffsetY * 3 + titleTextPosY + buttonHeight);
+
+		buttonTextPaint.getTextBounds(text, 0, text.length(), rect);
+		buttonTextPosY = buttonRect.bottom - buttonHeight / 2 + rect.height() / 2;
 	}
 
 	@Override
 	public void touchDown(float x, float y) {
-
+		if (buttonRect.contains(x, y)) {
+			isButtonHover = true;
+		}
 	}
 
 	@Override
 	public void touchUp(float x, float y) {
-
+		if (isButtonHover) {
+			isButtonHover = false;
+			// TODO:
+		}
 	}
 
 	@Override
