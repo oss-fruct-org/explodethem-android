@@ -18,7 +18,7 @@ public class GameOverState implements GameState {
 	private final Paint titleTextPaint;
 	private final Paint buttonPaint;
 	private final Paint buttonTextPaint;
-	private final Paint buttonPaintHightlight;
+	private final Paint buttonPaintHighlight;
 
 	private final float buttonRadius;
 
@@ -73,8 +73,8 @@ public class GameOverState implements GameState {
 		buttonTextPaint.setTextSize(Utils.getSP(context, 24));
 		buttonTextPaint.setTextAlign(Paint.Align.CENTER);
 
-		buttonPaintHightlight = new Paint(buttonPaint);
-		buttonPaintHightlight.setColor(0x99c5a0f3);
+		buttonPaintHighlight = new Paint(buttonPaint);
+		buttonPaintHighlight.setColor(0x99c5a0f3);
 
 		icon = new ExplodeThread.BitmapHolder(context, "gameover-bomb.png");
 
@@ -112,7 +112,7 @@ public class GameOverState implements GameState {
 			}
 
 			canvas.drawRoundRect(buttonRect, buttonRadius, buttonRadius,
-					isButtonHover ? buttonPaintHightlight : buttonPaint);
+					isButtonHover ? buttonPaintHighlight : buttonPaint);
 			canvas.drawText("OK", width / 2, buttonTextPosY, buttonTextPaint);
 		}
 	}
