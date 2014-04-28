@@ -28,7 +28,9 @@ public class PlayState implements GameState {
 
 	private final Context context;
 	private final ExplodeThread explodeThread;
+
 	private final NextLevelState nextLevelState;
+	private final MenuState menuState;
 
 	private float stepRemainTicks;
 	private float stepOffset;
@@ -65,6 +67,8 @@ public class PlayState implements GameState {
 	private BitmapHolder water;
 	private float tileRadius;
 
+	private boolean menuShown = false;
+
 
 	public PlayState(Context context, ExplodeThread explodeThread) {
 		this.context = context;
@@ -74,9 +78,6 @@ public class PlayState implements GameState {
 		tilePaint.setColor(0x84c5c0f3);
 		tilePaint.setStyle(Paint.Style.FILL_AND_STROKE);
 		tilePaint.setAntiAlias(true);
-
-		field = new Field(TILES_X, TILES_Y, 0);
-		Log.d(TAG, "Total bombs: " + field.getBombsRemain());
 
 		background = new BitmapHolder(context, "background.jpg");
 		largeBomb = new BitmapHolder(context, "large-bomb.png");
@@ -118,10 +119,27 @@ public class PlayState implements GameState {
 		}
 
 		nextLevelState = new NextLevelState(context, explodeThread, this);
+		menuState = new MenuState(context, explodeThread, this);
+	}
+
+	public void newGame(int skill) {
+		field = new Field(TILES_X, TILES_Y, skill);
+
+		Log.d(TAG, "Total bombs: " + field.getBombsRemain());
 	}
 
 	@Override
 	public void updatePhysics() {
+		if (!menuShown) {
+			menuShown = true;
+			explodeThread.pushState(menuState);
+			return;
+		}
+
+		if (field == null) {
+			return;
+		}
+
 		if (field.isActive()) {
 			if (stepRemainTicks == 0) {
 				initializeStep();
@@ -155,42 +173,21 @@ public class PlayState implements GameState {
 		//canvas.drawText("TPS: " + ticksElapsed / ((gameTime - startTime) / 1000.), 10, 30, testPaint);
 		//canvas.drawText("FPS: " + framesElapsed / ((gameTime - startTime) / 1000.), 10, 50, testPaint);
 
-
-		// Draw field
-		for (int x = 0; x < TILES_X; x++) {
-			for (int y = 0; y < TILES_Y; y++) {
-				float xPos = dimensions.getOffset(x);
-				float yPos = dimensions.getOffset(y) + dimensions.fieldStartY;
-
-				canvas.drawRoundRect(new RectF(xPos, yPos, xPos + dimensions.tileSize, yPos + dimensions.tileSize),
-						tileRadius, tileRadius, tilePaint);
-
-				Field.Entity ent = field.get(x, y);
-				Bitmap bitmapToDraw = null;
-				switch (ent) {
-				case LARGE_BOMB:
-					bitmapToDraw = largeBomb.getScaled();
-					break;
-				case MEDIUM_BOMB:
-					bitmapToDraw = mediumBomb.getScaled();
-					break;
-				case SMALL_BOMB:
-					bitmapToDraw = smallBomb.getScaled();
-					break;
-				case WATER_BOMB:
-					bitmapToDraw = waterBomb.getScaled();
-					break;
-				}
-
-				if (!field.isExplodedTile(x, y) && bitmapToDraw != null) {
-					canvas.drawBitmap(bitmapToDraw,
-							xPos + halfTileSize - bitmapToDraw.getWidth() / 2,
-							yPos + halfTileSize - bitmapToDraw.getHeight() / 2,
-							null);
-				}
-			}
+		if (field != null) {
+			// Draw field
+			drawField(canvas);
+			// Draw shells
+			drawShells(canvas);
+			drawAnimated(canvas);
+			drawText(canvas, "Score: " + field.getScore(), dimensions.scoreTextPoint, false);
+			drawText(canvas, "Level: " + field.getLevel(), dimensions.levelTextPoint, true);
+			drawText(canvas, "Shakes: ", dimensions.shakesTextPoint, true);
+			drawSparks(canvas);
 		}
+	}
 
+	private void drawShells(Canvas canvas) {
+		final float halfTileSize = dimensions.tileSize / 2;
 		canvas.save();
 		canvas.clipRect(dimensions.fieldRect);
 
@@ -231,12 +228,43 @@ public class PlayState implements GameState {
 		}
 
 		canvas.restore();
+	}
 
-		drawAnimated(canvas);
-		drawText(canvas, "Score: " + field.getScore(), dimensions.scoreTextPoint, false);
-		drawText(canvas, "Level: " + field.getLevel(), dimensions.levelTextPoint, true);
-		drawText(canvas, "Shakes: ", dimensions.shakesTextPoint, true);
-		drawSparks(canvas);
+	private void drawField(Canvas canvas) {
+		final float halfTileSize = dimensions.tileSize / 2;
+		for (int x = 0; x < TILES_X; x++) {
+			for (int y = 0; y < TILES_Y; y++) {
+				float xPos = dimensions.getOffset(x);
+				float yPos = dimensions.getOffset(y) + dimensions.fieldStartY;
+
+				canvas.drawRoundRect(new RectF(xPos, yPos, xPos + dimensions.tileSize, yPos + dimensions.tileSize),
+						tileRadius, tileRadius, tilePaint);
+
+				Field.Entity ent = field.get(x, y);
+				Bitmap bitmapToDraw = null;
+				switch (ent) {
+				case LARGE_BOMB:
+					bitmapToDraw = largeBomb.getScaled();
+					break;
+				case MEDIUM_BOMB:
+					bitmapToDraw = mediumBomb.getScaled();
+					break;
+				case SMALL_BOMB:
+					bitmapToDraw = smallBomb.getScaled();
+					break;
+				case WATER_BOMB:
+					bitmapToDraw = waterBomb.getScaled();
+					break;
+				}
+
+				if (!field.isExplodedTile(x, y) && bitmapToDraw != null) {
+					canvas.drawBitmap(bitmapToDraw,
+							xPos + halfTileSize - bitmapToDraw.getWidth() / 2,
+							yPos + halfTileSize - bitmapToDraw.getHeight() / 2,
+							null);
+				}
+			}
+		}
 	}
 
 	private void drawSparks(Canvas canvas) {
@@ -440,6 +468,7 @@ public class PlayState implements GameState {
 		}
 
 		nextLevelState.destroy();
+		menuState.destroy();
 	}
 
 	public void nextLevel() {
