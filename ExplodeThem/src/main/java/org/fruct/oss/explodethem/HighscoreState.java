@@ -19,7 +19,7 @@ import java.util.List;
 public class HighscoreState implements GameState {
 	public static final String TAG = HighscoreState.class.getName();
 
-	public static final int MAX_HIGHSCORE = 4;
+	public static final int MAX_HIGHSCORE = 10;
 
 	public static final String PREF_HIGHSCORE_COUNT = "count-highscore";
 	public static final String PREF_HIGHSCORE_WORST = "worst-highscore";
@@ -115,9 +115,8 @@ public class HighscoreState implements GameState {
 		textLineOffsetY = rect.height() + Utils.getDP(context, 16);
 		textLineStartY = titlePosY + Utils.getDP(context, 32) + textLineOffsetY;
 
-
 		textLineNameX = width / 6;
-		textLineValueX = 4 * width / 6;
+		textLineValueX = 5 * width / 6;
 	}
 
 	@Override
