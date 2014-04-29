@@ -479,7 +479,14 @@ public class PlayState implements GameState {
 	}
 
 	public void shakeDetected() {
-		field.shake();
+		if (!field.isActive()) {
+			field.shake();
+			field.commit();
+
+			if (field.isActive()) {
+				initializeStep();
+			}
+		}
 	}
 
 	private class Dimensions {
