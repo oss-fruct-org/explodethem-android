@@ -56,7 +56,6 @@ public class PlayState implements GameState {
 	private int touchX, touchY;
 	private Field field;
 
-	private BitmapHolder background;
 	private BitmapHolder largeBomb;
 	private BitmapHolder mediumBomb;
 	private BitmapHolder smallBomb;
@@ -69,7 +68,6 @@ public class PlayState implements GameState {
 
 	private boolean menuShown = false;
 
-
 	public PlayState(Context context, ExplodeThread explodeThread) {
 		this.context = context;
 		this.explodeThread = explodeThread;
@@ -79,7 +77,6 @@ public class PlayState implements GameState {
 		tilePaint.setStyle(Paint.Style.FILL_AND_STROKE);
 		tilePaint.setAntiAlias(true);
 
-		background = new BitmapHolder(context, "background.jpg");
 		largeBomb = new BitmapHolder(context, "large-bomb.png");
 		mediumBomb = new BitmapHolder(context, "medium-bomb.png");
 		smallBomb = new BitmapHolder(context, "small-bomb.png");
@@ -161,7 +158,7 @@ public class PlayState implements GameState {
 
 				Bundle args = new Bundle();
 				args.putInt("score", score);
-				explodeThread.pushState("gameover", args);
+				explodeThread.replaceStateStack("gameover", args);
 			}
 		}
 	}
@@ -177,7 +174,7 @@ public class PlayState implements GameState {
 		final float halfTileSize = dimensions.tileSize / 2;
 		final float tileSize = dimensions.tileSize;
 
-		canvas.drawBitmap(background.getScaled(), 0, 0, null);
+		canvas.drawBitmap(explodeThread.getCommonResources().background.getScaled(), 0, 0, null);
 
 		//canvas.drawText("TPS: " + ticksElapsed / ((gameTime - startTime) / 1000.), 10, 30, testPaint);
 		//canvas.drawText("FPS: " + framesElapsed / ((gameTime - startTime) / 1000.), 10, 50, testPaint);
@@ -392,8 +389,6 @@ public class PlayState implements GameState {
 				dimensions.fieldStartY
 						+ (dimensions.tilePadding + dimensions.tileSize) * TILES_Y);
 
-		// Scale bitmap holders
-		background.scale(width, height);
 
 		largeBomb.scale(dimensions.tileSize * Field.Entity.LARGE_BOMB.getFactor(),
 				dimensions.tileSize * Field.Entity.LARGE_BOMB.getFactor());
@@ -464,7 +459,6 @@ public class PlayState implements GameState {
 
 	@Override
 	public void destroy() {
-		background.recycle();
 		largeBomb.recycle();
 		mediumBomb.recycle();
 		smallBomb.recycle();

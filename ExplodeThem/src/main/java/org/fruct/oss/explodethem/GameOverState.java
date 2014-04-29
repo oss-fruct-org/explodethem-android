@@ -154,7 +154,7 @@ public class GameOverState implements GameState {
 		if (isButtonHover) {
 			isButtonHover = false;
 
-			explodeThread.popState();
+			explodeThread.replaceStateStack("menu");
 		}
 	}
 

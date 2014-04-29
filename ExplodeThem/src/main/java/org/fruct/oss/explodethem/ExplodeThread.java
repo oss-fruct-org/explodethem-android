@@ -27,6 +27,7 @@ public class ExplodeThread extends Thread {
 
 	private final Context context;
 	private final SurfaceHolder holder;
+	private final CommonResources commonResources;
 
 	private boolean isRunning = false;
 	private final Object isRunningLock = new Object();
@@ -64,10 +65,12 @@ public class ExplodeThread extends Thread {
 		states.put("highscore", new HighscoreState(context, this));
 		states.put("nextlevel", new NextLevelState(context, this, playState));
 		states.put("gameover", new GameOverState(context, this));
+
+		commonResources = new CommonResources(context);
 	}
 
 	public void startNewGame() {
-		pushState("play");
+		pushState("menu");
 	}
 
 	@Override
@@ -155,6 +158,8 @@ public class ExplodeThread extends Thread {
 			for (GameState state : states.values()) {
 				state.setSize(width, height);
 			}
+
+			commonResources.resize(width, height);
 		}
 	}
 
@@ -167,6 +172,24 @@ public class ExplodeThread extends Thread {
 	public void touchUp(float x, float y) {
 		synchronized (holder) {
 			stateStack.get(stateStack.size() - 1).touchUp(x, y);
+		}
+	}
+
+	public void replaceStateStack(String stateId, Bundle args) {
+		synchronized (holder) {
+			while (popState())
+				;
+
+			pushState(stateId, args);
+		}
+	}
+
+	public void replaceStateStack(String stateId) {
+		synchronized (holder) {
+			while (popState())
+				;
+
+			pushState(stateId);
 		}
 	}
 
@@ -204,6 +227,8 @@ public class ExplodeThread extends Thread {
 
 			stateStack.clear();
 		}
+
+		commonResources.destroy();
 	}
 
 	public void pause() {
@@ -225,6 +250,10 @@ public class ExplodeThread extends Thread {
 		synchronized (holder) {
 			pushState("highscore");
 		}
+	}
+
+	public CommonResources getCommonResources() {
+		return commonResources;
 	}
 
 	public static class BitmapHolder {

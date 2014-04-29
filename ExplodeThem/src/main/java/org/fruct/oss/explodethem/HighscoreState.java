@@ -9,6 +9,7 @@ import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,6 +17,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class HighscoreState implements GameState {
+	public static final String TAG = HighscoreState.class.getName();
+
 	public static final int MAX_HIGHSCORE = 10;
 
 	public static final String PREF_HIGHSCORE_COUNT = "count-highscore";
@@ -57,6 +60,7 @@ public class HighscoreState implements GameState {
 
 	@Override
 	public void draw(Canvas canvas) {
+		canvas.drawBitmap(explodeThread.getCommonResources().background.getScaled(), 0, 0, null);
 		canvas.drawText("Highscore", width / 2, titlePosY, titleTextPaint);
 	}
 
@@ -77,7 +81,7 @@ public class HighscoreState implements GameState {
 
 	@Override
 	public void touchUp(float x, float y) {
-
+		explodeThread.replaceStateStack("menu");
 	}
 
 	@Override
@@ -108,7 +112,9 @@ public class HighscoreState implements GameState {
 
 	public synchronized static List<Highscore> getHighscores(Context context) {
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+
 		int count = pref.getInt(PREF_HIGHSCORE_COUNT, 0);
+		Log.d(TAG, "Pref count = " + count);
 
 		ArrayList<Highscore> ret = new ArrayList<Highscore>();
 		for (int i = 0; i < count; i++) {
@@ -116,6 +122,8 @@ public class HighscoreState implements GameState {
 			String keyName = PREF_HIGHSCORE_NAME_PREFIX + i;
 
 			Highscore hs = new Highscore(pref.getString(keyName, ""), pref.getInt(keyValue, 0));
+			Log.d(TAG, "Pref name = " + hs.name + ", value = " + hs.value);
+
 			ret.add(hs);
 		}
 		Collections.sort(ret);
@@ -146,6 +154,6 @@ public class HighscoreState implements GameState {
 			edit.putInt(PREF_HIGHSCORE_PREFIX + i, hs.value);
 			edit.putString(PREF_HIGHSCORE_NAME_PREFIX + i, hs.name);
 		}
-		edit.apply();
+		edit.commit();
 	}
 }

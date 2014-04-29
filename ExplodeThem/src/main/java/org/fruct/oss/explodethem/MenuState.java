@@ -108,8 +108,11 @@ public class MenuState implements GameState {
 
 	@Override
 	public void draw(Canvas canvas) {
+		canvas.drawBitmap(explodeThread.getCommonResources().background.getScaled(),
+				0, 0, null);
+
 		if (fadeIn) {
-			int alpha = 240 - 240 * fadeTicksRemain / FADE_TICKS;
+			int alpha = 200 - 200 * fadeTicksRemain / FADE_TICKS;
 			backgroundPaint.setColor(alpha << 24);
 		}
 		canvas.drawRect(0, 0, width, height, backgroundPaint);
@@ -170,14 +173,18 @@ public class MenuState implements GameState {
 	private void onMenuItemClick(String id) {
 		if (id.equals("new-game-easy")) {
 			playState.newGame(0);
-			explodeThread.popState();
 		} else if (id.equals("new-game-medium")) {
 			playState.newGame(1);
-			explodeThread.popState();
 		} else if (id.equals("new-game-hard")) {
 			playState.newGame(2);
-			explodeThread.popState();
+		} else if (id.equals("highscore")) {
+			explodeThread.replaceStateStack("highscore");
+			return;
+		} else {
+			return;
 		}
+
+		explodeThread.replaceStateStack("play");
 	}
 
 	@Override
