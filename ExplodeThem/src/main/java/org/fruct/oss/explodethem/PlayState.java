@@ -12,6 +12,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import java.util.List;
@@ -187,7 +188,7 @@ public class PlayState implements GameState {
 			drawAnimated(canvas);
 			drawText(canvas, "Score: " + field.getScore(), dimensions.scoreTextPoint, false);
 			drawText(canvas, "Level: " + field.getLevel(), dimensions.levelTextPoint, true);
-			drawText(canvas, "Shakes: ", dimensions.shakesTextPoint, true);
+			drawText(canvas, "Shakes: " + field.getShakes(), dimensions.shakesTextPoint, true);
 			drawSparks(canvas);
 		}
 	}
@@ -475,6 +476,10 @@ public class PlayState implements GameState {
 		field.nextLevel();
 		stepOffset = 0;
 		stepRemainTicks = 0;
+	}
+
+	public void shakeDetected() {
+		field.shake();
 	}
 
 	private class Dimensions {

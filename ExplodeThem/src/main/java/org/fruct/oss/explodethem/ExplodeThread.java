@@ -46,6 +46,7 @@ public class ExplodeThread extends Thread {
 	private int width;
 	private int height;
 	private boolean isPaused = false;
+	private final PlayState playState;
 
 
 	public ExplodeThread(Context context, SurfaceHolder holder) {
@@ -59,7 +60,7 @@ public class ExplodeThread extends Thread {
 		testPaint.setColor(0xffffffff);
 		testPaint.setAntiAlias(true);
 
-		PlayState playState = new PlayState(context, this);
+		playState = new PlayState(context, this);
 		states.put("play", playState);
 		states.put("menu", new MenuState(context, this, playState));
 		states.put("highscore", new HighscoreState(context, this));
@@ -254,6 +255,14 @@ public class ExplodeThread extends Thread {
 
 	public CommonResources getCommonResources() {
 		return commonResources;
+	}
+
+	public void shakeDetected() {
+		synchronized (holder) {
+			if (isRunning && !isPaused && stateStack.get(stateStack.size() - 1) instanceof PlayState) {
+				playState.shakeDetected();
+			}
+		}
 	}
 
 	public static class BitmapHolder {

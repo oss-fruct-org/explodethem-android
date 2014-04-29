@@ -8,9 +8,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-public class MainActivity extends Activity {
+import uk.co.jarofgreen.lib.ShakeDetectActivity;
+import uk.co.jarofgreen.lib.ShakeDetectActivityListener;
+
+public class MainActivity extends Activity implements ShakeDetectActivityListener {
 	private static final String TAG = "MainActivity";
 	private ExplodeView explodeView;
+
+	private ShakeDetectActivity shakeDetector;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +23,9 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
 		explodeView = (ExplodeView) findViewById(R.id.explode_view);
+
+		shakeDetector = new ShakeDetectActivity(this);
+		shakeDetector.addListener(this);
 	}
 
 	@Override
@@ -26,6 +34,8 @@ public class MainActivity extends Activity {
 			explodeView.getThread().pause();
 		}
 		super.onPause();
+
+		shakeDetector.onPause();
 	}
 
 	@Override
@@ -35,6 +45,8 @@ public class MainActivity extends Activity {
 		if (explodeView.getThread() != null) {
 			explodeView.getThread().unpause();
 		}
+
+		shakeDetector.onResume();
 	}
 
 	@Override
@@ -53,6 +65,15 @@ public class MainActivity extends Activity {
 			int score = data.getIntExtra(GameOverActivity.EXTRA_SCORE, 0);
 			Log.d(TAG, "onActivityResult " + name);
 			explodeView.updateHighscore(name, score);
+		}
+	}
+
+	@Override
+	public void shakeDetected() {
+		Log.d(TAG, "Shake detected");
+
+		if (explodeView.getThread() != null) {
+			explodeView.getThread().shakeDetected();
 		}
 	}
 }

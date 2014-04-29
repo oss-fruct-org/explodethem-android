@@ -53,6 +53,7 @@ public class Field {
 	private int score = 0;
 	private int level = 0;
 	private int sparks = 10;
+	private int shakes = 3;
 
 	private int explodedInLevel;
 
@@ -195,6 +196,22 @@ public class Field {
 		return !shells.isEmpty() || !explodes.isEmpty();
 	}
 
+	public void shake() {
+		if (shakes == 0) {
+			return;
+		}
+
+		shakes--;
+
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				if (field[x][y] == Entity.LARGE_BOMB) {
+					explode(Entity.LARGE_BOMB, x, y);
+				}
+			}
+		}
+	}
+
 	public void explode(Entity ent, int x, int y) {
 		for (int i = 0; i < 4; i++) {
 			Shell shell = new Shell();
@@ -315,5 +332,9 @@ public class Field {
 
 	public int getSparkChange() {
 		return sparkChange;
+	}
+
+	public int getShakes() {
+		return shakes;
 	}
 }
