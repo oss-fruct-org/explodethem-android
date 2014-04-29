@@ -19,7 +19,7 @@ import java.util.List;
 public class HighscoreState implements GameState {
 	public static final String TAG = HighscoreState.class.getName();
 
-	public static final int MAX_HIGHSCORE = 10;
+	public static final int MAX_HIGHSCORE = 4;
 
 	public static final String PREF_HIGHSCORE_COUNT = "count-highscore";
 	public static final String PREF_HIGHSCORE_WORST = "worst-highscore";
@@ -27,13 +27,24 @@ public class HighscoreState implements GameState {
 	public static final String PREF_HIGHSCORE_NAME_PREFIX = "highscore-name-";
 
 	private final Paint titleTextPaint;
+	private final Paint textPaint;
+	private final Paint textPaintOutline;
+	private final Paint textPaintRed;
+
 	private Context context;
 	private ExplodeThread explodeThread;
 	private PlayState playState;
 
 	private float titlePosY;
+	private float textLineOffsetY;
+	private float textLineStartY;
+
+	private float textLineNameX;
+	private float textLineValueX;
+
 	private int width;
 	private int height;
+	private List<Highscore> highscores;
 
 	public HighscoreState(Context context, ExplodeThread explodeThread) {
 		this.context = context;
@@ -44,13 +55,27 @@ public class HighscoreState implements GameState {
 		titleTextPaint.setTypeface(Typeface.createFromAsset(context.getAssets(), "Colleged.ttf"));
 		titleTextPaint.setAntiAlias(true);
 		titleTextPaint.setColor(0xfffafef1);
-		titleTextPaint.setTextSize(Utils.getSP(context, 32));
+		titleTextPaint.setTextSize(Utils.getSP(context, 40));
 		titleTextPaint.setTextAlign(Paint.Align.CENTER);
+
+		textPaint = new Paint();
+		textPaint.setTypeface(Typeface.createFromAsset(context.getAssets(), "coolvetica.ttf"));
+		textPaint.setAntiAlias(true);
+		textPaint.setColor(0xfffafef1);
+		textPaint.setTextSize(Utils.getSP(context, 32));
+
+		textPaintOutline = new Paint(textPaint);
+		textPaintOutline.setStyle(Paint.Style.STROKE);
+		textPaintOutline.setColor(0xff110011);
+		textPaintOutline.setStrokeWidth(2f);
+
+		textPaintRed = new Paint(textPaint);
+		textPaintRed.setColor(0xffe64b45);
 	}
 
 	@Override
 	public void prepare(Bundle args) {
-
+		highscores = getHighscores(context);
 	}
 
 	@Override
@@ -62,6 +87,18 @@ public class HighscoreState implements GameState {
 	public void draw(Canvas canvas) {
 		canvas.drawBitmap(explodeThread.getCommonResources().background.getScaled(), 0, 0, null);
 		canvas.drawText("Highscore", width / 2, titlePosY, titleTextPaint);
+
+		for (int i = 0; i < highscores.size(); i++) {
+			Highscore hs = highscores.get(i);
+			String str = (i + 1) + ". " + hs.name;
+			String str2 = hs.value + "";
+
+			canvas.drawText(str, textLineNameX, textLineStartY + i * textLineOffsetY, textPaint);
+			canvas.drawText(str, textLineNameX, textLineStartY + i * textLineOffsetY, textPaintOutline);
+
+			canvas.drawText(str2, textLineValueX, textLineStartY + i * textLineOffsetY, textPaintRed);
+			canvas.drawText(str2, textLineValueX, textLineStartY + i * textLineOffsetY, textPaintOutline);
+		}
 	}
 
 	@Override
@@ -72,6 +109,15 @@ public class HighscoreState implements GameState {
 		titlePosY = Utils.getDP(context, 16) + rect.height();
 		this.width = width;
 		this.height = height;
+
+		textPaint.getTextBounds("name:", 0, "name".length(), rect);
+
+		textLineOffsetY = rect.height() + Utils.getDP(context, 16);
+		textLineStartY = titlePosY + Utils.getDP(context, 32) + textLineOffsetY;
+
+
+		textLineNameX = width / 6;
+		textLineValueX = 4 * width / 6;
 	}
 
 	@Override
@@ -101,7 +147,7 @@ public class HighscoreState implements GameState {
 
 		@Override
 		public int compareTo(Highscore highscore) {
-			return value - highscore.value;
+			return highscore.value - value;
 		}
 	}
 

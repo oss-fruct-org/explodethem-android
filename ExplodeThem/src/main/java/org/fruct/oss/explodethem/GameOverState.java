@@ -1,15 +1,23 @@
 package org.fruct.oss.explodethem;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.text.InputType;
+import android.util.Log;
+import android.widget.EditText;
+import android.widget.TextView;
 
 
-public class GameOverState implements GameState {
+public class GameOverState implements GameState, Handler.Callback {
 	private final Context context;
 	private final ExplodeThread explodeThread;
 
@@ -35,11 +43,15 @@ public class GameOverState implements GameState {
 
 	private int score = -1;
 
+	private RectF editNameRect;
+
 	private RectF buttonRect;
 	private float buttonTextPosY;
 
 	private boolean isButtonHover = false;
 	private boolean isHighscore = false;
+
+	private String enteredName = "...";
 
 	public GameOverState(Context context, ExplodeThread explodeThread) {
 		this.context = context;
@@ -108,12 +120,14 @@ public class GameOverState implements GameState {
 			canvas.drawText("Your score: " + score, width / 2, titleTextPosY + textOffsetY, textPaint);
 
 			if (isHighscore) {
-				canvas.drawText("Your name: ", width / 2, titleTextPosY + textOffsetY * 2, textPaint);
+				canvas.drawText("Your name: " + enteredName, width / 2, titleTextPosY + textOffsetY * 2, textPaint);
 			}
 
 			canvas.drawRoundRect(buttonRect, buttonRadius, buttonRadius,
 					isButtonHover ? buttonPaintHighlight : buttonPaint);
 			canvas.drawText("OK", width / 2, buttonTextPosY, buttonTextPaint);
+
+			//canvas.drawRoundRect(editNameRect, buttonRadius, buttonRadius, buttonPaint);
 		}
 	}
 
@@ -138,6 +152,9 @@ public class GameOverState implements GameState {
 		buttonRect = new RectF(width / 2 - buttonWidth / 2, textOffsetY * 3 + titleTextPosY,
 				width / 2 + buttonWidth / 2, textOffsetY * 3 + titleTextPosY + buttonHeight);
 
+		editNameRect = new RectF(width / 2, titleTextPosY + textOffsetY,
+				width, titleTextPosY + textOffsetY * 2);
+
 		buttonTextPaint.getTextBounds(text, 0, text.length(), rect);
 		buttonTextPosY = buttonRect.bottom - buttonHeight / 2 + rect.height() / 2;
 	}
@@ -146,7 +163,37 @@ public class GameOverState implements GameState {
 	public void touchDown(float x, float y) {
 		if (buttonRect.contains(x, y)) {
 			isButtonHover = true;
+		} else if (editNameRect.contains(x, y)) {
+			showInputDialog(new Handler(this));
 		}
+	}
+
+	private void showInputDialog(final Handler handler) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+		final EditText view = new EditText(context);
+		view.setInputType(InputType.TYPE_CLASS_TEXT);
+
+		builder.setView(view);
+		builder.setTitle("Enter name");
+		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialogInterface, int i) {
+				if (view.getText() == null) {
+					return;
+				}
+
+				Bundle data = new Bundle();
+				data.putString("name", view.getText().toString());
+
+				Message message = new Message();
+				message.setData(data);
+
+				handler.sendMessage(message);
+			}
+		});
+
+		builder.show();
 	}
 
 	@Override
@@ -154,12 +201,24 @@ public class GameOverState implements GameState {
 		if (isButtonHover) {
 			isButtonHover = false;
 
-			explodeThread.replaceStateStack("menu");
+			if (isHighscore && enteredName != null && enteredName.length() != 0 && !enteredName.equals("...")) {
+				HighscoreState.insertHighscore(context, enteredName, score);
+				explodeThread.replaceStateStack("highscore");
+			} else {
+				explodeThread.replaceStateStack("menu");
+			}
 		}
 	}
 
 	@Override
 	public void destroy() {
 		icon.recycle();
+	}
+
+	@Override
+	public boolean handleMessage(Message message) {
+		assert message.getData() != null;
+		enteredName = message.getData().getString("name");
+		return true;
 	}
 }
