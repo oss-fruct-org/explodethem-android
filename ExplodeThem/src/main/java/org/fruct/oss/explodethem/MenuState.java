@@ -91,6 +91,8 @@ public class MenuState implements GameState {
 		menuItems.add(newGameMenu = new MenuItem("New game", "new-game"));
 		menuItems.add(new MenuItem("Help", "help"));
 		menuItems.add(new MenuItem("Highscore", "highscore"));
+		menuItems.add(new MenuItem("Quit", "quit"));
+
 
 		newGameMenu.subMenu = new ArrayList<MenuItem>();
 		newGameMenu.subMenu.add(new MenuItem("Easy", "new-game-easy"));
@@ -185,6 +187,15 @@ public class MenuState implements GameState {
 		} else if (id.equals("help")) {
 			explodeThread.replaceStateStack("help");
 			return;
+		} else if (id.equals("quit")) {
+			if (context instanceof MainActivity) {
+				((MainActivity) context).runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						((MainActivity) context).finish();
+					}
+				});
+			}
 		} else {
 			return;
 		}

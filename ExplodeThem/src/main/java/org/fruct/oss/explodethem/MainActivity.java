@@ -53,7 +53,7 @@ public class MainActivity extends Activity implements ShakeDetectActivityListene
 	public void onBackPressed() {
 		if (explodeView.getThread() != null) {
 			if (!explodeView.getThread().popState()) {
-				finish();
+				explodeView.getThread().pushState("menu");
 			}
 		}
 	}

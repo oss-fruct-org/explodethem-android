@@ -18,12 +18,11 @@ public class HelpState implements GameState {
 	public static final String TAG = HelpState.class.getName();
 	private static final long HISTORY_TIME = 100;
 
-	public static final float FRICTION_RATE = 0.002f;
-	public static final float GRAVITY_RATE = 0.003f;
+	public static final float FRICTION_RATE = 0.003f;
+	public static final float GRAVITY_RATE = 0.004f;
 	public static final int SPEED_THRESHOLD = 1;
 	public static final int OFFSET_THRESHOLD = 5;
 	public static final float SPEED_LIMIT = 2f;
-
 
 	private final Paint backgroundPaint;
 
@@ -168,7 +167,7 @@ public class HelpState implements GameState {
 		float marginLeft = Utils.getDP(context, 8);
 		float marginTop = Utils.getDP(context, 16);
 		StaticLayout staticLayout = new StaticLayout(str, textPaint, (int) (ret.getWidth() - marginLeft * 2),
-				Layout.Alignment.ALIGN_NORMAL, 0, 0, false);
+				Layout.Alignment.ALIGN_NORMAL, 1, 0, false);
 
 		canvas.translate(marginLeft, marginTop);
 		staticLayout.draw(canvas);
