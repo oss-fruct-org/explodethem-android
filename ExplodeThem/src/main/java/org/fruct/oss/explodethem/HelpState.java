@@ -22,6 +22,7 @@ public class HelpState implements GameState {
 	public static final float GRAVITY_RATE = 0.003f;
 	public static final int SPEED_THRESHOLD = 1;
 	public static final int OFFSET_THRESHOLD = 5;
+	public static final float SPEED_LIMIT = 2f;
 
 
 	private final Paint backgroundPaint;
@@ -104,6 +105,9 @@ public class HelpState implements GameState {
 			}
 
 			viewSpeed += speedChange;
+			if (Math.abs(viewSpeed) > SPEED_LIMIT) {
+				viewSpeed = SPEED_LIMIT * Math.signum(viewSpeed);
+			}
 		}
 	}
 
