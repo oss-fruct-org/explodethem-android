@@ -88,6 +88,7 @@ public class MenuState implements GameState {
 		menuItems.clear();
 		MenuItem newGameMenu;
 		menuItems.add(newGameMenu = new MenuItem("New game", "new-game"));
+		menuItems.add(new MenuItem("Help", "help"));
 		menuItems.add(new MenuItem("Highscore", "highscore"));
 
 		newGameMenu.subMenu = new ArrayList<MenuItem>();
@@ -179,6 +180,9 @@ public class MenuState implements GameState {
 			playState.newGame(2);
 		} else if (id.equals("highscore")) {
 			explodeThread.replaceStateStack("highscore");
+			return;
+		} else if (id.equals("help")) {
+			explodeThread.replaceStateStack("help");
 			return;
 		} else {
 			return;

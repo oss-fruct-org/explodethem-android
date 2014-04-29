@@ -59,16 +59,6 @@ public class MainActivity extends Activity implements ShakeDetectActivityListene
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (resultCode == RESULT_OK && requestCode == 0) {
-			String name = data.getStringExtra(GameOverActivity.EXTRA_NAME);
-			int score = data.getIntExtra(GameOverActivity.EXTRA_SCORE, 0);
-			Log.d(TAG, "onActivityResult " + name);
-			explodeView.updateHighscore(name, score);
-		}
-	}
-
-	@Override
 	public void shakeDetected() {
 		Log.d(TAG, "Shake detected");
 

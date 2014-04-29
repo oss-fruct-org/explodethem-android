@@ -66,6 +66,7 @@ public class ExplodeThread extends Thread {
 		states.put("highscore", new HighscoreState(context, this));
 		states.put("nextlevel", new NextLevelState(context, this, playState));
 		states.put("gameover", new GameOverState(context, this));
+		states.put("help", new HelpState(context, this));
 
 		commonResources = new CommonResources(context);
 	}
