@@ -110,13 +110,14 @@ public class HighscoreState implements GameState {
 		this.width = width;
 		this.height = height;
 
-		textPaint.getTextBounds("name:", 0, "name".length(), rect);
+		textPaint.getTextBounds("99999", 0, "99999".length(), rect);
 
 		textLineOffsetY = rect.height() + Utils.getDP(context, 16);
 		textLineStartY = titlePosY + Utils.getDP(context, 32) + textLineOffsetY;
 
-		textLineNameX = width / 6;
-		textLineValueX = 5 * width / 6;
+		textLineNameX = width / 9;
+		textLineValueX = 8 * width / 9 - rect.width();
+
 	}
 
 	@Override
