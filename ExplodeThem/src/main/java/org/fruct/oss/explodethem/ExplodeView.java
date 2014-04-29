@@ -73,7 +73,9 @@ public class ExplodeView extends SurfaceView implements SurfaceHolder.Callback {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			thread.touchDown(event.getX(), event.getY());
 		} else if (event.getAction() == MotionEvent.ACTION_UP) {
-			thread.touchUp(event.getX(), event.getY());
+			thread.touchUp(event.getX(), event.getY(), event);
+		} else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+			thread.moveEvent(event);
 		} else {
 			return super.onTouchEvent(event);
 		}

@@ -8,6 +8,7 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.MotionEvent;
 
 import static org.fruct.oss.explodethem.ExplodeThread.BitmapHolder;
 
@@ -123,7 +124,7 @@ public class NextLevelState implements GameState{
 	}
 
 	@Override
-	public void touchUp(float x, float y) {
+	public void touchUp(float x, float y, MotionEvent event) {
 		if (ticksRemainFadeIn == 0) {
 			playState.nextLevel();
 			explodeThread.popState();
@@ -134,5 +135,10 @@ public class NextLevelState implements GameState{
 	@Override
 	public void destroy() {
 		faceBitmap.recycle();
+	}
+
+	@Override
+	public void moveEvent(MotionEvent event) {
+
 	}
 }

@@ -5,14 +5,13 @@ import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.MotionEvent;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -126,12 +125,17 @@ public class HighscoreState implements GameState {
 	}
 
 	@Override
-	public void touchUp(float x, float y) {
+	public void touchUp(float x, float y, MotionEvent event) {
 		explodeThread.replaceStateStack("menu");
 	}
 
 	@Override
 	public void destroy() {
+
+	}
+
+	@Override
+	public void moveEvent(MotionEvent event) {
 
 	}
 

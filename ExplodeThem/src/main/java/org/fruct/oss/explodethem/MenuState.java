@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.MotionEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -156,7 +157,7 @@ public class MenuState implements GameState {
 	}
 
 	@Override
-	public void touchUp(float x, float y) {
+	public void touchUp(float x, float y, MotionEvent event) {
 		if (hoverIndex >= 0) {
 
 			MenuItem menuItem = menuItems.get(hoverIndex);
@@ -193,6 +194,11 @@ public class MenuState implements GameState {
 
 	@Override
 	public void destroy() {
+
+	}
+
+	@Override
+	public void moveEvent(MotionEvent event) {
 
 	}
 

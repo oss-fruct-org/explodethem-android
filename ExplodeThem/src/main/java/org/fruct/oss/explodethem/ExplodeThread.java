@@ -5,19 +5,15 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class ExplodeThread extends Thread {
 	private static final String TAG = "ExplodeThread";
@@ -171,9 +167,15 @@ public class ExplodeThread extends Thread {
 		}
 	}
 
-	public void touchUp(float x, float y) {
+	public void touchUp(float x, float y, MotionEvent event) {
 		synchronized (holder) {
-			stateStack.get(stateStack.size() - 1).touchUp(x, y);
+			stateStack.get(stateStack.size() - 1).touchUp(x, y, event);
+		}
+	}
+
+	public void moveEvent(MotionEvent event) {
+		synchronized (holder) {
+			stateStack.get(stateStack.size() - 1).moveEvent(event);
 		}
 	}
 

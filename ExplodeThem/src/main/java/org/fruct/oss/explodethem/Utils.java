@@ -14,4 +14,17 @@ public class Utils {
 				context.getResources().getDisplayMetrics());
 	}
 
+	public static float round(float f) {
+		return (float) Math.floor(f + 0.5f);
+	}
+
+	public static int modPos(int a, int m) {
+		int ret = a % m;
+
+		if (ret < 0)
+			ret += m;
+
+		return ret;
+	}
+
 }

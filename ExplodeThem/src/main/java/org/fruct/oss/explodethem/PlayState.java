@@ -2,7 +2,6 @@ package org.fruct.oss.explodethem;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -12,8 +11,8 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.view.MotionEvent;
 
 import java.util.List;
 
@@ -441,7 +440,7 @@ public class PlayState implements GameState {
 	}
 
 	@Override
-	public void touchUp(float x, float y) {
+	public void touchUp(float x, float y, MotionEvent event) {
 		testHit(x, y, point);
 
 		if (touchX != -1 && touchY != -1 && touchY == point.y && touchX == point.x) {
@@ -470,6 +469,11 @@ public class PlayState implements GameState {
 		for (BitmapHolder bh : explosion) {
 			bh.recycle();
 		}
+	}
+
+	@Override
+	public void moveEvent(MotionEvent event) {
+
 	}
 
 	public void nextLevel() {

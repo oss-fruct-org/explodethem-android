@@ -12,9 +12,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.InputType;
-import android.util.Log;
+import android.view.MotionEvent;
 import android.widget.EditText;
-import android.widget.TextView;
 
 
 public class GameOverState implements GameState, Handler.Callback {
@@ -197,7 +196,7 @@ public class GameOverState implements GameState, Handler.Callback {
 	}
 
 	@Override
-	public void touchUp(float x, float y) {
+	public void touchUp(float x, float y, MotionEvent event) {
 		if (isButtonHover) {
 			isButtonHover = false;
 
@@ -213,6 +212,11 @@ public class GameOverState implements GameState, Handler.Callback {
 	@Override
 	public void destroy() {
 		icon.recycle();
+	}
+
+	@Override
+	public void moveEvent(MotionEvent event) {
+
 	}
 
 	@Override
