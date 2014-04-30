@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion 8
         targetSdkVersion 19
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "1.1"
     }
 
     buildTypes {
@@ -35,12 +35,12 @@ android {
     productFlavors {
         free {
             packageName "org.fruct.oss.explodethem.free"
-            versionName "1.0-free"
+            versionName "1.1-free"
         }
 
         full {
             packageName "org.fruct.oss.explodethem.full"
-            versionName "1.0-full"
+            versionName "1.1-full"
         }
     }
 }
