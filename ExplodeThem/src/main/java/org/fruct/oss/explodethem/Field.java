@@ -53,7 +53,7 @@ public class Field implements Serializable {
 	private int bombsRemain;
 	private int score = 0;
 	private int level = 0;
-	private int sparks = 10;
+	private int sparks = 9;
 	private int shakes = 3;
 
 	private int explodedInLevel;
@@ -80,6 +80,7 @@ public class Field implements Serializable {
 	}
 
 	public void nextLevel() {
+		sparks++;
 		level++;
 		explodedInLevel = 0;
 

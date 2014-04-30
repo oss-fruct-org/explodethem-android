@@ -186,11 +186,8 @@ public class PlayState implements GameState {
 
 			if (field.getBombsRemain() == 0) {
 				Log.d(TAG, "Win");
-				field.addSpark();
 				explodeThread.pushState("nextlevel");
-			}
-
-			if (field.getSparks() == 0) {
+			} else if (field.getSparks() == 0) {
 				Log.d(TAG, "Game over");
 				final int score = field.getScore();
 				field = null;
