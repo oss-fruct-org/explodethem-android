@@ -146,6 +146,7 @@ public class PlayState implements GameState {
 		} else {
 			if (field.getBombsRemain() == 0) {
 				Log.d(TAG, "Win");
+				field.addSpark();
 				explodeThread.pushState("nextlevel");
 			}
 
@@ -410,15 +411,17 @@ public class PlayState implements GameState {
 		Rect rect = new Rect();
 		textPaint.getTextBounds("Score:", 0, "Score:".length(), rect);
 
-		dimensions.scoreTextPoint.set(0, rect.height());
-		dimensions.levelTextPoint.set(width, rect.height());
-		dimensions.shakesTextPoint.set(width, rect.height() * 2);
+		final int textMargin = (int) Utils.getDP(context, 8);
+
+		dimensions.scoreTextPoint.set(textMargin, textMargin + rect.height());
+		dimensions.levelTextPoint.set(width - textMargin, textMargin + rect.height());
+		dimensions.shakesTextPoint.set(width - textMargin, rect.height() * 2 + textMargin * 2);
 
 		PointF sparksSize = new PointF(Utils.getDP(context, 64), Utils.getDP(context, 32));
-		dimensions.sparksRect.set(width / 2 - sparksSize.x / 2,
-				dimensions.shakesTextPoint.y - sparksSize.y / 2,
-				width / 2 + sparksSize.x / 2,
-				dimensions.shakesTextPoint.y + sparksSize.y / 2);
+		dimensions.sparksRect.set(dimensions.scoreTextPoint.x,
+				dimensions.scoreTextPoint.y + textMargin,
+				dimensions.scoreTextPoint.x + sparksSize.x,
+				dimensions.scoreTextPoint.y + sparksSize.y + textMargin);
 
 		textPaint.getTextBounds("99", 0, "99".length(), rect);
 		dimensions.sparksTextPoint.set(dimensions.sparksRect.centerX(),

@@ -337,4 +337,8 @@ public class Field {
 	public int getShakes() {
 		return shakes;
 	}
+
+	public void addSpark() {
+		sparks ++;
+	}
 }
