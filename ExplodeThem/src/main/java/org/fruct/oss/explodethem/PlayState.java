@@ -73,6 +73,9 @@ public class PlayState implements GameState {
 	private int soundBombId;
 	private int soundNoneId;
 	private SoundPool soundPool;
+	private String playScore;
+	private String playLevel;
+	private String playShakes;
 
 	public PlayState(Context context, ExplodeThread explodeThread) {
 		this.context = context;
@@ -132,6 +135,10 @@ public class PlayState implements GameState {
 		soundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 0);
 		soundBombId = soundPool.load(context, R.raw.bomb4, 1);
 		soundNoneId = soundPool.load(context, R.raw.none, 1);
+
+		playScore = context.getString(R.string.play_score);
+		playShakes = context.getString(R.string.play_shakes);
+		playLevel = context.getString(R.string.play_level);
 	}
 
 	public void newGame(int skill) {
@@ -217,11 +224,12 @@ public class PlayState implements GameState {
 			// Draw shells
 			drawShells(canvas);
 			drawAnimated(canvas);
-			drawText(canvas, "Score: " + field.getScore(), dimensions.scoreTextPoint, false);
-			drawText(canvas, "Level: " + field.getLevel(), dimensions.levelTextPoint, true);
+
+			drawText(canvas, playScore + " " + field.getScore(), dimensions.scoreTextPoint, false);
+			drawText(canvas, playLevel + " " + field.getLevel(), dimensions.levelTextPoint, true);
 
 			if (Flavor.isFull()) {
-				drawText(canvas, "Shakes: " + field.getShakes(), dimensions.shakesTextPoint, true);
+				drawText(canvas, playShakes + " " + field.getShakes(), dimensions.shakesTextPoint, true);
 			}
 			drawSparks(canvas);
 		}

@@ -31,6 +31,7 @@ public class NextLevelState implements GameState{
 	private int height;
 
 	private BitmapHolder faceBitmap;
+	private String nextLevelTitle;
 
 	public NextLevelState(Context context, ExplodeThread explodeThread, PlayState playState) {
 		this.context = context;
@@ -66,11 +67,13 @@ public class NextLevelState implements GameState{
 		textPaint.setTextAlign(Paint.Align.CENTER);
 
 		textPaint.getTextBounds("Next", 0, 4, textBounds);
+
+		nextLevelTitle = context.getString(R.string.next_level_title);
 	}
 
 	@Override
 	public void prepare(Bundle args) {
-
+		ticksRemainFadeIn = TICKS_FADE;
 	}
 
 	@Override
@@ -104,7 +107,7 @@ public class NextLevelState implements GameState{
 			int textY = (int) (height / 2 + faceBitmap.getScaled().getHeight() / 2
 								+ textBounds.height() + Utils.getDP(context, 8));
 
-			drawText(canvas, "Next level", textX, textY);
+			drawText(canvas, nextLevelTitle, textX, textY);
 		}
 	}
 

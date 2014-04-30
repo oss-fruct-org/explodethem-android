@@ -44,6 +44,9 @@ public class AboutState implements GameState {
 	private float buttonTextPosY;
 
 	private boolean isButtonHover = false;
+	private String titleText;
+	private String aboutText;
+
 	public AboutState(Context context, ExplodeThread explodeThread) {
 		this.context = context;
 		this.explodeThread = explodeThread;
@@ -80,6 +83,9 @@ public class AboutState implements GameState {
 		buttonPaintHighlight.setColor(0x99c5a0f3);
 
 		icon = new ExplodeThread.BitmapHolder(context, "about-icon.png");
+
+		titleText = context.getString(R.string.explode_them);
+		aboutText = context.getString(R.string.ok);
 	}
 
 	@Override
@@ -97,11 +103,11 @@ public class AboutState implements GameState {
 		canvas.drawBitmap(icon.getScaled(), width / 2 - icon.getScaled().getWidth() / 2,
 				height / 4 - icon.getScaled().getHeight() / 2, null);
 
-		canvas.drawText("Explode Them", width / 2, titleTextPosY, titleTextPaint);
+		canvas.drawText(titleText, width / 2, titleTextPosY, titleTextPaint);
 
 		canvas.drawRoundRect(buttonRect, buttonRadius, buttonRadius,
 				isButtonHover ? buttonPaintHighlight : buttonPaint);
-		canvas.drawText("OK", width / 2, buttonTextPosY, buttonTextPaint);
+		canvas.drawText(aboutText, width / 2, buttonTextPosY, buttonTextPaint);
 
 		canvas.save();
 		canvas.translate(width / 2 - descriptionLayout.getWidth() / 2, titleTextPosY + padding);
@@ -118,7 +124,7 @@ public class AboutState implements GameState {
 
 		this.icon.scale(width / 2, width / 2);
 
-		String text = "Explode Them 1.0";
+		String text = context.getString(R.string.about_app_name);
 
 		Rect rect = new Rect();
 		titleTextPaint.getTextBounds(text, 0, text.length(), rect);
@@ -126,9 +132,7 @@ public class AboutState implements GameState {
 
 		textPaint.getTextBounds(text, 0, text.length(), rect);
 
-		descriptionLayout = new StaticLayout("Copyright \u00a9 2012,2014 FRUCT Lab in IT-park of" +
-				" Petrozavodsk State University. Main developer is Artemov Nikita." +
-				" Android port by Kirill Ivashov.",
+		descriptionLayout = new StaticLayout(context.getString(R.string.about_text),
 				textPaint, 2 * width / 3, Layout.Alignment.ALIGN_CENTER, 1, 0, false);
 
 		float buttonHeight = Utils.getDP(context, 48);

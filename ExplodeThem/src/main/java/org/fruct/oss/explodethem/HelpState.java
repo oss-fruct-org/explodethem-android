@@ -54,6 +54,7 @@ public class HelpState implements GameState {
 
 	private boolean isDragging = false;
 	private boolean isMoving = false;
+	private String helpTitle;
 
 	public HelpState(Context context, ExplodeThread explodeThread) {
 		this.context = context;
@@ -78,6 +79,8 @@ public class HelpState implements GameState {
 		panelDistance = Utils.getDP(context, 32);
 
 		helpStrings = context.getResources().getStringArray(R.array.help_strings);
+		helpTitle = context.getString(R.string.help_title);
+
 	}
 
 	@Override
@@ -117,7 +120,7 @@ public class HelpState implements GameState {
 	@Override
 	public void draw(Canvas canvas) {
 		canvas.drawBitmap(explodeThread.getCommonResources().background.getScaled(), 0, 0, null);
-		canvas.drawText("Help", width / 2, titlePosY, titleTextPaint);
+		canvas.drawText(helpTitle, width / 2, titlePosY, titleTextPaint);
 
 		float relativeViewPosition = viewPosition / width;
 

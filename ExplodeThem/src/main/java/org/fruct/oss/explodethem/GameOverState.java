@@ -51,6 +51,11 @@ public class GameOverState implements GameState, Handler.Callback {
 	private boolean isHighscore = false;
 
 	private String enteredName = "...";
+	private String gameOverTitle;
+	private String gameOverScore;
+	private String gameOverName;
+	private String okString;
+
 
 	public GameOverState(Context context, ExplodeThread explodeThread) {
 		this.context = context;
@@ -89,6 +94,11 @@ public class GameOverState implements GameState, Handler.Callback {
 
 		icon = new ExplodeThread.BitmapHolder(context, "gameover-bomb.png");
 
+		gameOverTitle = context.getString(R.string.game_over_title);
+		gameOverScore = context.getString(R.string.game_over_score);
+		gameOverName = context.getString(R.string.game_over_name);
+		okString = context.getString(R.string.ok);
+
 	}
 
 	@Override
@@ -118,16 +128,16 @@ public class GameOverState implements GameState, Handler.Callback {
 			canvas.drawBitmap(icon.getScaled(), width / 2 - icon.getScaled().getWidth() / 2,
 					height / 4 - icon.getScaled().getHeight() / 2, null);
 
-			canvas.drawText("Game Over", width / 2, titleTextPosY, titleTextPaint);
-			canvas.drawText("Your score: " + score, width / 2, titleTextPosY + textOffsetY, textPaint);
+			canvas.drawText(gameOverTitle, width / 2, titleTextPosY, titleTextPaint);
+			canvas.drawText(gameOverScore + " " + score, width / 2, titleTextPosY + textOffsetY, textPaint);
 
 			if (isHighscore) {
-				canvas.drawText("Your name: " + enteredName, width / 2, titleTextPosY + textOffsetY * 2, textPaint);
+				canvas.drawText(gameOverName + " " + enteredName, width / 2, titleTextPosY + textOffsetY * 2, textPaint);
 			}
 
 			canvas.drawRoundRect(buttonRect, buttonRadius, buttonRadius,
 					isButtonHover ? buttonPaintHighlight : buttonPaint);
-			canvas.drawText("OK", width / 2, buttonTextPosY, buttonTextPaint);
+			canvas.drawText(okString, width / 2, buttonTextPosY, buttonTextPaint);
 
 			//canvas.drawRoundRect(editNameRect, buttonRadius, buttonRadius, buttonPaint);
 		}
@@ -177,8 +187,8 @@ public class GameOverState implements GameState, Handler.Callback {
 		view.setInputType(InputType.TYPE_CLASS_TEXT);
 
 		builder.setView(view);
-		builder.setTitle("Enter name");
-		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+		builder.setTitle(context.getString(R.string.game_over_enter_name));
+		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
 				if (view.getText() == null) {
@@ -236,6 +246,7 @@ public class GameOverState implements GameState, Handler.Callback {
 	public boolean handleMessage(Message message) {
 		assert message.getData() != null;
 		enteredName = message.getData().getString("name");
+		explodeThread.continueRendering();
 		return true;
 	}
 }

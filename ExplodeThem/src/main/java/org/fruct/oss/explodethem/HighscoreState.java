@@ -44,6 +44,7 @@ public class HighscoreState implements GameState {
 	private int width;
 	private int height;
 	private List<Highscore> highscores;
+	private String highscoreTitle;
 
 	public HighscoreState(Context context, ExplodeThread explodeThread) {
 		this.context = context;
@@ -70,6 +71,8 @@ public class HighscoreState implements GameState {
 
 		textPaintRed = new Paint(textPaint);
 		textPaintRed.setColor(0xffe64b45);
+
+		highscoreTitle = context.getString(R.string.highscore_title);
 	}
 
 	@Override
@@ -85,7 +88,7 @@ public class HighscoreState implements GameState {
 	@Override
 	public void draw(Canvas canvas) {
 		canvas.drawBitmap(explodeThread.getCommonResources().background.getScaled(), 0, 0, null);
-		canvas.drawText("Highscore", width / 2, titlePosY, titleTextPaint);
+		canvas.drawText(highscoreTitle, width / 2, titlePosY, titleTextPaint);
 
 		for (int i = 0; i < highscores.size(); i++) {
 			Highscore hs = highscores.get(i);

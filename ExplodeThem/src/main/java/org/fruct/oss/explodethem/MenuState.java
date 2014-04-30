@@ -93,23 +93,24 @@ public class MenuState implements GameState {
 	public void prepare(Bundle args) {
 		menuItems.clear();
 		MenuItem newGameMenu;
-		menuItems.add(new MenuItem("Help", "help"));
-		menuItems.add(new MenuItem("Highscore", "highscore"));
-		menuItems.add(new MenuItem("About", "about"));
-		menuItems.add(new MenuItem("Quit", "quit"));
+		menuItems.add(new MenuItem(context.getString(R.string.menu_help), "help"));
+		menuItems.add(new MenuItem(context.getString(R.string.menu_highscore), "highscore"));
+		menuItems.add(new MenuItem(context.getString(R.string.menu_about), "about"));
+		menuItems.add(new MenuItem(context.getString(R.string.menu_quit), "quit"));
 
 		if (Flavor.isFull()) {
-			menuItems.add(0, newGameMenu = new MenuItem("New game", "new-game"));
+			menuItems.add(0, newGameMenu = new MenuItem(context.getString(R.string.menu_new_game),
+					"new-game"));
 			newGameMenu.subMenu = new ArrayList<MenuItem>();
-			newGameMenu.subMenu.add(new MenuItem("Easy", "new-game-easy"));
-			newGameMenu.subMenu.add(new MenuItem("Medium", "new-game-medium"));
-			newGameMenu.subMenu.add(new MenuItem("Hard", "new-game-hard"));
+			newGameMenu.subMenu.add(new MenuItem(context.getString(R.string.menu_easy), "new-game-easy"));
+			newGameMenu.subMenu.add(new MenuItem(context.getString(R.string.menu_medium), "new-game-medium"));
+			newGameMenu.subMenu.add(new MenuItem(context.getString(R.string.menu_hard), "new-game-hard"));
 		} else {
-			menuItems.add(0, new MenuItem("New game", "new-game-medium"));
+			menuItems.add(0, new MenuItem(context.getString(R.string.menu_new_game), "new-game-medium"));
 		}
 
 		if (playState.isStarted()) {
-			menuItems.add(0, new MenuItem("Continue", "continue"));
+			menuItems.add(0, new MenuItem(context.getString(R.string.menu_continue), "continue"));
 		}
 
 		updateMenuLayout();
