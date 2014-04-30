@@ -88,16 +88,19 @@ public class MenuState implements GameState {
 	public void prepare(Bundle args) {
 		menuItems.clear();
 		MenuItem newGameMenu;
-		menuItems.add(newGameMenu = new MenuItem("New game", "new-game"));
 		menuItems.add(new MenuItem("Help", "help"));
 		menuItems.add(new MenuItem("Highscore", "highscore"));
 		menuItems.add(new MenuItem("Quit", "quit"));
 
-
-		newGameMenu.subMenu = new ArrayList<MenuItem>();
-		newGameMenu.subMenu.add(new MenuItem("Easy", "new-game-easy"));
-		newGameMenu.subMenu.add(new MenuItem("Medium", "new-game-medium"));
-		newGameMenu.subMenu.add(new MenuItem("Hard", "new-game-hard"));
+		if (Flavor.isFull()) {
+			menuItems.add(0, newGameMenu = new MenuItem("New game", "new-game"));
+			newGameMenu.subMenu = new ArrayList<MenuItem>();
+			newGameMenu.subMenu.add(new MenuItem("Easy", "new-game-easy"));
+			newGameMenu.subMenu.add(new MenuItem("Medium", "new-game-medium"));
+			newGameMenu.subMenu.add(new MenuItem("Hard", "new-game-hard"));
+		} else {
+			menuItems.add(0, new MenuItem("New game", "new-game-medium"));
+		}
 		updateMenuLayout();
 	}
 

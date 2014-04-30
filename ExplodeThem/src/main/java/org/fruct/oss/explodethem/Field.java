@@ -125,7 +125,12 @@ public class Field {
 					ent = Entity.LARGE_BOMB;
 					break;
 				case 4:
-					ent = Entity.WATER_BOMB;
+					if (Flavor.isFull()) {
+						ent = Entity.WATER_BOMB;
+					} else {
+						// Near impossible
+						ent = Entity.EMPTY;
+					}
 					break;
 				default:
 					throw new RuntimeException("Error");
@@ -293,7 +298,7 @@ public class Field {
 
 	private int[] createRationArray(int level) {
 		int empty, small, medium, large, water;
-		water = 2;
+		water = Flavor.isFull() ? 2 : 0;
 		empty = level < 14 ? 7 + level : 20;
 		medium = level < 14 ? 18 - level : 3;
 		if(level < 2)

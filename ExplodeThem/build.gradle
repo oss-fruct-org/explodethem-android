@@ -10,10 +10,37 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
     buildTypes {
+        if (false) {
+            signingConfigs {
+                release {
+                    storeFile file(System.getenv("KEYSTORE"))
+                    storePassword System.getenv("KEYSTORE_PASSWORD")
+                    keyAlias System.getenv("KEY_ALIAS")
+                    keyPassword System.getenv("KEY_PASSWORD")
+                }
+            }
+        }
+
         release {
-            runProguard false
+            runProguard true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            if (false) {
+                signingConfig signingConfigs.release
+            }
+        }
+    }
+
+    productFlavors {
+        free {
+            packageName "org.fruct.oss.explodethem.free"
+            versionName "1.0-free"
+        }
+
+        full {
+            packageName "org.fruct.oss.explodethem.full"
+            versionName "1.0-full"
         }
     }
 }

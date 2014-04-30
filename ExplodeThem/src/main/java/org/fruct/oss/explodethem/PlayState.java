@@ -1,6 +1,5 @@
 package org.fruct.oss.explodethem;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -87,10 +86,13 @@ public class PlayState implements GameState {
 		largeBomb = new BitmapHolder(context, "large-bomb.png");
 		mediumBomb = new BitmapHolder(context, "medium-bomb.png");
 		smallBomb = new BitmapHolder(context, "small-bomb.png");
-		waterBomb = new BitmapHolder(context, "water-bomb.png");
 
 		fire = new BitmapHolder(context, "fire.png");
-		water = new BitmapHolder(context, "drop.png");
+
+		if (Flavor.isFull()) {
+			waterBomb = new BitmapHolder(context, "water-bomb.png");
+			water = new BitmapHolder(context, "drop.png");
+		}
 
 		tileRadius = Utils.getDP(context, 4);
 		textSize = Utils.getSP(context, 32);
@@ -418,8 +420,10 @@ public class PlayState implements GameState {
 		smallBomb.scale(dimensions.tileSize * Field.Entity.SMALL_BOMB.getFactor(),
 				dimensions.tileSize * Field.Entity.SMALL_BOMB.getFactor());
 
-		waterBomb.scale(dimensions.tileSize * Field.Entity.WATER_BOMB.getFactor(),
-				dimensions.tileSize * Field.Entity.WATER_BOMB.getFactor());
+		if (Flavor.isFull()) {
+			waterBomb.scale(dimensions.tileSize * Field.Entity.WATER_BOMB.getFactor(),
+					dimensions.tileSize * Field.Entity.WATER_BOMB.getFactor());
+		}
 
 		for (BitmapHolder anExplosion : explosion) {
 			anExplosion.scale(dimensions.tileSize, dimensions.tileSize);
@@ -488,8 +492,12 @@ public class PlayState implements GameState {
 		largeBomb.recycle();
 		mediumBomb.recycle();
 		smallBomb.recycle();
-		waterBomb.recycle();
-		water.recycle();
+		if (waterBomb != null) {
+			waterBomb.recycle();
+		}
+		if (water != null) {
+			water.recycle();
+		}
 		fire.recycle();
 
 		for (BitmapHolder bh : explosion) {
