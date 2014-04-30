@@ -23,10 +23,7 @@ public class MenuState implements GameState {
 	private final Paint buttonPaint;
 	private final Paint buttonPaintHightlight;
 	private final Paint textPaint;
-	private final Paint backgroundPaint;
-
-	private boolean fadeIn = true;
-	private int fadeTicksRemain = FADE_TICKS;
+	private final Paint titleTextPaint;
 
 	private int width;
 	private int height;
@@ -43,6 +40,9 @@ public class MenuState implements GameState {
 	private List<RectF> menuItemsRects = new ArrayList<RectF>();
 
 	private int hoverIndex = -1;
+	private float titlePosY;
+	private float titleOffsetY;
+
 
 	public MenuState(Context context, ExplodeThread explodeThread, PlayState playState) {
 		this.context = context;
@@ -67,7 +67,12 @@ public class MenuState implements GameState {
 		textPaint.setTextSize(textSize);
 		textPaint.setTextAlign(Paint.Align.CENTER);
 
-		backgroundPaint = new Paint();
+		titleTextPaint = new Paint();
+		titleTextPaint.setTypeface(Typeface.createFromAsset(context.getAssets(), "Colleged.ttf"));
+		titleTextPaint.setAntiAlias(true);
+		titleTextPaint.setColor(0xfffafef1);
+		titleTextPaint.setTextSize(Utils.getSP(context, 40));
+		titleTextPaint.setTextAlign(Paint.Align.CENTER);
 	}
 
 	private void updateMenuLayout() {
@@ -90,6 +95,7 @@ public class MenuState implements GameState {
 		MenuItem newGameMenu;
 		menuItems.add(new MenuItem("Help", "help"));
 		menuItems.add(new MenuItem("Highscore", "highscore"));
+		menuItems.add(new MenuItem("About", "about"));
 		menuItems.add(new MenuItem("Quit", "quit"));
 
 		if (Flavor.isFull()) {
@@ -106,11 +112,11 @@ public class MenuState implements GameState {
 
 	@Override
 	public void updatePhysics() {
-		if (fadeTicksRemain > 0) {
+		/*if (fadeTicksRemain > 0) {
 			fadeTicksRemain--;
 		} else {
 			fadeIn = false;
-		}
+		}*/
 	}
 
 	@Override
@@ -118,11 +124,14 @@ public class MenuState implements GameState {
 		canvas.drawBitmap(explodeThread.getCommonResources().background.getScaled(),
 				0, 0, null);
 
-		if (fadeIn) {
+		canvas.drawText("Explode", width / 2, titlePosY, titleTextPaint);
+		canvas.drawText("Them", width / 2, titlePosY + titleOffsetY, titleTextPaint);
+
+		/*if (fadeIn) {
 			int alpha = 200 - 200 * fadeTicksRemain / FADE_TICKS;
 			backgroundPaint.setColor(alpha << 24);
 		}
-		canvas.drawRect(0, 0, width, height, backgroundPaint);
+		canvas.drawRect(0, 0, width, height, backgroundPaint);*/
 
 		for (int i = 0; i < menuItems.size(); i++) {
 			String str = menuItems.get(i).text;
@@ -139,6 +148,11 @@ public class MenuState implements GameState {
 	public void setSize(int width, int height) {
 		this.width = width;
 		this.height = height;
+
+		Rect rect = new Rect();
+		titleTextPaint.getTextBounds("Explode them", 0, "Explode them".length(), rect);
+		titlePosY = Utils.getDP(context, 16) + rect.height();
+		titleOffsetY = rect.height() + Utils.getDP(context, 8);
 
 		buttonHeight = Utils.getDP(context, 48);
 		buttonPadding = Utils.getDP(context, 8);
@@ -178,7 +192,9 @@ public class MenuState implements GameState {
 	}
 
 	private void onMenuItemClick(String id) {
-		if (id.equals("new-game-easy")) {
+		if (id.equals("about")) {
+			explodeThread.replaceStateStack("about");
+		} if (id.equals("new-game-easy")) {
 			playState.newGame(0);
 		} else if (id.equals("new-game-medium")) {
 			playState.newGame(1);
