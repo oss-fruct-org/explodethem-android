@@ -222,6 +222,16 @@ public class GameOverState implements GameState, Handler.Callback {
 	}
 
 	@Override
+	public void storeState(Bundle outState) {
+		outState.putString("name", enteredName);
+	}
+
+	@Override
+	public void restoreState(Bundle inState) {
+		enteredName = inState.getString("name");
+	}
+
+	@Override
 	public boolean handleMessage(Message message) {
 		assert message.getData() != null;
 		enteredName = message.getData().getString("name");

@@ -93,6 +93,8 @@ public class AboutState implements GameState {
 	public void updatePhysics() {
 		if (ticksRemainFadeIn > 0) {
 			ticksRemainFadeIn--;
+		} else {
+			explodeThread.stopRendering();
 		}
 	}
 
@@ -150,8 +152,6 @@ public class AboutState implements GameState {
 
 		buttonTextPaint.getTextBounds(text, 0, text.length(), rect);
 		buttonTextPosY = buttonRect.bottom - buttonHeight / 2 + rect.height() / 2;
-
-		explodeThread.stopRendering();
 	}
 
 	@Override
@@ -180,4 +180,11 @@ public class AboutState implements GameState {
 
 	}
 
+	@Override
+	public void storeState(Bundle outState) {
+	}
+
+	@Override
+	public void restoreState(Bundle inState) {
+	}
 }

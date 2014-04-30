@@ -143,4 +143,14 @@ public class NextLevelState implements GameState{
 	public void moveEvent(MotionEvent event) {
 
 	}
+
+	@Override
+	public void storeState(Bundle outState) {
+
+	}
+
+	@Override
+	public void restoreState(Bundle inState) {
+
+	}
 }

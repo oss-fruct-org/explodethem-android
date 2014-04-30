@@ -211,6 +211,16 @@ public class HelpState implements GameState {
 	}
 
 	@Override
+	public void storeState(Bundle outState) {
+
+	}
+
+	@Override
+	public void restoreState(Bundle inState) {
+
+	}
+
+	@Override
 	public void destroy() {
 		for (Bitmap panel : helpPanels) {
 			panel.recycle();

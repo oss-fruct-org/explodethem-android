@@ -140,6 +140,16 @@ public class HighscoreState implements GameState {
 
 	}
 
+	@Override
+	public void storeState(Bundle outState) {
+
+	}
+
+	@Override
+	public void restoreState(Bundle inState) {
+
+	}
+
 	public static class Highscore implements Comparable<Highscore> {
 		public Highscore(String name, int value) {
 			this.name = name;

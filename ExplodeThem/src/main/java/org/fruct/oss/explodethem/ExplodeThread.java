@@ -34,6 +34,7 @@ public class ExplodeThread extends Thread {
 
 	private HashMap<String, GameState> states = new HashMap<String, GameState>();
 	private ArrayList<GameState> stateStack = new ArrayList<GameState>();
+	private ArrayList<String> stateStackIds = new ArrayList<String>();
 
 	// Timing variables
 	private long gameTime;
@@ -46,8 +47,7 @@ public class ExplodeThread extends Thread {
 	private int height;
 	private final PlayState playState;
 
-
-	public ExplodeThread(Context context, SurfaceHolder holder) {
+	public ExplodeThread(Context context, SurfaceHolder holder, Bundle inState) {
 		setName("ExplodeThread");
 
 		this.context = context;
@@ -68,10 +68,25 @@ public class ExplodeThread extends Thread {
 		states.put("about", new AboutState(context, this));
 
 		commonResources = new CommonResources(context);
+
+		if (inState != null) {
+			for (String stateId : states.keySet()) {
+				Bundle data = inState.getBundle("state-" + stateId);
+				if (data != null) {
+					states.get(stateId).restoreState(data);
+				}
+			}
+		}
 	}
 
-	public void startNewGame() {
-		pushState("menu");
+	public void startNewGame(Bundle inState) {
+		if (inState == null ) {
+			pushState("menu");
+		} else {
+			for (String stateId : inState.getStringArrayList("states-stack")) {
+				pushState(stateId);
+			}
+		}
 	}
 
 	@Override
@@ -228,6 +243,7 @@ public class ExplodeThread extends Thread {
 			if (state != null) {
 				state.prepare(null);
 				stateStack.add(state);
+				stateStackIds.add(stateId);
 			}
 
 			continueRendering();
@@ -239,6 +255,7 @@ public class ExplodeThread extends Thread {
 			if (state != null) {
 				state.prepare(args);
 				stateStack.add(state);
+				stateStackIds.add(stateId);
 			}
 
 			continueRendering();
@@ -248,6 +265,8 @@ public class ExplodeThread extends Thread {
 	public boolean popState() {
 		synchronized (holder) {
 			stateStack.remove(stateStack.size() - 1);
+			stateStackIds.remove(stateStackIds.size() - 1);
+
 			continueRendering();
 			return !stateStack.isEmpty();
 		}
@@ -260,6 +279,7 @@ public class ExplodeThread extends Thread {
 			}
 
 			stateStack.clear();
+			stateStackIds.clear();
 		}
 
 		commonResources.destroy();
@@ -307,6 +327,22 @@ public class ExplodeThread extends Thread {
 				playState.shakeDetected();
 				continueRendering();
 			}
+		}
+	}
+
+	public void storeState(Bundle outState) {
+		Log.d(TAG, "storeState");
+
+		synchronized (holder) {
+			// Store states
+			for (String stateId : states.keySet()) {
+				Bundle stateBundle = new Bundle();
+				states.get(stateId).storeState(stateBundle);
+				outState.putBundle("state-" + stateId, stateBundle);
+			}
+
+			// Store state stack
+			outState.putStringArrayList("states-stack", new ArrayList<String>(stateStackIds));
 		}
 	}
 

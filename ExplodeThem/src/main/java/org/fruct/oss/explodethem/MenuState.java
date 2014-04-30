@@ -231,6 +231,16 @@ public class MenuState implements GameState {
 
 	}
 
+	@Override
+	public void storeState(Bundle outState) {
+
+	}
+
+	@Override
+	public void restoreState(Bundle inState) {
+
+	}
+
 	private class MenuItem {
 		MenuItem(String text, String id) {
 			this.text = text;

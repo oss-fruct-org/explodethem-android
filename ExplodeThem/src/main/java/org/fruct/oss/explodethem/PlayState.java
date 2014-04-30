@@ -33,7 +33,7 @@ public class PlayState implements GameState {
 	private final Context context;
 	private final ExplodeThread explodeThread;
 
-	private float stepRemainTicks;
+	private long stepRemainTicks;
 	private float stepOffset;
 
 	// Paints
@@ -68,8 +68,6 @@ public class PlayState implements GameState {
 	private BitmapHolder water;
 	private BitmapHolder spark;
 	private float tileRadius;
-
-	private boolean menuShown = false;
 
 	// Sound
 	private int soundBombId;
@@ -154,7 +152,6 @@ public class PlayState implements GameState {
 	@Override
 	public void updatePhysics() {
 		if (field == null) {
-			menuShown = true;
 			explodeThread.pushState("menu");
 			return;
 		}
@@ -535,7 +532,20 @@ public class PlayState implements GameState {
 
 	@Override
 	public void moveEvent(MotionEvent event) {
+	}
 
+	@Override
+	public void storeState(Bundle outState) {
+		outState.putFloat("stepOffset", stepOffset);
+		outState.putLong("stepRemainTicks", stepRemainTicks);
+		outState.putSerializable("field", field);
+	}
+
+	@Override
+	public void restoreState(Bundle inState) {
+		stepOffset = inState.getFloat("stepOffset");
+		stepRemainTicks = inState.getLong("stepRemainTicks");
+		field = (Field) inState.getSerializable("field");
 	}
 
 	public void nextLevel() {

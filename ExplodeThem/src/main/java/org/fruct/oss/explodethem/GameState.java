@@ -10,11 +10,11 @@ public interface GameState {
 	void updatePhysics();
 	void draw(Canvas canvas);
 	void setSize(int width, int height);
-
 	void touchDown(float x, float y);
 	void touchUp(float x, float y, MotionEvent event);
-
 	void destroy();
-
 	void moveEvent(MotionEvent event);
+
+	void storeState(Bundle outState);
+	void restoreState(Bundle inState);
 }

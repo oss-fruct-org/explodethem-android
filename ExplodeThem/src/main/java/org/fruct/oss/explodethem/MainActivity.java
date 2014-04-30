@@ -19,10 +19,15 @@ public class MainActivity extends Activity implements ShakeDetectActivityListene
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+		Log.d(TAG, "onCreate");
+
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
 
 		explodeView = (ExplodeView) findViewById(R.id.explode_view);
+		if (savedInstanceState != null) {
+			explodeView.setInitialState(savedInstanceState);
+		}
 
 		if (Flavor.isFull()) {
 			shakeDetector = new ShakeDetectActivity(this);
@@ -62,6 +67,18 @@ public class MainActivity extends Activity implements ShakeDetectActivityListene
 			}
 		}
 	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+
+		if (explodeView.getThread() != null) {
+			explodeView.storeState(outState);
+		}
+
+		Log.d(TAG, "onSaveInstanceState");
+	}
+
 
 	@Override
 	public void shakeDetected() {

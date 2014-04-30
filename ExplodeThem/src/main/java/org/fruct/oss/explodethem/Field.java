@@ -1,24 +1,25 @@
 package org.fruct.oss.explodethem;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Field {
-	private static final String TAG = "Field";
+public class Field implements Serializable {
+	public static final String TAG = "Field";
 	private static final int[] SCORE_SKILL = {7, 10, 13};
 	private static final int[] SPARK_COST = {4, 5, 6};
 
 	private final int skill;
 
-	public class Explode {
+	public class Explode implements Serializable {
 		public Entity from;
 		public Entity to;
 
 		int x, y;
 	}
 
-	public class Shell {
+	public class Shell implements Serializable {
 		public int x;
 		public int y;
 
