@@ -95,8 +95,12 @@ public class HighscoreState implements GameState {
 			String str = (i + 1) + ". " + hs.name;
 			String str2 = hs.value + "";
 
+			canvas.save();
+			canvas.clipRect(textLineNameX, 0,
+					textLineValueX, height);
 			canvas.drawText(str, textLineNameX, textLineStartY + i * textLineOffsetY, textPaint);
 			canvas.drawText(str, textLineNameX, textLineStartY + i * textLineOffsetY, textPaintOutline);
+			canvas.restore();
 
 			canvas.drawText(str2, textLineValueX, textLineStartY + i * textLineOffsetY, textPaintRed);
 			canvas.drawText(str2, textLineValueX, textLineStartY + i * textLineOffsetY, textPaintOutline);
