@@ -24,8 +24,10 @@ public class MainActivity extends Activity implements ShakeDetectActivityListene
 
 		explodeView = (ExplodeView) findViewById(R.id.explode_view);
 
-		shakeDetector = new ShakeDetectActivity(this);
-		shakeDetector.addListener(this);
+		if (Flavor.isFull()) {
+			shakeDetector = new ShakeDetectActivity(this);
+			shakeDetector.addListener(this);
+		}
 	}
 
 	@Override
@@ -33,9 +35,10 @@ public class MainActivity extends Activity implements ShakeDetectActivityListene
 		if (explodeView.getThread() != null) {
 			explodeView.getThread().pause();
 		}
+		if (Flavor.isFull()) {
+			shakeDetector.onPause();
+		}
 		super.onPause();
-
-		shakeDetector.onPause();
 	}
 
 	@Override
@@ -46,7 +49,9 @@ public class MainActivity extends Activity implements ShakeDetectActivityListene
 			explodeView.getThread().unpause();
 		}
 
-		shakeDetector.onResume();
+		if (Flavor.isFull()) {
+			shakeDetector.onResume();
+		}
 	}
 
 	@Override
@@ -61,6 +66,10 @@ public class MainActivity extends Activity implements ShakeDetectActivityListene
 	@Override
 	public void shakeDetected() {
 		Log.d(TAG, "Shake detected");
+
+		if (!getPackageName().equals("org.fruct.oss.explodethem.full")) {
+			throw new RuntimeException("Wrong permissions");
+		}
 
 		if (explodeView.getThread() != null) {
 			explodeView.getThread().shakeDetected();

@@ -208,7 +208,10 @@ public class PlayState implements GameState {
 			drawAnimated(canvas);
 			drawText(canvas, "Score: " + field.getScore(), dimensions.scoreTextPoint, false);
 			drawText(canvas, "Level: " + field.getLevel(), dimensions.levelTextPoint, true);
-			drawText(canvas, "Shakes: " + field.getShakes(), dimensions.shakesTextPoint, true);
+
+			if (Flavor.isFull()) {
+				drawText(canvas, "Shakes: " + field.getShakes(), dimensions.shakesTextPoint, true);
+			}
 			drawSparks(canvas);
 		}
 	}
