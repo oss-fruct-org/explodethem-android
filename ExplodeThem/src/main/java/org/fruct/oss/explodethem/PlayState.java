@@ -431,11 +431,10 @@ public class PlayState implements GameState {
 		dimensions.levelTextPoint.set(width - textMargin, textMargin + rect.height());
 		dimensions.shakesTextPoint.set(width - textMargin, rect.height() * 2 + textMargin * 2);
 
-		final float textPanelEnd = dimensions.shakesTextPoint.y + rect.height() + textMargin;
+		final float textPanelEnd = dimensions.shakesTextPoint.y + textMargin;
 
 		// Tiles
 		dimensions.tilePadding = Utils.getDP(context, TILES_PADDING);
-
 		dimensions.tileSize = (width - dimensions.tilePadding) / TILES_X
 				- dimensions.tilePadding;
 
