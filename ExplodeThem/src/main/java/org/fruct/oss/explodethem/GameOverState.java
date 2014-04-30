@@ -95,6 +95,7 @@ public class GameOverState implements GameState, Handler.Callback {
 	public void prepare(Bundle args) {
 		score = args.getInt("score");
 		isHighscore = HighscoreState.isHighscore(context, score);
+		ticksRemainFadeIn = TICKS_FADE;
 	}
 
 	@Override
@@ -114,7 +115,7 @@ public class GameOverState implements GameState, Handler.Callback {
 			canvas.drawRect(0, 0, width, height, backgroundPaint);
 		} else {
 			canvas.drawRect(0, 0, width, height, backgroundPaint);
-			canvas.drawBitmap(icon.getOriginal(), width / 2 - icon.getScaled().getWidth() / 2,
+			canvas.drawBitmap(icon.getScaled(), width / 2 - icon.getScaled().getWidth() / 2,
 					height / 4 - icon.getScaled().getHeight() / 2, null);
 
 			canvas.drawText("Game Over", width / 2, titleTextPosY, titleTextPaint);

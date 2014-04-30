@@ -40,9 +40,6 @@ public class AboutState implements GameState {
 
 	private float padding;
 
-	private static final long TICKS_FADE = 800 / ExplodeThread.TICK_MS;
-	private long ticksRemainFadeIn = TICKS_FADE;
-
 	private RectF buttonRect;
 	private float buttonTextPosY;
 
@@ -62,10 +59,10 @@ public class AboutState implements GameState {
 		textPaint.setAntiAlias(true);
 		textPaint.setColor(0xfffafef1);
 		textPaint.setTextSize(textSize);
-		textPaint.setTextAlign(Paint.Align.CENTER);
 
 		titleTextPaint = new Paint(textPaint);
 		titleTextPaint.setTextSize(Utils.getSP(context, 32));
+		titleTextPaint.setTextAlign(Paint.Align.CENTER);
 
 		buttonPaint = new Paint();
 		buttonPaint.setColor(0x84c5c0f3);
@@ -91,36 +88,27 @@ public class AboutState implements GameState {
 
 	@Override
 	public void updatePhysics() {
-		if (ticksRemainFadeIn > 0) {
-			ticksRemainFadeIn--;
-		} else {
-			explodeThread.stopRendering();
-		}
 	}
 
 	@Override
 	public void draw(Canvas canvas) {
-		if (ticksRemainFadeIn > 0) {
-			int alpha = 200 - (int) (200 * ticksRemainFadeIn / TICKS_FADE);
-			backgroundPaint.setColor(alpha << 24);
-			canvas.drawRect(0, 0, width, height, backgroundPaint);
-		} else {
-			canvas.drawRect(0, 0, width, height, backgroundPaint);
-			canvas.drawBitmap(icon.getOriginal(), width / 2 - icon.getScaled().getWidth() / 2,
-					height / 4 - icon.getScaled().getHeight() / 2, null);
+		backgroundPaint.setColor(0xff000000);
+		canvas.drawRect(0, 0, width, height, backgroundPaint);
+		canvas.drawBitmap(icon.getScaled(), width / 2 - icon.getScaled().getWidth() / 2,
+				height / 4 - icon.getScaled().getHeight() / 2, null);
 
-			canvas.drawText("Explode Them", width / 2, titleTextPosY, titleTextPaint);
+		canvas.drawText("Explode Them", width / 2, titleTextPosY, titleTextPaint);
 
-			canvas.drawRoundRect(buttonRect, buttonRadius, buttonRadius,
-					isButtonHover ? buttonPaintHighlight : buttonPaint);
-			canvas.drawText("OK", width / 2, buttonTextPosY, buttonTextPaint);
+		canvas.drawRoundRect(buttonRect, buttonRadius, buttonRadius,
+				isButtonHover ? buttonPaintHighlight : buttonPaint);
+		canvas.drawText("OK", width / 2, buttonTextPosY, buttonTextPaint);
 
-			canvas.save();
-			canvas.translate(width / 2 - descriptionLayout.getWidth() / 2, titleTextPosY + padding);
-			descriptionLayout.draw(canvas);
+		canvas.save();
+		canvas.translate(width / 2 - descriptionLayout.getWidth() / 2, titleTextPosY + padding);
+		descriptionLayout.draw(canvas);
 
-			canvas.restore();
-		}
+		canvas.restore();
+		explodeThread.stopRendering();
 	}
 
 	@Override
