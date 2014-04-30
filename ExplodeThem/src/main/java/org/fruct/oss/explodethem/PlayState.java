@@ -24,7 +24,8 @@ public class PlayState implements GameState {
 	private static final String TAG = "PlayState";
 
 	public static int TILES_X = 6;
-	public static int TILES_Y = 8;
+	public int TILES_Y = 8;
+
 	public static int TILES_PADDING = 4;
 
 	public static final long TICK_PER_STEP = 250 / ExplodeThread.TICK_MS;
@@ -420,10 +421,25 @@ public class PlayState implements GameState {
 		dimensions.width = width;
 		dimensions.height = height;
 
+		// Text bounds
+		Rect rect = new Rect();
+		textPaint.getTextBounds("Score:", 0, "Score:".length(), rect);
+
+		final int textMargin = (int) Utils.getDP(context, 8);
+
+		dimensions.scoreTextPoint.set(textMargin, textMargin + rect.height());
+		dimensions.levelTextPoint.set(width - textMargin, textMargin + rect.height());
+		dimensions.shakesTextPoint.set(width - textMargin, rect.height() * 2 + textMargin * 2);
+
+		final float textPanelEnd = dimensions.shakesTextPoint.y + rect.height() + textMargin;
+
+		// Tiles
 		dimensions.tilePadding = Utils.getDP(context, TILES_PADDING);
 
 		dimensions.tileSize = (width - dimensions.tilePadding) / TILES_X
 				- dimensions.tilePadding;
+
+		TILES_Y = (int) ((height - textPanelEnd) / (dimensions.tileSize + dimensions.tilePadding));
 
 		dimensions.fieldWidth = dimensions.tilePadding + (dimensions.tilePadding + dimensions.tileSize) * TILES_X;
 		dimensions.fieldHeight = dimensions.tilePadding + (dimensions.tilePadding + dimensions.tileSize) * TILES_Y;
@@ -437,6 +453,7 @@ public class PlayState implements GameState {
 						+ (dimensions.tilePadding + dimensions.tileSize) * TILES_Y);
 
 
+		// Bitmaps
 		largeBomb.scale(dimensions.tileSize * Field.Entity.LARGE_BOMB.getFactor(),
 				dimensions.tileSize * Field.Entity.LARGE_BOMB.getFactor());
 
@@ -455,16 +472,8 @@ public class PlayState implements GameState {
 			anExplosion.scale(dimensions.tileSize, dimensions.tileSize);
 		}
 
-		// Text bounds
-		Rect rect = new Rect();
-		textPaint.getTextBounds("Score:", 0, "Score:".length(), rect);
 
-		final int textMargin = (int) Utils.getDP(context, 8);
-
-		dimensions.scoreTextPoint.set(textMargin, textMargin + rect.height());
-		dimensions.levelTextPoint.set(width - textMargin, textMargin + rect.height());
-		dimensions.shakesTextPoint.set(width - textMargin, rect.height() * 2 + textMargin * 2);
-
+		// Sparks
 		PointF sparksSize = new PointF(Utils.getDP(context, 64), Utils.getDP(context, 32));
 		spark.scaleHeight(sparksSize.y);
 
