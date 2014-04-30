@@ -107,6 +107,11 @@ public class MenuState implements GameState {
 		} else {
 			menuItems.add(0, new MenuItem("New game", "new-game-medium"));
 		}
+
+		if (playState.isStarted()) {
+			menuItems.add(0, new MenuItem("Continue", "continue"));
+		}
+
 		updateMenuLayout();
 	}
 
@@ -183,7 +188,10 @@ public class MenuState implements GameState {
 	}
 
 	private void onMenuItemClick(String id) {
-		if (id.equals("about")) {
+		if (id.equals("continue")) {
+			explodeThread.replaceStateStack("play");
+			return;
+		} if (id.equals("about")) {
 			explodeThread.replaceStateStack("about");
 		} if (id.equals("new-game-easy")) {
 			playState.newGame(0);

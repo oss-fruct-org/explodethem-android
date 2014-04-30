@@ -126,7 +126,6 @@ public class PlayState implements GameState {
 		sparksTextPaintOutline.setStyle(Paint.Style.STROKE);
 		sparksTextPaintOutline.setStrokeWidth(2f);
 
-
 		explosion = new BitmapHolder[6];
 		for (int i = 0; i < explosion.length; i++) {
 			explosion[i] = new BitmapHolder(context, "explosion-" + i + ".png");
@@ -141,6 +140,10 @@ public class PlayState implements GameState {
 		field = new Field(TILES_X, TILES_Y, skill);
 
 		Log.d(TAG, "Total bombs: " + field.getBombsRemain());
+	}
+
+	public boolean isStarted() {
+		return field != null;
 	}
 
 	@Override
