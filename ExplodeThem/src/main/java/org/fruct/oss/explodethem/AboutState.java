@@ -150,6 +150,8 @@ public class AboutState implements GameState {
 
 		buttonTextPaint.getTextBounds(text, 0, text.length(), rect);
 		buttonTextPosY = buttonRect.bottom - buttonHeight / 2 + rect.height() / 2;
+
+		explodeThread.stopRendering();
 	}
 
 	@Override

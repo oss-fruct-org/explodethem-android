@@ -168,6 +168,8 @@ public class PlayState implements GameState {
 			stepRemainTicks--;
 			stepOffset += RELATIVE_OFFSET;
 		} else {
+			explodeThread.stopRendering();
+
 			if (field.getBombsRemain() == 0) {
 				Log.d(TAG, "Win");
 				field.addSpark();

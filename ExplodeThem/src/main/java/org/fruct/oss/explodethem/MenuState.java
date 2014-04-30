@@ -112,11 +112,6 @@ public class MenuState implements GameState {
 
 	@Override
 	public void updatePhysics() {
-		/*if (fadeTicksRemain > 0) {
-			fadeTicksRemain--;
-		} else {
-			fadeIn = false;
-		}*/
 	}
 
 	@Override
@@ -127,12 +122,6 @@ public class MenuState implements GameState {
 		canvas.drawText("Explode", width / 2, titlePosY, titleTextPaint);
 		canvas.drawText("Them", width / 2, titlePosY + titleOffsetY, titleTextPaint);
 
-		/*if (fadeIn) {
-			int alpha = 200 - 200 * fadeTicksRemain / FADE_TICKS;
-			backgroundPaint.setColor(alpha << 24);
-		}
-		canvas.drawRect(0, 0, width, height, backgroundPaint);*/
-
 		for (int i = 0; i < menuItems.size(); i++) {
 			String str = menuItems.get(i).text;
 			RectF buttonRect = menuItemsRects.get(i);
@@ -142,6 +131,8 @@ public class MenuState implements GameState {
 			canvas.drawText(str, width / 2,
 					buttonRect.top + buttonHeight / 2 + textRect.height() / 2, textPaint);
 		}
+
+		explodeThread.stopRendering();
 	}
 
 	@Override

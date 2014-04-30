@@ -98,6 +98,7 @@ public class HighscoreState implements GameState {
 			canvas.drawText(str2, textLineValueX, textLineStartY + i * textLineOffsetY, textPaintRed);
 			canvas.drawText(str2, textLineValueX, textLineStartY + i * textLineOffsetY, textPaintOutline);
 		}
+		explodeThread.stopRendering();
 	}
 
 	@Override

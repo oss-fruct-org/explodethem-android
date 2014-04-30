@@ -26,6 +26,10 @@ public class ExplodeThread extends Thread {
 	private final CommonResources commonResources;
 
 	private boolean isRunning = false;
+
+	private final Object isSuspendedLock = new Object();
+	private boolean isSuspended = false;
+
 	private final Object isRunningLock = new Object();
 
 	private HashMap<String, GameState> states = new HashMap<String, GameState>();
@@ -34,14 +38,12 @@ public class ExplodeThread extends Thread {
 	// Timing variables
 	private long gameTime;
 
-	private long startTime;
 	private long ticksElapsed;
 	private long framesElapsed;
 
 	private Paint testPaint;
 	private int width;
 	private int height;
-	private boolean isPaused = false;
 	private final PlayState playState;
 
 
@@ -76,10 +78,21 @@ public class ExplodeThread extends Thread {
 	public void run() {
 		Canvas canvas = null;
 
-		startTime = System.currentTimeMillis();
+		long startTime = System.currentTimeMillis();
 		gameTime = System.currentTimeMillis();
 
 		while (isRunning) {
+			synchronized (isSuspendedLock) {
+				while (isSuspended) {
+					try {
+						isSuspendedLock.wait();
+					} catch (InterruptedException e) {
+						if (!isRunning)
+							break;
+					}
+				}
+			}
+
 			try {
 				canvas = holder.lockCanvas(null);
 
@@ -97,7 +110,7 @@ public class ExplodeThread extends Thread {
 	}
 
 	private void update(Canvas canvas) {
-		if (isPaused || stateStack.isEmpty()) {
+		if (stateStack.isEmpty()) {
 			return;
 		}
 
@@ -116,7 +129,7 @@ public class ExplodeThread extends Thread {
 		}
 
 		synchronized (holder) {
-			if (isPaused || stateStack.isEmpty()) {
+			if (stateStack.isEmpty()) {
 				return;
 			}
 
@@ -159,24 +172,31 @@ public class ExplodeThread extends Thread {
 			}
 
 			commonResources.resize(width, height);
+			continueRendering();
 		}
 	}
 
 	public void touchDown(float x, float y) {
 		synchronized (holder) {
 			stateStack.get(stateStack.size() - 1).touchDown(x, y);
+
+			continueRendering();
 		}
 	}
 
 	public void touchUp(float x, float y, MotionEvent event) {
 		synchronized (holder) {
 			stateStack.get(stateStack.size() - 1).touchUp(x, y, event);
+
+			continueRendering();
 		}
 	}
 
 	public void moveEvent(MotionEvent event) {
 		synchronized (holder) {
 			stateStack.get(stateStack.size() - 1).moveEvent(event);
+
+			continueRendering();
 		}
 	}
 
@@ -186,6 +206,8 @@ public class ExplodeThread extends Thread {
 				;
 
 			pushState(stateId, args);
+
+			continueRendering();
 		}
 	}
 
@@ -195,6 +217,8 @@ public class ExplodeThread extends Thread {
 				;
 
 			pushState(stateId);
+
+			continueRendering();
 		}
 	}
 
@@ -205,6 +229,8 @@ public class ExplodeThread extends Thread {
 				state.prepare(null);
 				stateStack.add(state);
 			}
+
+			continueRendering();
 		}
 	}
 	public void pushState(String stateId, Bundle args) {
@@ -214,12 +240,15 @@ public class ExplodeThread extends Thread {
 				state.prepare(args);
 				stateStack.add(state);
 			}
+
+			continueRendering();
 		}
 	}
 
 	public boolean popState() {
 		synchronized (holder) {
 			stateStack.remove(stateStack.size() - 1);
+			continueRendering();
 			return !stateStack.isEmpty();
 		}
 	}
@@ -236,18 +265,29 @@ public class ExplodeThread extends Thread {
 		commonResources.destroy();
 	}
 
-	public void pause() {
-		synchronized (holder) {
-			Log.d(TAG, "pause");
-			isPaused = true;
+	public void stopRendering() {
+		synchronized (isSuspendedLock) {
+			if (isSuspended) {
+				return;
+			}
+
+			Log.d(TAG, "stopRendering");
+
+			isSuspended = true;
 		}
 	}
 
-	public void unpause() {
-		synchronized (holder) {
-			Log.d(TAG, "unpause");
-			isPaused = false;
+	public void continueRendering() {
+		synchronized (isSuspendedLock) {
+			if (!isSuspended) {
+				return;
+			}
+
+			Log.d(TAG, "continueRendering");
+
+			isSuspended = false;
 			gameTime = System.currentTimeMillis();
+			isSuspendedLock.notifyAll();
 		}
 	}
 
@@ -263,8 +303,9 @@ public class ExplodeThread extends Thread {
 
 	public void shakeDetected() {
 		synchronized (holder) {
-			if (isRunning && !isPaused && stateStack.get(stateStack.size() - 1) instanceof PlayState) {
+			if (isRunning && stateStack.get(stateStack.size() - 1) instanceof PlayState) {
 				playState.shakeDetected();
+				continueRendering();
 			}
 		}
 	}

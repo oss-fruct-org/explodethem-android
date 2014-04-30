@@ -108,6 +108,10 @@ public class HelpState implements GameState {
 				viewSpeed = SPEED_LIMIT * Math.signum(viewSpeed);
 			}
 		}
+
+		if (!isDragging && !isMoving) {
+			explodeThread.stopRendering();
+		}
 	}
 
 	@Override

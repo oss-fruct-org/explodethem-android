@@ -33,7 +33,7 @@ public class MainActivity extends Activity implements ShakeDetectActivityListene
 	@Override
 	protected void onPause() {
 		if (explodeView.getThread() != null) {
-			explodeView.getThread().pause();
+			explodeView.getThread().stopRendering();
 		}
 		if (Flavor.isFull()) {
 			shakeDetector.onPause();
@@ -46,7 +46,7 @@ public class MainActivity extends Activity implements ShakeDetectActivityListene
 		super.onResume();
 
 		if (explodeView.getThread() != null) {
-			explodeView.getThread().unpause();
+			explodeView.getThread().continueRendering();
 		}
 
 		if (Flavor.isFull()) {

@@ -101,6 +101,8 @@ public class GameOverState implements GameState, Handler.Callback {
 	public void updatePhysics() {
 		if (ticksRemainFadeIn > 0) {
 			ticksRemainFadeIn--;
+		} else {
+			explodeThread.stopRendering();
 		}
 	}
 

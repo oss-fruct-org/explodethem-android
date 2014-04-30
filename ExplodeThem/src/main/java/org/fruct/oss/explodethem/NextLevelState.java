@@ -77,6 +77,8 @@ public class NextLevelState implements GameState{
 	public void updatePhysics() {
 		if (ticksRemainFadeIn > 0) {
 			ticksRemainFadeIn--;
+		} else {
+			explodeThread.stopRendering();
 		}
 	}
 
