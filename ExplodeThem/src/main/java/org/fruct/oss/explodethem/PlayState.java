@@ -41,6 +41,7 @@ public class PlayState implements GameState {
 	private final Paint tilePaint;
 
 	private final Paint sparksTextPaint;
+	private final Paint sparksTextPaintOutline;
 
 	private final Paint textPaint;
 	private final Paint textPaintOutline;
@@ -119,6 +120,12 @@ public class PlayState implements GameState {
 		sparksTextPaint = new Paint(textPaint);
 		sparksTextPaint.setTextAlign(Paint.Align.CENTER);
 		sparksTextPaint.setColor(0xeeffffff);
+
+		sparksTextPaintOutline = new Paint(sparksTextPaint);
+		sparksTextPaintOutline.setColor(0xff110011);
+		sparksTextPaintOutline.setStyle(Paint.Style.STROKE);
+		sparksTextPaintOutline.setStrokeWidth(2f);
+
 
 		explosion = new BitmapHolder[6];
 		for (int i = 0; i < explosion.length; i++) {
@@ -327,9 +334,13 @@ public class PlayState implements GameState {
 
 			canvas.drawText(text1, dimensions.sparksRect.centerX(), posY1, sparksTextPaint);
 			canvas.drawText(text2, dimensions.sparksRect.centerX(), posY2, sparksTextPaint);
+
+			canvas.drawText(text1, dimensions.sparksRect.centerX(), posY1, sparksTextPaintOutline);
+			canvas.drawText(text2, dimensions.sparksRect.centerX(), posY2, sparksTextPaintOutline);
 			canvas.restore();
 		} else {
 			canvas.drawText(text, dimensions.sparksRect.centerX(), dimensions.sparksTextPoint.y, sparksTextPaint);
+			canvas.drawText(text, dimensions.sparksRect.centerX(), dimensions.sparksTextPoint.y, sparksTextPaintOutline);
 		}
 
 		canvas.drawBitmap(spark.getScaled(), 0, dimensions.sparksRect.top, null);
