@@ -65,6 +65,7 @@ public class PlayState implements GameState {
 	private BitmapHolder[] explosion;
 	private BitmapHolder fire;
 	private BitmapHolder water;
+	private BitmapHolder spark;
 	private float tileRadius;
 
 	private boolean menuShown = false;
@@ -86,6 +87,7 @@ public class PlayState implements GameState {
 		largeBomb = new BitmapHolder(context, "large-bomb.png");
 		mediumBomb = new BitmapHolder(context, "medium-bomb.png");
 		smallBomb = new BitmapHolder(context, "small-bomb.png");
+		spark = new BitmapHolder(context, "spark.png");
 
 		fire = new BitmapHolder(context, "fire.png");
 
@@ -327,6 +329,9 @@ public class PlayState implements GameState {
 		} else {
 			canvas.drawText(text, dimensions.sparksRect.centerX(), dimensions.sparksTextPoint.y, sparksTextPaint);
 		}
+
+		canvas.drawBitmap(spark.getScaled(), 0, dimensions.sparksRect.top, null);
+		canvas.drawBitmap(spark.getScaled(), dimensions.sparksRect.right, dimensions.sparksRect.top, null);
 	}
 
 	private void drawAnimated(Canvas canvas) {
@@ -443,9 +448,11 @@ public class PlayState implements GameState {
 		dimensions.shakesTextPoint.set(width - textMargin, rect.height() * 2 + textMargin * 2);
 
 		PointF sparksSize = new PointF(Utils.getDP(context, 64), Utils.getDP(context, 32));
-		dimensions.sparksRect.set(dimensions.scoreTextPoint.x,
+		spark.scaleHeight(sparksSize.y);
+
+		dimensions.sparksRect.set(spark.getScaled().getWidth() + dimensions.scoreTextPoint.x,
 				dimensions.scoreTextPoint.y + textMargin,
-				dimensions.scoreTextPoint.x + sparksSize.x,
+				spark.getScaled().getWidth() + dimensions.scoreTextPoint.x + sparksSize.x,
 				dimensions.scoreTextPoint.y + sparksSize.y + textMargin);
 
 		textPaint.getTextBounds("99", 0, "99".length(), rect);

@@ -297,6 +297,16 @@ public class ExplodeThread extends Thread {
 			scaled = Bitmap.createScaledBitmap(original, (int) width, (int) height, true);
 		}
 
+		void scaleWidth(float width) {
+			float newHeight = width * original.getHeight() / original.getWidth();
+			scale(width, newHeight);
+		}
+
+		void scaleHeight(float height) {
+			float newWidth = height * original.getWidth() / original.getHeight();
+			scale(newWidth, height);
+		}
+
 		Bitmap getScaled() {
 			return scaled;
 		}
