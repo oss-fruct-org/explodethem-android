@@ -10,6 +10,8 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -68,6 +70,11 @@ public class PlayState implements GameState {
 
 	private boolean menuShown = false;
 
+	// Sound
+	private int soundBombId;
+	private int soundNoneId;
+	private SoundPool soundPool;
+
 	public PlayState(Context context, ExplodeThread explodeThread) {
 		this.context = context;
 		this.explodeThread = explodeThread;
@@ -113,6 +120,10 @@ public class PlayState implements GameState {
 		for (int i = 0; i < explosion.length; i++) {
 			explosion[i] = new BitmapHolder(context, "explosion-" + i + ".png");
 		}
+
+		soundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 0);
+		soundBombId = soundPool.load(context, R.raw.bomb4, 1);
+		soundNoneId = soundPool.load(context, R.raw.none, 1);
 	}
 
 	public void newGame(int skill) {
@@ -139,6 +150,15 @@ public class PlayState implements GameState {
 				initializeStep();
 				field.step();
 				field.commit();
+
+				if (soundPool != null) {
+					for (Field.Explode explode : field.getExplodes()) {
+						if (explode.to == Field.Entity.EMPTY) {
+							soundPool.play(soundBombId, 100, 100, 0, 0, 1);
+							break;
+						}
+					}
+				}
 			}
 
 			stepRemainTicks--;
@@ -152,8 +172,6 @@ public class PlayState implements GameState {
 
 			if (field.getSparks() == 0) {
 				Log.d(TAG, "Game over");
-				final Activity mainActivity = (Activity) context;
-
 				final int score = field.getScore();
 				field = null;
 
@@ -167,7 +185,7 @@ public class PlayState implements GameState {
 	private void initializeStep() {
         stepRemainTicks = TICK_PER_STEP;
         stepOffset = 0f;
-    }
+	}
 
 	@Override
 	public void draw(Canvas canvas) {
@@ -455,7 +473,12 @@ public class PlayState implements GameState {
 
 				if (field.isActive()) {
 					initializeStep();
+					if (field.get(touchX, touchY) == Field.Entity.EMPTY && soundPool != null) {
+						soundPool.play(soundBombId, 100, 100, 0, 0, 1);
+					}
 				}
+			} else if (soundPool != null) {
+				soundPool.play(soundNoneId, 100, 100, 0, 0, 1);
 			}
 		}
 	}
@@ -472,6 +495,8 @@ public class PlayState implements GameState {
 		for (BitmapHolder bh : explosion) {
 			bh.recycle();
 		}
+
+		soundPool.release();
 	}
 
 	@Override
