@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="app_name">ВзорватьИх</string>
+  <string name="hello_world">Привет мир!</string>
+  <string name="action_settings">Настройки</string>
+  <string name="explode_them">Взорвать Их</string>
+  <string name="ok">Ok</string>
+  <string name="about_app_name">Взорвать Их</string>
+  <string name="about_text">Copyright © 2012, 2014 FRUCT Лаборатория IT-парка Петрозаводского государственного университета. Главный разработчик Никита Артемов. Портирование на Android произведено Кириллом Ивашовым.</string>
+  <string name="game_over_title">Игра окончена</string>
+  <string name="game_over_score">Ваш счет:</string>
+  <string name="game_over_name">Ваше имя:</string>
+  <string name="game_over_enter_name">Введите имя</string>
+  <string name="help_title">Справка</string>
+  <string name="highscore_title">Результаты</string>
+  <string name="menu_help">Справка</string>
+  <string name="menu_highscore">Результаты</string>
+  <string name="menu_about">О программе</string>
+  <string name="menu_quit">Выход</string>
+  <string name="menu_new_game">Новая игра</string>
+  <string name="menu_easy">Простой</string>
+  <string name="menu_medium">Средний</string>
+  <string name="menu_hard">Сложный</string>
+  <string name="menu_continue">Продолжить</string>
+  <string name="next_level_title">Следующий уровень</string>
+  <string name="play_score">Счет:</string>
+  <string name="play_level">Уровень:</string>
+  <string name="play_shakes">Количество встряхиваний:</string>
+  <string name="store_text_free">Взорвите Их - аркадная игра. На игровом поле разбросаны бомбы разных размеров. Нажав на бомбу, вы тратите на нее спичку. По достижению определенного размера, бомба взрывается и искры, образовавшиеся от ее взрыва, взаимодействуют с другими бомбами. Количество спичек ограничено. Вы получаете одну новую спичке в конце каждого уровня или после пяти взорванных бомб. Цель игры - взорвать как можно больше бомб, пока не закончатся спички.</string>
+  <string name="store_text_full">Взорвите Их - аркадная игра. На игровом поле разбросаны бомбы разных размеров. Нажав на бомбу, вы тратите на нее спичку. По достижению определенного размера, бомба взрывается и искры, образовавшиеся от ее взрыва, взаимодействуют с другими бомбами. Количество спичек ограничено. Вы получаете одну новую спичке в конце каждого уровня или после пяти взорванных бомб. Цель игры - взорвать как можно больше бомб, пока не закончатся спички. Особенности полной версии игры: - 3 уровня сложности; - эффект встряхивания; - водяные бомбы.</string>
+  <string-array name="help_strings">
+    <item>Нажав на бомбу, вы потратите одну спичку. Игра закончится, когда у вас не останется спичек.</item>
+    <item>Если бомба окрашена в красный цвет, следующее нажатие на нее вызовет взрыв. Вы не можете нажимать на бомбы пока идет цепная реакция.</item>
+    <item>Вы получаете одну спичку после каждой пятой взорванной бомбы и в конце каждого уровня.</item>
+    <item>Цель игры взорвать как можно больше бомб, потратив наименьшее количество спичек</item>
+    <item>В начале игры у вас есть три возможности встряхивания поля. Встряхните телефон, и все красные бомбы взорвутся.</item>
+  </string-array>
+</resources>
