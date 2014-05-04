@@ -35,7 +35,7 @@
         <item>If the bomb acquires a red color then next push will cause explosion. You can\'t push the bomb until reaction doesn\'t stop</item>
         <item>You get one spark after every fifth bomb explosion and at the end of level</item>
         <item>The main goal is to explode as many bombs as possible using the least amount of sparks</item>
-        <item>At at game start you have three shakes. Shake the phone and all red bombs will explode.</item>
+        <item>At the beginning of the game you have three shakes. Shake the phone and all red bombs will explode.</item>
     </string-array>
 
 </resources>
