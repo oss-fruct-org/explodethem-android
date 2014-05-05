@@ -1,6 +1,7 @@
 package org.fruct.oss.explodethem;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -11,6 +12,7 @@ import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -77,6 +79,8 @@ public class PlayState implements GameState {
 	private String playScore;
 	private String playLevel;
 	private String playShakes;
+	private String buyText;
+
 
 	public PlayState(Context context, ExplodeThread explodeThread) {
 		this.context = context;
@@ -140,6 +144,7 @@ public class PlayState implements GameState {
 		playScore = context.getString(R.string.play_score);
 		playShakes = context.getString(R.string.play_shakes);
 		playLevel = context.getString(R.string.play_level);
+		buyText = context.getString(R.string.menu_buy);
 	}
 
 	public void newGame(int skill) {
@@ -228,7 +233,11 @@ public class PlayState implements GameState {
 
 			if (Flavor.isFull()) {
 				drawText(canvas, playShakes + " " + field.getShakes(), dimensions.shakesTextPoint, true);
+			} else {
+				canvas.drawRoundRect(dimensions.buyButton, tileRadius, tileRadius, tilePaint);
+				drawText(canvas, buyText, dimensions.shakesTextPoint, true);
 			}
+
 			drawSparks(canvas);
 		}
 	}
@@ -431,6 +440,15 @@ public class PlayState implements GameState {
 		dimensions.levelTextPoint.set(width - textMargin, textMargin + rect.height());
 		dimensions.shakesTextPoint.set(width - textMargin, rect.height() * 2 + textMargin * 2);
 
+
+		if (!Flavor.isFull()) {
+			dimensions.shakesTextPoint.y += Utils.getDP(context, 6);
+			textPaint.getTextBounds(buyText, 0, buyText.length(), rect);
+			dimensions.buyButton = new RectF(dimensions.shakesTextPoint.x - rect.width() - Utils.getDP(context, 8),
+					dimensions.shakesTextPoint.y - rect.height() - Utils.getDP(context, 6),
+					width,
+					dimensions.shakesTextPoint.y + 2 * Utils.getDP(context, 4));
+		}
 		final float textPanelEnd = dimensions.shakesTextPoint.y + textMargin;
 
 		// Tiles
@@ -470,7 +488,6 @@ public class PlayState implements GameState {
 		for (BitmapHolder anExplosion : explosion) {
 			anExplosion.scale(dimensions.tileSize, dimensions.tileSize);
 		}
-
 
 		// Sparks
 		PointF sparksSize = new PointF(Utils.getDP(context, 64), Utils.getDP(context, 32));
@@ -519,6 +536,15 @@ public class PlayState implements GameState {
 				}
 			} else if (soundPool != null) {
 				soundPool.play(soundNoneId, 100, 100, 0, 0, 1);
+			}
+		}
+
+		if (dimensions.buyButton.contains(x, y)) {
+			final String appPackageName = "org.fruct.oss.explodethem.full";
+			try {
+				context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+			} catch (android.content.ActivityNotFoundException anfe) {
+				context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
 			}
 		}
 	}
@@ -596,6 +622,7 @@ public class PlayState implements GameState {
 
 		RectF fieldRect = new RectF();
 		RectF sparksRect = new RectF();
+		RectF buyButton;
 
 		float getOffset(int index) {
 			return tilePadding + index * (tileSize + tilePadding);
