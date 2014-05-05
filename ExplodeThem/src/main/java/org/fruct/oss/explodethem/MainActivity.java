@@ -69,6 +69,15 @@ public class MainActivity extends Activity implements ShakeDetectActivityListene
 		banner.destroy();
 	}
 
+	public void setBannerVisibility(final boolean isVisible) {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				banner.setVisibility(isVisible);
+			}
+		});
+	}
+
 	@Override
 	public void onBackPressed() {
 		if (explodeView.getThread() != null) {

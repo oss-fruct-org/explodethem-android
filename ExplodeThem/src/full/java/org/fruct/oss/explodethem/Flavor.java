@@ -5,6 +5,8 @@ public class Flavor {
 		void pause();
 		void resume();
 		void destroy();
+
+		void setVisibility(boolean isVisible);
 	}
 
 	public static boolean isFull() {
@@ -22,6 +24,11 @@ public class Flavor {
 
 			@Override
 			public void destroy() {
+			}
+
+			@Override
+			public void setVisibility(boolean isVisible) {
+
 			}
 		};
 	}

@@ -539,7 +539,7 @@ public class PlayState implements GameState {
 			}
 		}
 
-		if (dimensions.buyButton.contains(x, y)) {
+		if (!Flavor.isFull() &&  dimensions.buyButton.contains(x, y)) {
 			final String appPackageName = "org.fruct.oss.explodethem.full";
 			try {
 				context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));

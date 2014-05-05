@@ -273,16 +273,7 @@ public class ExplodeThread extends Thread {
 		final MainActivity activity = (MainActivity) context;
 		final String topStateId = stateStackIds.get(stateStackIds.size() - 1);
 
-		activity.runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				if (topStateId.equals("play")) {
-					activity.findViewById(R.id.banner).setVisibility(View.GONE);
-				} else {
-					activity.findViewById(R.id.banner).setVisibility(View.VISIBLE);
-				}
-			}
-		});
+		activity.setBannerVisibility(!topStateId.equals("play"));
 	}
 
 	public void release() {
