@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="app_name">ExploderaDem</string>
+  <string name="hello_world">Hej världen!</string>
+  <string name="action_settings">Inställningarna</string>
+  <string name="explode_them">Explodera Dem</string>
+  <string name="ok">Ok</string>
+  <string name="about_app_name">Explodera Dem</string>
+  <string name="about_text">Copyright © 2012, 2014 FRUCT Lab i IT-park för Petrozavodsk Staten Universitet. Huvud utvecklar är Artemov Nikita. Android portering gjordes av Ivashov Kirill.</string>
+  <string name="game_over_title">Spelet Över</string>
+  <string name="game_over_score">Din poäng:</string>
+  <string name="game_over_name">Din namn:</string>
+  <string name="game_over_enter_name">Skriva in namn</string>
+  <string name="help_title">Hjälpa</string>
+  <string name="highscore_title">Topplista</string>
+  <string name="menu_help">Hjälpa</string>
+  <string name="menu_highscore">Topplista</string>
+  <string name="menu_about">Om</string>
+  <string name="menu_quit">Sluta</string>
+  <string name="menu_new_game">Nytt spel</string>
+  <string name="menu_easy">Enkelt</string>
+  <string name="menu_medium">Medelhög</string>
+  <string name="menu_hard">Hård</string>
+  <string name="menu_continue">Fortsätt</string>
+  <string name="next_level_title">Nästa nivå</string>
+  <string name="play_score">Poäng:</string>
+  <string name="play_level">Nivå:</string>
+  <string name="play_shakes">Skakningar:</string>
+  <string name="store_text_free">Explodera Dem är arkadspel. På fält spridda bomber av olika storlekar. Genom att klicka på bomben du spenderar en gnista på den. Efter att ha nått en viss storlek, bomb exploderar och dess spridda gnistor samverkar med de andra bomber. Antalet gnistor är begränsad. Du får en ny gnista efter utgången av varje nivå eller efter den femte explosionen. Det huvudsakliga målet med spelet är att spränga så många bomber som möjligt tills gnistor kommer att avsluta.</string>
+  <string name="store_text_full">Explodera Dem är arkadspel. På fält spridda bomber av olika storlekar. Genom att klicka på bomben du spenderar en gnista på den. Efter att ha nått en viss storlek, bomb exploderar och dess spridda gnistor samverkar med de andra bomber. Antalet gnistor är begränsad. Du får en ny gnista efter utgången av varje nivå eller efter den femte explosionen. Det huvudsakliga målet med spelet är att spränga så många bomber som möjligt tills gnistor kommer att avsluta. Dragen av fullversionen: - 3 olika svårighetsgrader; - skaka effekt; - vatten bomber.</string>
+  <string-array name="help_strings">
+    <item>När du trycker på bomb du kommer att spendera en gnista. Om inga gnistor finns då spelet är över.</item>
+    <item>Om bomben förvärvar en röd färg då nästa tryck kommer att orsaka explosion. Du kan inte blåsa upp bomben tills reaktionen inte stannar.</item>
+    <item>Du får en gnista efter var femte bombexplosion och i slutet av nivån</item>
+    <item>Det huvudsakliga målet är att explodera alla bomber som möjligt med den minsta mängden av gnistor</item>
+    <item>I spelet börjar har du tre skaka. Skaka telefonen och alla röda bomber exploderar.</item>
+  </string-array>
+</resources>

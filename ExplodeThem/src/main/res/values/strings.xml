@@ -7,7 +7,7 @@
     <string name="explode_them">Explode Them</string>
     <string name="ok">OK</string>
     <string name="about_app_name">Explode Them</string>
-    <string name="about_text">Copyright © 2012, 2014 FRUCT Lab in IT-park of Petrozavodsk State University. Main developer is Artemov Nikita. Android port by Kirill Ivashov.</string>
+    <string name="about_text">Copyright © 2012, 2014 FRUCT Lab in IT-park of Petrozavodsk State University. Main developer is Artemov Nikita. Android port by Ivashov Kirill.</string>
     <string name="game_over_title">Game Over</string>
     <string name="game_over_score">Your score: </string>
     <string name="game_over_name">Your name: </string>
@@ -28,13 +28,15 @@
     <string name="play_level">Level:</string>
     <string name="play_shakes">Shakes:</string>
     <string name="menu_buy">Buy</string>
+    <string name="store_text_free">Explode Them is arcade game. On the game field bombs of different sizes scattered. By clicking on the bomb you are spending a spark on it. After reaching a certain size, bomb explodes and its scattered sparks interact with the other bombs. The number of sparks is limited. You get a new spark after the end of each level, or after the fifth explosion. The main goal of the game is to explode as many bombs as possible until sparks will finish.</string>
+    <string name="store_text_full">Explode Them is arcade game. On the game field bombs of different sizes scattered. By clicking on the bomb you are spending a spark on it. After reaching a certain size, bomb explodes and its scattered sparks interact with the other bombs. The number of sparks is limited. You get a new spark after the end of each level, or after the fifth explosion. The main goal of the game is to explode as many bombs as possible until sparks will finish. Features of full version: - 3 levels of difficulty; - shake effect; - water bombs.</string>
 
     <string-array name="help_strings">
         <item>When you push the bomb you will spend a spark. If no sparks are available then game is over.</item>
         <item>If the bomb acquires a red color then next push will cause explosion. You can\'t push the bomb until reaction doesn\'t stop</item>
         <item>You get one spark after every fifth bomb explosion and at the end of level</item>
         <item>The main goal is to explode as many bombs as possible using the least amount of sparks</item>
-        <item>At at game start you have three shakes. Shake the phone and all red bombs will explode.</item>
+        <item>At the beginning of the game you have three shakes. Shake the phone and all red bombs will explode.</item>
     </string-array>
 
 </resources>
