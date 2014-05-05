@@ -16,6 +16,7 @@ public class MainActivity extends Activity implements ShakeDetectActivityListene
 	private ExplodeView explodeView;
 
 	private ShakeDetectActivity shakeDetector;
+	private Flavor.Banner banner;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +24,8 @@ public class MainActivity extends Activity implements ShakeDetectActivityListene
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		banner = Flavor.setupBanner(this);
 
 		explodeView = (ExplodeView) findViewById(R.id.explode_view);
 		if (savedInstanceState != null) {
@@ -43,13 +46,14 @@ public class MainActivity extends Activity implements ShakeDetectActivityListene
 		if (Flavor.isFull()) {
 			shakeDetector.onPause();
 		}
+		banner.pause();
 		super.onPause();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-
+		banner.resume();
 		if (explodeView.getThread() != null) {
 			explodeView.getThread().continueRendering();
 		}
@@ -57,6 +61,12 @@ public class MainActivity extends Activity implements ShakeDetectActivityListene
 		if (Flavor.isFull()) {
 			shakeDetector.onResume();
 		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		banner.destroy();
 	}
 
 	@Override

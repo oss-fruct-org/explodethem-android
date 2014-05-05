@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
+import android.view.View;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -238,16 +239,7 @@ public class ExplodeThread extends Thread {
 	}
 
 	public void pushState(String stateId) {
-		synchronized (holder) {
-			GameState state = states.get(stateId);
-			if (state != null) {
-				state.prepare(null);
-				stateStack.add(state);
-				stateStackIds.add(stateId);
-			}
-
-			continueRendering();
-		}
+		pushState(stateId, null);
 	}
 	public void pushState(String stateId, Bundle args) {
 		synchronized (holder) {
@@ -258,6 +250,7 @@ public class ExplodeThread extends Thread {
 				stateStackIds.add(stateId);
 			}
 
+			checkBanner();
 			continueRendering();
 		}
 	}
@@ -268,8 +261,28 @@ public class ExplodeThread extends Thread {
 			stateStackIds.remove(stateStackIds.size() - 1);
 
 			continueRendering();
+			checkBanner();
 			return !stateStack.isEmpty();
 		}
+	}
+
+	private void checkBanner() {
+		if (Flavor.isFull() || stateStackIds.isEmpty())
+			return;
+
+		final MainActivity activity = (MainActivity) context;
+		final String topStateId = stateStackIds.get(stateStackIds.size() - 1);
+
+		activity.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				if (topStateId.equals("play")) {
+					activity.findViewById(R.id.banner).setVisibility(View.GONE);
+				} else {
+					activity.findViewById(R.id.banner).setVisibility(View.VISIBLE);
+				}
+			}
+		});
 	}
 
 	public void release() {

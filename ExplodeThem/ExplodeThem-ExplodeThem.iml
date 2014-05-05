@@ -8,54 +8,54 @@
     </facet>
     <facet type="android" name="Android">
       <configuration>
-        <option name="SELECTED_BUILD_VARIANT" value="fullDebug" />
-        <option name="ASSEMBLE_TASK_NAME" value="assembleFullDebug" />
-        <option name="COMPILE_JAVA_TASK_NAME" value="compileFullDebugJava" />
-        <option name="ASSEMBLE_TEST_TASK_NAME" value="assembleFullDebugTest" />
-        <option name="SOURCE_GEN_TASK_NAME" value="generateFullDebugSources" />
+        <option name="SELECTED_BUILD_VARIANT" value="freeDebug" />
+        <option name="ASSEMBLE_TASK_NAME" value="assembleFreeDebug" />
+        <option name="COMPILE_JAVA_TASK_NAME" value="compileFreeDebugJava" />
+        <option name="ASSEMBLE_TEST_TASK_NAME" value="assembleFreeDebugTest" />
+        <option name="SOURCE_GEN_TASK_NAME" value="generateFreeDebugSources" />
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
         <option name="RES_FOLDER_RELATIVE_PATH" value="/src/main/res" />
-        <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/main/res;file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/full/res" />
+        <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/main/res;file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/free/res" />
         <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/src/main/assets" />
       </configuration>
     </facet>
   </component>
   <component name="NewModuleRootManager" inherit-compiler-output="false">
-    <output url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/build/classes/full/debug" />
+    <output url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/build/classes/free/debug" />
     <exclude-output />
     <content url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem">
-      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/build/source/r/full/debug" isTestSource="false" generated="true" />
-      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/build/source/aidl/full/debug" isTestSource="false" generated="true" />
-      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/build/source/buildConfig/full/debug" isTestSource="false" generated="true" />
-      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/build/source/rs/full/debug" isTestSource="false" generated="true" />
-      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/build/res/rs/full/debug" type="java-resource" />
-      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/fullDebug/res" type="java-resource" />
-      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/fullDebug/resources" type="java-resource" />
-      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/fullDebug/aidl" isTestSource="false" />
-      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/fullDebug/assets" isTestSource="false" />
-      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/fullDebug/java" isTestSource="false" />
-      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/fullDebug/jni" isTestSource="false" />
-      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/fullDebug/rs" isTestSource="false" />
-      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/build/source/r/test/full/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/build/source/aidl/test/full/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/build/source/buildConfig/test/full/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/build/source/rs/test/full/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/build/res/rs/test/full/debug" type="java-test-resource" />
-      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/full/res" type="java-resource" />
-      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/full/resources" type="java-resource" />
-      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/full/aidl" isTestSource="false" />
-      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/full/assets" isTestSource="false" />
-      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/full/java" isTestSource="false" />
-      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/full/jni" isTestSource="false" />
-      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/full/rs" isTestSource="false" />
-      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/androidTestFull/res" type="java-test-resource" />
-      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/androidTestFull/resources" type="java-test-resource" />
-      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/androidTestFull/aidl" isTestSource="true" />
-      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/androidTestFull/assets" isTestSource="true" />
-      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/androidTestFull/java" isTestSource="true" />
-      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/androidTestFull/jni" isTestSource="true" />
-      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/androidTestFull/rs" isTestSource="true" />
+      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/build/source/r/free/debug" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/build/source/aidl/free/debug" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/build/source/buildConfig/free/debug" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/build/source/rs/free/debug" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/build/res/rs/free/debug" type="java-resource" />
+      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/freeDebug/res" type="java-resource" />
+      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/freeDebug/resources" type="java-resource" />
+      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/freeDebug/aidl" isTestSource="false" />
+      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/freeDebug/assets" isTestSource="false" />
+      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/freeDebug/java" isTestSource="false" />
+      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/freeDebug/jni" isTestSource="false" />
+      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/freeDebug/rs" isTestSource="false" />
+      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/build/source/r/test/free/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/build/source/aidl/test/free/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/build/source/buildConfig/test/free/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/build/source/rs/test/free/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/build/res/rs/test/free/debug" type="java-test-resource" />
+      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/free/res" type="java-resource" />
+      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/free/resources" type="java-resource" />
+      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/free/aidl" isTestSource="false" />
+      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/free/assets" isTestSource="false" />
+      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/free/java" isTestSource="false" />
+      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/free/jni" isTestSource="false" />
+      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/free/rs" isTestSource="false" />
+      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/androidTestFree/res" type="java-test-resource" />
+      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/androidTestFree/resources" type="java-test-resource" />
+      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/androidTestFree/aidl" isTestSource="true" />
+      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/androidTestFree/assets" isTestSource="true" />
+      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/androidTestFree/java" isTestSource="true" />
+      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/androidTestFree/jni" isTestSource="true" />
+      <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/androidTestFree/rs" isTestSource="true" />
       <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/debug/res" type="java-resource" />
       <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/debug/resources" type="java-resource" />
       <sourceFolder url="file://$USER_HOME$/AndroidStudioProjects/ExplodeThem/ExplodeThem/src/debug/aidl" isTestSource="false" />
@@ -93,6 +93,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="appcompat-v7-19.1.0" level="project" />
     <orderEntry type="library" exported="" name="support-v4-19.1.0" level="project" />
+    <orderEntry type="library" exported="" name="play-services-4.3.23" level="project" />
   </component>
 </module>
 
