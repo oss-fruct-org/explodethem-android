@@ -26,6 +26,7 @@
   <string name="play_score">Poäng:</string>
   <string name="play_level">Nivå:</string>
   <string name="play_shakes">Skakningar:</string>
+  <string name="menu_buy">Köpa</string>
   <string name="store_text_free">Explodera Dem är arkadspel. På fält spridda bomber av olika storlekar. Genom att klicka på bomben du spenderar en gnista på den. Efter att ha nått en viss storlek, bomb exploderar och dess spridda gnistor samverkar med de andra bomber. Antalet gnistor är begränsad. Du får en ny gnista efter utgången av varje nivå eller efter den femte explosionen. Det huvudsakliga målet med spelet är att spränga så många bomber som möjligt tills gnistor kommer att avsluta.</string>
   <string name="store_text_full">Explodera Dem är arkadspel. På fält spridda bomber av olika storlekar. Genom att klicka på bomben du spenderar en gnista på den. Efter att ha nått en viss storlek, bomb exploderar och dess spridda gnistor samverkar med de andra bomber. Antalet gnistor är begränsad. Du får en ny gnista efter utgången av varje nivå eller efter den femte explosionen. Det huvudsakliga målet med spelet är att spränga så många bomber som möjligt tills gnistor kommer att avsluta. Dragen av fullversionen: - 3 olika svårighetsgrader; - skaka effekt; - vatten bomber.</string>
   <string-array name="help_strings">

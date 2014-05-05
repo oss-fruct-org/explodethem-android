@@ -36,10 +36,6 @@ android {
         free {
             packageName "org.fruct.oss.explodethem.free"
             versionName "1.1-free"
-
-            dependencies {
-                compile 'com.google.android.gms:play-services:+'
-            }
         }
 
         full {
@@ -52,4 +48,5 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:19.+'
+    freeCompile 'com.google.android.gms:play-services:+'
 }
