@@ -27,6 +27,7 @@
     <string name="play_score">Score:</string>
     <string name="play_level">Level:</string>
     <string name="play_shakes">Shakes:</string>
+    <string name="menu_buy">Buy</string>
 
     <string-array name="help_strings">
         <item>When you push the bomb you will spend a spark. If no sparks are available then game is over.</item>

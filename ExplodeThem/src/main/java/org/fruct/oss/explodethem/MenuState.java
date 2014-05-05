@@ -2,11 +2,13 @@ package org.fruct.oss.explodethem;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MotionEvent;
 
@@ -107,6 +109,7 @@ public class MenuState implements GameState {
 			newGameMenu.subMenu.add(new MenuItem(context.getString(R.string.menu_hard), "new-game-hard"));
 		} else {
 			menuItems.add(0, new MenuItem(context.getString(R.string.menu_new_game), "new-game-medium"));
+			menuItems.add(0, new MenuItem(context.getString(R.string.menu_buy), "buy-full-version"));
 		}
 
 		if (playState.isStarted()) {
@@ -151,7 +154,7 @@ public class MenuState implements GameState {
 		titlePosY = Utils.getDP(context, 16) + rect.height();
 		titleOffsetY = rect.height() + Utils.getDP(context, 8);
 
-		buttonHeight = Utils.getDP(context, 48);
+		buttonHeight = context.getResources().getDimension(R.dimen.menu_button_height);
 		buttonPadding = Utils.getDP(context, 8);
 		buttonWidth = width / 2;
 
@@ -189,7 +192,15 @@ public class MenuState implements GameState {
 	}
 
 	private void onMenuItemClick(String id) {
-		if (id.equals("continue")) {
+		if (id.equals("buy-full-version")) {
+			final String appPackageName = "org.fruct.oss.explodethem.full";
+			try {
+				context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+			} catch (android.content.ActivityNotFoundException anfe) {
+				context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
+			}
+			return;
+		} if (id.equals("continue")) {
 			explodeThread.replaceStateStack("play");
 			return;
 		} if (id.equals("about")) {
