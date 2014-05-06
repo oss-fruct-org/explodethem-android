@@ -63,7 +63,7 @@ public class MenuState implements GameState {
 		buttonPaintHightlight.setColor(0x99c5a0f3);
 
 		textPaint = new Paint();
-		textPaint.setTypeface(Typeface.createFromAsset(context.getAssets(), "coolvetica.ttf"));
+		textPaint.setTypeface(Typeface.createFromAsset(context.getAssets(), "Roboto-Medium.ttf"));
 		textPaint.setAntiAlias(true);
 		textPaint.setColor(0xfffafef1);
 		textPaint.setTextSize(textSize);

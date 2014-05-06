@@ -14,6 +14,9 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Layout;
+import android.text.StaticLayout;
+import android.text.TextPaint;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -39,14 +42,12 @@ public class PlayState implements GameState {
 	private long stepRemainTicks;
 	private float stepOffset;
 
-	// Paints
-	private final float textSize;
 	private final Paint tilePaint;
 
 	private final Paint sparksTextPaint;
 	private final Paint sparksTextPaintOutline;
 
-	private final Paint textPaint;
+	private final TextPaint textPaint;
 	private final Paint textPaintOutline;
 
 	private final Paint textPaintRight;
@@ -76,11 +77,15 @@ public class PlayState implements GameState {
 	private int soundBombId;
 	private int soundNoneId;
 	private SoundPool soundPool;
+
+	// Strings
 	private String playScore;
 	private String playLevel;
 	private String playShakes;
 	private String buyText;
 
+	private StaticLayout layoutShakes;
+	private StaticLayout layoutShakesOutline;
 
 	public PlayState(Context context, ExplodeThread explodeThread) {
 		this.context = context;
@@ -104,10 +109,10 @@ public class PlayState implements GameState {
 		}
 
 		tileRadius = Utils.getDP(context, 4);
-		textSize = Utils.getSP(context, 32);
+		float textSize = Utils.getSP(context, 32);
 
-		textPaint = new Paint();
-		textPaint.setTypeface(Typeface.createFromAsset(context.getAssets(), "coolvetica.ttf"));
+		textPaint = new TextPaint();
+		textPaint.setTypeface(Typeface.createFromAsset(context.getAssets(), "Roboto-Medium.ttf"));
 		textPaint.setAntiAlias(true);
 		textPaint.setColor(0xfffafef1);
 		textPaint.setTextSize(textSize);
@@ -213,8 +218,6 @@ public class PlayState implements GameState {
 	@Override
 	public void draw(Canvas canvas) {
 		assert dimensions != null;
-		final float halfTileSize = dimensions.tileSize / 2;
-		final float tileSize = dimensions.tileSize;
 
 		canvas.drawBitmap(explodeThread.getCommonResources().background.getScaled(), 0, 0, null);
 
@@ -232,11 +235,23 @@ public class PlayState implements GameState {
 			drawText(canvas, playLevel + " " + field.getLevel(), dimensions.levelTextPoint, true);
 
 			if (Flavor.isFull()) {
-				drawText(canvas, playShakes + " " + field.getShakes(), dimensions.shakesTextPoint, true);
+				if (layoutShakes == null) {
+					drawText(canvas, playShakes + " " + field.getShakes(), dimensions.shakesTextPoint, true);
+				} else {
+					drawText(canvas, String.valueOf(field.getShakes()), dimensions.shakesTextPoint, true);
+					canvas.save();
+					canvas.translate(dimensions.width / 2,
+							dimensions.levelTextPoint.y + dimensions.textMargin);
+					layoutShakes.draw(canvas);
+					layoutShakesOutline.draw(canvas);
+
+					canvas.restore();
+				}
 			} else {
 				canvas.drawRoundRect(dimensions.buyButton, tileRadius, tileRadius, tilePaint);
 				drawText(canvas, buyText, dimensions.shakesTextPoint, true);
 			}
+
 
 			drawSparks(canvas);
 		}
@@ -434,7 +449,8 @@ public class PlayState implements GameState {
 		Rect rect = new Rect();
 		textPaint.getTextBounds("Score:", 0, "Score:".length(), rect);
 
-		final int textMargin = (int) Utils.getDP(context, 8);
+		dimensions.textMargin = (int) Utils.getDP(context, 8);
+		final int textMargin = dimensions.textMargin;
 
 		dimensions.scoreTextPoint.set(textMargin, textMargin + rect.height());
 		dimensions.levelTextPoint.set(width - textMargin, textMargin + rect.height());
@@ -501,6 +517,25 @@ public class PlayState implements GameState {
 		textPaint.getTextBounds("99", 0, "99".length(), rect);
 		dimensions.sparksTextPoint.set(dimensions.sparksRect.centerX(),
 				dimensions.sparksRect.centerY() + rect.height() / 2);
+
+
+		// Check shakes length
+		Rect shakeRect = new Rect();
+		textPaintRight.getTextBounds(playShakes, 0, playShakes.length(), shakeRect);
+		if (shakeRect.width() > width / 2) {
+			TextPaint textPaintSmall = new TextPaint(textPaintRight);
+			textPaintSmall.setTextSize(textPaint.getTextSize() / 2);
+
+			TextPaint textPaintSmallOutline = new TextPaint(textPaintRightOutline);
+			textPaintSmallOutline.setTextSize(textPaintRightOutline.getTextSize() / 2);
+			textPaintSmallOutline.setStrokeWidth(textPaintRightOutline.getStrokeWidth() / 2);
+
+			layoutShakes = new StaticLayout(playShakes, textPaintSmall, width / 2,
+					Layout.Alignment.ALIGN_NORMAL, 1, 0, false);
+			layoutShakesOutline = new StaticLayout(playShakes, textPaintSmallOutline, width / 2,
+					Layout.Alignment.ALIGN_NORMAL, 1, 0, false);
+		}
+
 	}
 
 	public void testHit(float x, float y, Point outPoint) {
@@ -623,6 +658,7 @@ public class PlayState implements GameState {
 		RectF fieldRect = new RectF();
 		RectF sparksRect = new RectF();
 		RectF buyButton;
+		int textMargin;
 
 		float getOffset(int index) {
 			return tilePadding + index * (tileSize + tilePadding);

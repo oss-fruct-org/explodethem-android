@@ -68,7 +68,7 @@ public class GameOverState implements GameState, Handler.Callback {
 		backgroundPaint = new Paint();
 
 		textPaint = new Paint();
-		textPaint.setTypeface(Typeface.createFromAsset(context.getAssets(), "coolvetica.ttf"));
+		textPaint.setTypeface(Typeface.createFromAsset(context.getAssets(), "Roboto-Medium.ttf"));
 		textPaint.setAntiAlias(true);
 		textPaint.setColor(0xfffafef1);
 		textPaint.setTextSize(textSize);
@@ -83,7 +83,7 @@ public class GameOverState implements GameState, Handler.Callback {
 		buttonPaint.setAntiAlias(true);
 
 		buttonTextPaint = new Paint();
-		buttonTextPaint.setTypeface(Typeface.createFromAsset(context.getAssets(), "coolvetica.ttf"));
+		buttonTextPaint.setTypeface(Typeface.createFromAsset(context.getAssets(), "Roboto-Medium.ttf"));
 		buttonTextPaint.setAntiAlias(true);
 		buttonTextPaint.setColor(0xfffafef1);
 		buttonTextPaint.setTextSize(Utils.getSP(context, 24));

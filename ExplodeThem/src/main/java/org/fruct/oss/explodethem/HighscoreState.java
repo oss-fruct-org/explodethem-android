@@ -59,7 +59,7 @@ public class HighscoreState implements GameState {
 		titleTextPaint.setTextAlign(Paint.Align.CENTER);
 
 		textPaint = new Paint();
-		textPaint.setTypeface(Typeface.createFromAsset(context.getAssets(), "coolvetica.ttf"));
+		textPaint.setTypeface(Typeface.createFromAsset(context.getAssets(), "Roboto-Medium.ttf"));
 		textPaint.setAntiAlias(true);
 		textPaint.setColor(0xfffafef1);
 		textPaint.setTextSize(Utils.getSP(context, 32));
