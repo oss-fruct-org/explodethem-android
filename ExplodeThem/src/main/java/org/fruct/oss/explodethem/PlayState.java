@@ -252,7 +252,6 @@ public class PlayState implements GameState {
 				drawText(canvas, buyText, dimensions.shakesTextPoint, true);
 			}
 
-
 			drawSparks(canvas);
 		}
 	}
@@ -523,19 +522,23 @@ public class PlayState implements GameState {
 		Rect shakeRect = new Rect();
 		textPaintRight.getTextBounds(playShakes, 0, playShakes.length(), shakeRect);
 		if (shakeRect.width() > width / 2) {
-			TextPaint textPaintSmall = new TextPaint(textPaintRight);
+			Rect shakeCountRect = new Rect();
+			textPaint.getTextBounds("99", 0, 2, shakeCountRect);
+
+			TextPaint textPaintSmall = new TextPaint(textPaint);
 			textPaintSmall.setTextSize(textPaint.getTextSize() / 2);
 
-			TextPaint textPaintSmallOutline = new TextPaint(textPaintRightOutline);
-			textPaintSmallOutline.setTextSize(textPaintRightOutline.getTextSize() / 2);
-			textPaintSmallOutline.setStrokeWidth(textPaintRightOutline.getStrokeWidth() / 2);
+			TextPaint textPaintSmallOutline = new TextPaint(textPaintOutline);
+			textPaintSmallOutline.setTextSize(textPaintOutline.getTextSize() / 2);
+			textPaintSmallOutline.setStrokeWidth(textPaintOutline.getStrokeWidth() / 2);
 
-			layoutShakes = new StaticLayout(playShakes, textPaintSmall, width / 2,
-					Layout.Alignment.ALIGN_NORMAL, 1, 0, false);
-			layoutShakesOutline = new StaticLayout(playShakes, textPaintSmallOutline, width / 2,
-					Layout.Alignment.ALIGN_NORMAL, 1, 0, false);
+			final int textWidth = width / 2  - shakeCountRect.width() - textMargin;
+
+			layoutShakes = new StaticLayout(playShakes, textPaintSmall, textWidth,
+					Layout.Alignment.ALIGN_OPPOSITE, 1, 0, false);
+			layoutShakesOutline = new StaticLayout(playShakes, textPaintSmallOutline, textWidth,
+					Layout.Alignment.ALIGN_OPPOSITE, 1, 0, false);
 		}
-
 	}
 
 	public void testHit(float x, float y, Point outPoint) {
