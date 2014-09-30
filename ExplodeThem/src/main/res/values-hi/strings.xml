@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="app_name">विस्फोट</string>
+  <string name="hello_world">नमस्कार दुनिया !</string>
+  <string name="action_settings">सेटिंग्स</string>
+  <string name="explode_them">विस्फोट</string>
+  <string name="ok">ठीक है</string>
+  <string name="about_app_name">विस्फोट</string>
+  <string name="about_text">कॉपीराइट © 2012, 2014 FRUCT लैब Petrozavodsk स्टेट यूनिवर्सिटी के आईटी पार्क में. मुख्य डेवलपर Artemov Nikita है. Ivashov Kirill ने एंड्रॉयड बंदरगाह.</string>
+  <string name="game_over_title">खेल खत्म</string>
+  <string name="game_over_score">आपका स्कोर:</string>
+  <string name="game_over_name">आपका नाम:</string>
+  <string name="game_over_enter_name">नाम दर्ज</string>
+  <string name="help_title">मदद</string>
+  <string name="highscore_title">उच्चतम स्कोर</string>
+  <string name="menu_help">मदद</string>
+  <string name="menu_highscore">उच्चतम स्कोर</string>
+  <string name="menu_about">बारे में</string>
+  <string name="menu_quit">छोड़ो</string>
+  <string name="menu_new_game">नई खेल</string>
+  <string name="menu_easy">आसान</string>
+  <string name="menu_medium">मध्यम</string>
+  <string name="menu_hard">हार्ड</string>
+  <string name="menu_continue">"जारी "</string>
+  <string name="next_level_title">अगला स्तर</string>
+  <string name="play_score">स्कोर:</string>
+  <string name="play_level">स्तर:</string>
+  <string name="play_shakes">हिलाता:</string>
+  <string name="store_text_free">आर्केड खेल विस्फोट है. बिखरे हुए विभिन्न आकार के खेल मैदान बमों पर. बम पर क्लिक करके आप उस पर एक चिंगारी खर्च कर रहे हैं. एक निश्चित आकार तक पहुँचने के बाद, बम फट और अपने बिखरे हुए स्पार्क्स अन्य बम के साथ बातचीत. स्पार्क्स की संख्या सीमित है. आप प्रत्येक स्तर के अंत के बाद एक नई चिंगारी हो, या पांचवें विस्फोट के बाद. खेल का मुख्य लक्ष्य खत्म हो जाएगा स्पार्क्स जब तक संभव के रूप में कई बम विस्फोट करने के लिए है.</string>
+  <string name="store_text_full">आर्केड खेल विस्फोट है. बिखरे हुए विभिन्न आकार के खेल मैदान बमों पर. बम पर क्लिक करके आप उस पर एक चिंगारी खर्च कर रहे हैं. एक निश्चित आकार तक पहुँचने के बाद, बम फट और अपने बिखरे हुए स्पार्क्स अन्य बम के साथ बातचीत. स्पार्क्स की संख्या सीमित है. आप प्रत्येक स्तर के अंत के बाद एक नई चिंगारी हो, या पांचवें विस्फोट के बाद. खेल का मुख्य लक्ष्य खत्म हो जाएगा स्पार्क्स जब तक संभव के रूप में कई बम विस्फोट करने के लिए है. पूर्ण संस्करण की विशेषताएं: - कठिनाई के 3 स्तरों; - प्रभाव हिला; - पानी बम.</string>
+  <string-array name="help_strings">
+    <item>आप बम धक्का जब आप एक चिंगारी खर्च करेगा. कोई स्पार्क्स तो उपलब्ध हैं, तो खेल खत्म हो गया है.</item>
+    <item>बम एक लाल रंग का अधिग्रहण तो अगले धक्का विस्फोट का कारण होगा. प्रतिक्रिया बंद नहीं करता है, जब तक आप बम धक्का नहीं कर सकते</item>
+    <item>आप एक चिंगारी हर पांचवां बम विस्फोट के बाद और स्तर के अंत में मिलता है</item>
+    <item>मुख्य लक्ष्य स्पार्क्स के कम से कम राशि का उपयोग कर के रूप में संभव के रूप में कई बम विस्फोट करने के लिए है</item>
+    <item>खेल की शुरुआत में आप तीन हिलाता है. फोन मिलाने और सभी लाल बम विस्फोट हो जाएगा.</item>
+  </string-array>
+</resources>
