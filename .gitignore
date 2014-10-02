@@ -6,3 +6,5 @@
 
 .DS_Store
 ExplodeThem/build
+*.apk
+private.properties

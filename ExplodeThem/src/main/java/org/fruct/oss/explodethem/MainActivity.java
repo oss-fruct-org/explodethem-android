@@ -74,6 +74,10 @@ public class MainActivity extends Activity implements ShakeDetectActivityListene
 			@Override
 			public void run() {
 				banner.setVisibility(isVisible);
+
+				if (Math.random() < 0.2) {
+					banner.refresh();
+				}
 			}
 		});
 	}

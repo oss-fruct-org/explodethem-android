@@ -16,9 +16,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
 
         ad:adSize="BANNER"
-        ad:adUnitId="ca-app-pub-7587295031147128/8523722094"
+        ad:adUnitId="@string/banner_id"
         />
 
 </RelativeLayout>
