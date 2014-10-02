@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="app_name">বিস্ফোরিত</string>
+  <string name="hello_world">হ্যালো দুনিয়া!</string>
+  <string name="action_settings">সেটিংস</string>
+  <string name="explode_them">বিস্ফোরিত</string>
+  <string name="ok">"ঠিক "</string>
+  <string name="about_app_name">বিস্ফোরিত</string>
+  <string name="about_text">কপিরাইট © 2012, 2014 Petrozavodsk স্টেট ইউনিভার্সিটি আইটি পার্ক FRUCT ল্যাব. প্রধান ডেভেলপার Artemov Nikita. Ivashov Kirill এর দ্বারা অ্যানড্রইড পোর্ট.</string>
+  <string name="game_over_title">ওভার খেলা</string>
+  <string name="game_over_score">আপনার স্কোর:</string>
+  <string name="game_over_name">আপনার নাম:</string>
+  <string name="game_over_enter_name">নাম লিখুন</string>
+  <string name="help_title">সাহায্য</string>
+  <string name="highscore_title">উচ্চ স্কোর</string>
+  <string name="menu_help">সাহায্য</string>
+  <string name="menu_highscore">উচ্চ স্কোর</string>
+  <string name="menu_about">সম্পর্কে</string>
+  <string name="menu_quit">প্রস্থান</string>
+  <string name="menu_new_game">নতুন খেলা</string>
+  <string name="menu_easy">সহজ</string>
+  <string name="menu_medium">মাধ্যম</string>
+  <string name="menu_hard">হার্ড</string>
+  <string name="next_level_title">পরবর্তী স্তরে</string>
+  <string name="play_score">স্কোর:</string>
+  <string name="play_level">শ্রেনী:</string>
+  <string name="play_shakes">শেকস:</string>
+  <string name="menu_buy">কেনা</string>
+  <string name="store_text_free">তোরণ খেলা বিস্ফোরিত হয়. ছড়িয়ে ছিটিয়ে বিভিন্ন আকারের খেলা ক্ষেত্রের বোমা. বোমা ক্লিক করে আপনি এটি একটি স্ফুলিঙ্গ খরচ হয়. একটি নির্দিষ্ট মাপ পৌঁছনোর পর, বোমা explodes এবং তার বিক্ষিপ্ত স্পার্ক অন্যান্য বোমা সঙ্গে যোগাযোগ করার জন্য. স্পার্ক সংখ্যা সীমিত করা হয়. আপনি প্রতিটি স্তর শেষে একটি নতুন স্পার্ক পেতে, বা পঞ্চম বিস্ফোরণের পর. খেলার মূল লক্ষ্য শেষ হবে স্পার্ক পর্যন্ত সম্ভব হিসাবে হিসাবে অনেক বোমা বিস্ফোরিত হয়.</string>
+  <string name="store_text_full">তোরণ খেলা বিস্ফোরিত হয়. ছড়িয়ে ছিটিয়ে বিভিন্ন আকারের খেলা ক্ষেত্রের বোমা. বোমা ক্লিক করে আপনি এটি একটি স্ফুলিঙ্গ খরচ হয়. একটি নির্দিষ্ট মাপ পৌঁছনোর পর, বোমা explodes এবং তার বিক্ষিপ্ত স্পার্ক অন্যান্য বোমা সঙ্গে যোগাযোগ করার জন্য. স্পার্ক সংখ্যা সীমিত করা হয়. আপনি প্রতিটি স্তর শেষে একটি নতুন স্পার্ক পেতে, বা পঞ্চম বিস্ফোরণের পর. খেলার মূল লক্ষ্য শেষ হবে স্পার্ক পর্যন্ত সম্ভব হিসাবে হিসাবে অনেক বোমা বিস্ফোরিত হয়. পূর্ণ সংস্করণ বৈশিষ্ট্য: - অসুবিধা 3 মাত্রা; - প্রভাব ঝাঁকি; - জল বোমা.</string>
+  <string-array name="help_strings">
+    <item>আপনি বোমা ধাক্কা যখন আপনি একটি স্ফুলিঙ্গ ব্যয় করা হবে. কোন স্পার্ক তারপর পাওয়া যায় যদি খেলা হয়.</item>
+    <item>বোমা একটি লাল রঙ acquires, তাহলে পরের ধাক্কা বিস্ফোরণ হতে হবে. প্রতিক্রিয়া বন্ধ না হওয়া পর্যন্ত আপনি বোমা ধাক্কা পারে না</item>
+    <item>আপনি এক স্ফুলিঙ্গ প্রতি পঞ্চম বোমা বিস্ফোরণের পর এবং স্তর শেষে পেতে</item>
+    <item>মূল লক্ষ্য স্পার্ক কমপক্ষে পরিমাণ ব্যবহার করা সম্ভব হিসাবে হিসাবে অনেক বোমা বিস্ফোরিত করা হয়</item>
+    <item>খেলার শুরুতে আপনি তিনটি শেকস আছে. ফোন শেক এবং সব লাল বোমা বিস্ফোরিত করা হবে.</item>
+  </string-array>
+</resources>
