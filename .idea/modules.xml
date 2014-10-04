@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ExplodeThem.iml" filepath="$PROJECT_DIR$/ExplodeThem.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ExplodeThem/ExplodeThem.iml" filepath="$PROJECT_DIR$/ExplodeThem/ExplodeThem.iml" />
       <module fileurl="file://$PROJECT_DIR$/explodethem-android.iml" filepath="$PROJECT_DIR$/explodethem-android.iml" />
     </modules>
   </component>
