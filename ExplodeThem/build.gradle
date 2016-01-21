@@ -5,7 +5,6 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        minSdkVersion 14
         targetSdkVersion 23
         versionCode 7
         versionName "1.4"
@@ -19,6 +18,8 @@ android {
 
     productFlavors {
         free {
+            minSdkVersion 14
+
             applicationId "org.fruct.oss.explodethem.free"
             versionName "1.4-free"
 
@@ -38,6 +39,7 @@ android {
 
         full {
             minSdkVersion 9
+
             applicationId "org.fruct.oss.explodethem.full"
             versionName "1.4-full"
         }
