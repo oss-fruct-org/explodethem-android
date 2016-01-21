@@ -9,6 +9,9 @@ import android.util.Log;
 import ru.adwow.sdk.AdWow;
 import ru.adwow.sdk.AdWowFragment;
 import ru.adwow.sdk.Callback;
+import ru.adwow.sdk.Form;
+import ru.adwow.sdk.Notification;
+import ru.adwow.sdk.SessionListener;
 import ru.adwow.sdk.Unit;
 
 public class AdwowFlavor {
@@ -42,11 +45,14 @@ public class AdwowFlavor {
 			public void onFailed(AdWow adwow, Exception exception) {
 				Log.e(TAG, "Start adwow failed", exception);
 			}
+
 			@Override
 			public void onFinished(AdWow adwow, Unit unit) {
 				Log.e(TAG, "Start adwow success");
 			}
 		});
+
+		AdWow.getInstance().setSessionListener(new MySessionListener());
 	}
 
 	public static void stopAdwow(Activity activity) {
@@ -87,5 +93,60 @@ public class AdwowFlavor {
 				unit.show(context);
 			}
 		});
+	}
+
+	private static class MySessionListener implements SessionListener {
+		private static final String TAG = "MySessionListener";
+
+		@Override
+		public void onSessionOpened(AdWow adWow, Unit unit, Exception e) {
+			Log.d(TAG, "onSessionOpened");
+		}
+
+		@Override
+		public void onSessionStateChanged(AdWow adWow) {
+			Log.d(TAG, "onSessionStateChanged");
+		}
+
+		@Override
+		public void onSessionClosed(AdWow adWow, Exception e) {
+			Log.d(TAG, "onSessionClosed");
+		}
+
+		@Override
+		public void onUnitShow(Unit unit) {
+			Log.d(TAG, "onUnitShow");
+
+		}
+
+		@Override
+		public void onUnitDismiss(Unit unit) {
+			Log.d(TAG, "onUnitDismiss");
+		}
+
+		@Override
+		public void onFormShow(Form form) {
+			Log.d(TAG, "onFormShow");
+		}
+
+		@Override
+		public void onFormDismiss(Form form) {
+			Log.d(TAG, "onFormDismiss");
+		}
+
+		@Override
+		public void onNotificationShow(Notification notification) {
+			Log.d(TAG, "onNotificationShow");
+		}
+
+		@Override
+		public void onNotificationDismiss(Notification notification) {
+			Log.d(TAG, "onNotificationDismiss");
+		}
+
+		@Override
+		public void onNotificationDismissWithClick(Notification notification) {
+			Log.d(TAG, "onNotificationDismissWithClick");
+		}
 	}
 }
