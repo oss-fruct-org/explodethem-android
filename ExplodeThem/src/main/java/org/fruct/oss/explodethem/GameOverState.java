@@ -216,6 +216,11 @@ public class GameOverState implements GameState, Handler.Callback {
 			if (isHighscore && enteredName != null && enteredName.length() != 0 && !enteredName.equals("...")) {
 				HighscoreState.insertHighscore(context, enteredName, score);
 				explodeThread.replaceStateStack("highscore");
+
+				if (score > 3000) {
+					AdwowFlavor.saveMoment("попадание в top с 3000 очков");
+				}
+
 			} else {
 				explodeThread.replaceStateStack("menu");
 			}
