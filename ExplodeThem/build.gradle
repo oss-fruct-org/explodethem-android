@@ -27,6 +27,9 @@ android {
                 props.load(new FileInputStream(file("private.properties")));
                 resValue "string", "banner_id", props["banner_id"]
                 resValue "string", "test_devices", props["test_devices"]
+
+                resValue "string", "adwow_key", props["adwow_key"]
+                resValue "string", "adwow_secret", props["adwow_secret"]
                 logger.info("banner_id found in private.properties")
             } else {
                 logger.warn("No banner_id defined in private.properties")
@@ -49,7 +52,8 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    //compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:23.1.1'
+    freeCompile files("libs/AdWoW_SDK_1.0.6.jar")
     freeCompile 'com.google.android.gms:play-services-ads:8.4.0'
 }

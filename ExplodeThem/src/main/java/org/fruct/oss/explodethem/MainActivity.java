@@ -36,6 +36,20 @@ public class MainActivity extends Activity implements ShakeDetectActivityListene
 			shakeDetector = new ShakeDetectActivity(this);
 			shakeDetector.addListener(this);
 		}
+
+		AdwowFlavor.setupFragment(this);
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		AdwowFlavor.startAdwow(this);
+	}
+
+	@Override
+	protected void onStop() {
+		AdwowFlavor.stopAdwow(this);
+		super.onStop();
 	}
 
 	@Override

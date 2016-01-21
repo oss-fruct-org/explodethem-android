@@ -222,6 +222,6 @@ public class HighscoreState implements GameState {
 			edit.putInt(PREF_HIGHSCORE_PREFIX + i, hs.value);
 			edit.putString(PREF_HIGHSCORE_NAME_PREFIX + i, hs.name);
 		}
-		edit.commit();
+		edit.apply();
 	}
 }
