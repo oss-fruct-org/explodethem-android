@@ -3,6 +3,7 @@ package org.fruct.oss.explodethem;
 import android.app.Activity;
 import android.app.Application;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.util.Log;
 
 import ru.adwow.sdk.AdWow;
@@ -43,6 +44,7 @@ public class AdwowFlavor {
 			}
 			@Override
 			public void onFinished(AdWow adwow, Unit unit) {
+				Log.e(TAG, "Start adwow success");
 			}
 		});
 	}
@@ -53,35 +55,36 @@ public class AdwowFlavor {
 			public void onFailed(AdWow kiip, Exception exception) {
 				Log.e(TAG, "Stop adwow failed", exception);
 			}
-
 			@Override
 			public void onFinished(AdWow adwow, Unit unit) {
 			}
 		});
 	}
 
-	public static void saveMoment(String name) {
+	public static void saveMoment(final Context context, String name) {
 		AdWow.getInstance().saveMoment(name, new Callback() {
 			@Override
 			public void onFailed(AdWow adWow, Exception e) {
 				Log.e(TAG, "Save adwow moment failed", e);
 			}
-
 			@Override
 			public void onFinished(AdWow adWow, Unit unit) {
+				Log.e(TAG, "Save adwow moment success");
+				unit.show(context);
 			}
 		});
 	}
 
-	public static void saveMoment(String name, int number) {
+	public static void saveMoment(final Context context, String name, int number) {
 		AdWow.getInstance().saveMoment(name, number, new Callback() {
 			@Override
 			public void onFailed(AdWow adWow, Exception e) {
 				Log.e(TAG, "Save adwow moment failed", e);
 			}
-
 			@Override
 			public void onFinished(AdWow adWow, Unit unit) {
+				Log.e(TAG, "Save adwow moment success");
+				unit.show(context);
 			}
 		});
 	}

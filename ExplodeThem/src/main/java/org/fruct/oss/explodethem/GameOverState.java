@@ -11,6 +11,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.text.InputType;
 import android.view.MotionEvent;
 import android.widget.EditText;
@@ -217,10 +218,9 @@ public class GameOverState implements GameState, Handler.Callback {
 				HighscoreState.insertHighscore(context, enteredName, score);
 				explodeThread.replaceStateStack("highscore");
 
-				if (score > 3000) {
-					AdwowFlavor.saveMoment("попадание в top с 3000 очков");
-				}
-
+				//if (score > 100) {
+				AdwowFlavor.saveMoment(context, "попадание в top с N очков", score);
+				//}
 			} else {
 				explodeThread.replaceStateStack("menu");
 			}
