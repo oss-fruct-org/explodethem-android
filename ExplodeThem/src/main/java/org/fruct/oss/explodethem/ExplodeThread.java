@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class ExplodeThread extends Thread {
 	private static final String TAG = "ExplodeThread";
@@ -33,9 +35,11 @@ public class ExplodeThread extends Thread {
 
 	private final Object isRunningLock = new Object();
 
-	private HashMap<String, GameState> states = new HashMap<String, GameState>();
-	private ArrayList<GameState> stateStack = new ArrayList<GameState>();
-	private ArrayList<String> stateStackIds = new ArrayList<String>();
+	private HashMap<String, GameState> states = new HashMap<>();
+
+	private ArrayList<Bundle> stateStackArgs = new ArrayList<>();
+	private ArrayList<GameState> stateStack = new ArrayList<>();
+	private ArrayList<String> stateStackIds = new ArrayList<>();
 
 	// Timing variables
 	private long gameTime;
@@ -84,8 +88,13 @@ public class ExplodeThread extends Thread {
 		if (inState == null ) {
 			pushState("menu");
 		} else {
-			for (String stateId : inState.getStringArrayList("states-stack")) {
-				pushState(stateId);
+			List<String> stateStack = inState.getStringArrayList("states-stack");
+			List<Bundle> stateArgStack = inState.getParcelableArrayList("states-args");
+
+			for (int i = 0; i < stateStack.size(); i++) {
+				String stateId = stateStack.get(i);
+				Bundle arg = stateArgStack.get(i);
+				pushState(stateId, arg);
 			}
 		}
 	}
@@ -248,6 +257,7 @@ public class ExplodeThread extends Thread {
 				state.prepare(args);
 				stateStack.add(state);
 				stateStackIds.add(stateId);
+				stateStackArgs.add(args);
 			}
 
 			checkBanner();
@@ -259,6 +269,7 @@ public class ExplodeThread extends Thread {
 		synchronized (holder) {
 			stateStack.remove(stateStack.size() - 1);
 			stateStackIds.remove(stateStackIds.size() - 1);
+			stateStackArgs.remove(stateStackArgs.size() - 1);
 
 			continueRendering();
 			checkBanner();
@@ -284,6 +295,7 @@ public class ExplodeThread extends Thread {
 
 			stateStack.clear();
 			stateStackIds.clear();
+			stateStackArgs.clear();
 		}
 
 		commonResources.destroy();
@@ -347,6 +359,7 @@ public class ExplodeThread extends Thread {
 
 			// Store state stack
 			outState.putStringArrayList("states-stack", new ArrayList<String>(stateStackIds));
+			outState.putParcelableArrayList("states-args", new ArrayList<Parcelable>(stateStackArgs));
 		}
 	}
 
