@@ -1,5 +1,6 @@
 package org.fruct.oss.explodethem;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -10,6 +11,8 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 
 public class Flavor {
+	private static final String TAG = "Flavor";
+
 	public interface Banner {
 		void pause();
 		void resume();
@@ -21,7 +24,7 @@ public class Flavor {
 	public static boolean isFull() {
 		return false;
 	}
-	public static Banner setupBanner(MainActivity activity) {
+	public static Banner setupBanner(final MainActivity activity) {
 		final AdView adView = (AdView) activity.findViewById(R.id.banner);
 
 		Banner banner = new Banner() {
@@ -46,12 +49,18 @@ public class Flavor {
 
 			@Override
 			public void refresh() {
-				AdRequest adRequest = new AdRequest.Builder()
-						.addTestDevice("66F5F4A83F7A89035992FD48AD60A182")
-						.addTestDevice("E75183292BA271E4AA858B7A375EB405")
-						.build();
+				AdRequest.Builder builder = new AdRequest.Builder();
 
-				adView.loadAd(adRequest);
+				String testDevice = activity.getString(R.string.test_devices);
+
+				String[] devices = testDevice.split(":");
+
+				for (String device : devices) {
+					Log.d(TAG, "Adding test device " + device);
+					builder.addTestDevice(device);
+				}
+
+				adView.loadAd(builder.build());
 			}
 
 			@Override

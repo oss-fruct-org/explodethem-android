@@ -26,6 +26,7 @@ android {
                 def props = new Properties()
                 props.load(new FileInputStream(file("private.properties")));
                 resValue "string", "banner_id", props["banner_id"]
+                resValue "string", "test_devices", props["test_devices"]
                 logger.info("banner_id found in private.properties")
             } else {
                 logger.warn("No banner_id defined in private.properties")
