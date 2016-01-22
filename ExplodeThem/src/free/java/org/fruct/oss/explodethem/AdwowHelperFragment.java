@@ -19,7 +19,6 @@ import ru.adwow.sdk.AdWowFragment;
 import ru.adwow.sdk.Callback;
 import ru.adwow.sdk.Unit;
 
-// TODO: желательно запрашивать COARSE и FINE как отдельные разрешения
 public class AdwowHelperFragment extends Fragment {
 	private static final String TAG = "AdwowHelperFragment";
 
