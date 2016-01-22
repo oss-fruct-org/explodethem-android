@@ -61,18 +61,20 @@ public class AdwowHelperFragment extends Fragment {
 	// а это может быть только на Android M.
 	@TargetApi(Build.VERSION_CODES.M)
 	private void showSnackbar() {
-		if (!isSnackbackShown
-				&& !isAdwowAllowed
-				&& shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-			View anchor = getActivity().findViewById(R.id.anchor);
-			Snackbar.make(anchor, R.string.i_need_your_location, Snackbar.LENGTH_LONG)
-					.setAction(android.R.string.ok, new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							onFirstPermissionStagePassed();
-						}
-					}).show();
-			isSnackbackShown = true;
+		if (!isSnackbackShown && !isAdwowAllowed) {
+			if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+				View anchor = getActivity().findViewById(R.id.anchor);
+				Snackbar.make(anchor, R.string.i_need_your_location, Snackbar.LENGTH_LONG)
+						.setAction(android.R.string.ok, new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								onFirstPermissionStagePassed();
+							}
+						}).show();
+				isSnackbackShown = true;
+			} else {
+				onFirstPermissionStagePassed();
+			}
 		}
 	}
 
