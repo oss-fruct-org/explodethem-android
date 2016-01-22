@@ -22,7 +22,7 @@ android {
             minSdkVersion 14
 
             applicationId "org.fruct.oss.explodethem.free"
-            versionName "1.4-free"
+            versionName "1.4.1-free"
 
             if (file("private.properties").exists()) {
                 def props = new Properties()
@@ -42,7 +42,7 @@ android {
             minSdkVersion 9
 
             applicationId "org.fruct.oss.explodethem.full"
-            versionName "1.4-full"
+            versionName "1.4.1-full"
         }
     }
 

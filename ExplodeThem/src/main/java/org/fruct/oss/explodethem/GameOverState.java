@@ -218,9 +218,7 @@ public class GameOverState implements GameState, Handler.Callback {
 				HighscoreState.insertHighscore(context, enteredName, score);
 				explodeThread.replaceStateStack("highscore");
 
-				//if (score > 100) {
 				AdwowFlavor.saveMoment(context, "попадание в top с N очков", score);
-				//}
 			} else {
 				explodeThread.replaceStateStack("menu");
 			}
