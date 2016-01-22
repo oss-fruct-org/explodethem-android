@@ -11,12 +11,6 @@ public class AdwowFlavor {
 	public static void setupFragment(Activity activity) {
 	}
 
-	public static void startAdwow(Activity activity) {
-	}
-
-	public static void stopAdwow(Activity activity) {
-	}
-
 	public static void saveMoment(final Context context, String name) {
 	}
 

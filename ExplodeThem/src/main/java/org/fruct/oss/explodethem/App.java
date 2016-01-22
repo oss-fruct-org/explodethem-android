@@ -9,4 +9,5 @@ public class App extends Application {
 
 		AdwowFlavor.initializeAdwow(this);
 	}
+
 }

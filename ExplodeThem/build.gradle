@@ -6,8 +6,8 @@ android {
 
     defaultConfig {
         targetSdkVersion 23
-        versionCode 7
-        versionName "1.4"
+        versionCode 8
+        versionName "1.4.1"
     }
 
     buildTypes {
@@ -59,4 +59,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     freeCompile files("libs/AdWoW_SDK_1.0.6.jar")
     freeCompile 'com.google.android.gms:play-services-ads:8.4.0'
+    freeCompile 'com.android.support:design:23.1.1' // Snackbar
 }

@@ -1,5 +1,6 @@
 package org.fruct.oss.explodethem;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -43,12 +44,12 @@ public class MainActivity extends Activity implements ShakeDetectActivityListene
 	@Override
 	protected void onStart() {
 		super.onStart();
-		AdwowFlavor.startAdwow(this);
+		//AdwowFlavor.startAdwow(this);
 	}
 
 	@Override
 	protected void onStop() {
-		AdwowFlavor.stopAdwow(this);
+		//AdwowFlavor.stopAdwow(this);
 		super.onStop();
 	}
 
@@ -61,6 +62,7 @@ public class MainActivity extends Activity implements ShakeDetectActivityListene
 			shakeDetector.onPause();
 		}
 		banner.pause();
+
 		super.onPause();
 	}
 

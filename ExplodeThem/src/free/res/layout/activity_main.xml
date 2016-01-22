@@ -4,7 +4,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:context="${packageName}.${activityClass}"
-                android:id="@+id/main_layout" >
+                android:id="@+id/main_layout"
+                android:fitsSystemWindows="true"
+    >
 
     <org.fruct.oss.explodethem.ExplodeView
         android:id="@+id/explode_view"
@@ -21,5 +23,12 @@
         ad:adSize="BANNER"
         ad:adUnitId="@string/banner_id"
         />
+    <View
+        android:id="@+id/anchor"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
 
+        />
 </RelativeLayout>

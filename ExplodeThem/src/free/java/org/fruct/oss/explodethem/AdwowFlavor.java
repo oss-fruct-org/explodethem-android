@@ -1,9 +1,13 @@
 package org.fruct.oss.explodethem;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Application;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import ru.adwow.sdk.AdWow;
@@ -17,7 +21,7 @@ import ru.adwow.sdk.Unit;
 public class AdwowFlavor {
 	private static final String TAG = "AdwowFlavor";
 
-	private static final String ADWOW_FRAGMENT_TAG = "org.fruct.oss.explodethem.ADWOW_FRAGMENT_TAG";
+	private static final String ADWOW_HELPER_FRAGMENT_TAG = "org.fruct.oss.explodethem.ADWOW_HELPER_FRAGMENT_TAG";
 
 	public static boolean isEnabled() {
 		return true;
@@ -32,39 +36,12 @@ public class AdwowFlavor {
 	public static void setupFragment(Activity activity) {
 		FragmentManager fragmentManager = activity.getFragmentManager();
 
-		AdWowFragment adwowFragment = (AdWowFragment) fragmentManager.findFragmentByTag(ADWOW_FRAGMENT_TAG);
-		if (adwowFragment == null) {
-			adwowFragment = new AdWowFragment();
-			fragmentManager.beginTransaction().add(adwowFragment, ADWOW_FRAGMENT_TAG).commit();
+		AdwowHelperFragment adwowHelperFragment
+				= (AdwowHelperFragment) fragmentManager.findFragmentByTag(ADWOW_HELPER_FRAGMENT_TAG);
+		if (adwowHelperFragment == null) {
+			adwowHelperFragment = new AdwowHelperFragment();
+			fragmentManager.beginTransaction().add(adwowHelperFragment, ADWOW_HELPER_FRAGMENT_TAG).commit();
 		}
-	}
-
-	public static void startAdwow(Activity activity) {
-		AdWow.getInstance().openSession(new Callback() {
-			@Override
-			public void onFailed(AdWow adwow, Exception exception) {
-				Log.e(TAG, "Start adwow failed", exception);
-			}
-
-			@Override
-			public void onFinished(AdWow adwow, Unit unit) {
-				Log.e(TAG, "Start adwow success");
-			}
-		});
-
-		AdWow.getInstance().setSessionListener(new MySessionListener());
-	}
-
-	public static void stopAdwow(Activity activity) {
-		AdWow.getInstance().closeSession(new Callback() {
-			@Override
-			public void onFailed(AdWow kiip, Exception exception) {
-				Log.e(TAG, "Stop adwow failed", exception);
-			}
-			@Override
-			public void onFinished(AdWow adwow, Unit unit) {
-			}
-		});
 	}
 
 	public static void saveMoment(final Context context, String name) {

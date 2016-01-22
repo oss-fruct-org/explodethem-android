@@ -30,6 +30,7 @@
     <string name="menu_buy">Buy</string>
     <string name="store_text_free">Explode Them is arcade game. On the game field bombs of different sizes scattered. By clicking on the bomb you are spending a spark on it. After reaching a certain size, bomb explodes and its scattered sparks interact with the other bombs. The number of sparks is limited. You get a new spark after the end of each level, or after the fifth explosion. The main goal of the game is to explode as many bombs as possible until sparks will finish.</string>
     <string name="store_text_full">Explode Them is arcade game. On the game field bombs of different sizes scattered. By clicking on the bomb you are spending a spark on it. After reaching a certain size, bomb explodes and its scattered sparks interact with the other bombs. The number of sparks is limited. You get a new spark after the end of each level, or after the fifth explosion. The main goal of the game is to explode as many bombs as possible until sparks will finish. Features of full version: - 3 levels of difficulty; - shake effect; - water bombs.</string>
+    <string name="i_need_your_location" translatable="false">Improve your experience by providing location</string>
 
     <string-array name="help_strings">
         <item>When you push the bomb you will spend a spark. If no sparks are available then game is over.</item>
