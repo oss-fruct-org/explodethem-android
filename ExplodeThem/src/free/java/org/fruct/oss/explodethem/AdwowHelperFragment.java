@@ -64,7 +64,7 @@ public class AdwowHelperFragment extends Fragment {
 	private void showSnackbar() {
 		if (!isSnackbackShown
 				&& !isAdwowAllowed
-				/*&& shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)*/) {
+				&& shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
 			View anchor = getActivity().findViewById(R.id.anchor);
 			Snackbar.make(anchor, R.string.i_need_your_location, Snackbar.LENGTH_LONG)
 					.setAction(android.R.string.ok, new View.OnClickListener() {
